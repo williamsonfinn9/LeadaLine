@@ -1,0 +1,175 @@
+/* ─────────────────────────────────────────────────────────────
+   Missed-call revenue calculator
+   - 3 sliders → live annual / weekly / monthly loss figure
+   - Trade preset buttons that pre-fill the sliders
+   - Optional "email me the results" lead capture
+   ───────────────────────────────────────────────────────────── */
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const missed = $('calcMissed'), job = $('calcJob'), conv = $('calcConv');
+  if (!missed || !job || !conv) return;
+
+  const missedOut = $('calcMissedOut');
+  const jobOut    = $('calcJobOut');
+  const convOut   = $('calcConvOut');
+  const annual    = $('calcAnnual');
+  const weekly    = $('calcWeekly');
+  const monthly   = $('calcMonthly');
+  const callsYr   = $('calcCallsYear');
+  const custYr    = $('calcCustomersYear');
+
+  const fmt    = (n) => '£' + Math.round(n).toLocaleString('en-GB');
+  const fmtInt = (n) => Math.round(n).toLocaleString('en-GB');
+
+  // ── Trade presets ────────────────────────────────────────────
+  // Sensible UK service-business starting points: [missedPerWeek, jobValue£, conversion%]
+  const PRESETS = {
+    roofing:     { missed: 5,  job: 800,  conv: 25, label: 'Roofing'             },
+    plumbing:    { missed: 12, job: 350,  conv: 30, label: 'Plumbing'            },
+    electrical:  { missed: 10, job: 400,  conv: 28, label: 'Electrical'          },
+    building:    { missed: 4,  job: 3000, conv: 20, label: 'Building'            },
+    landscaping: { missed: 8,  job: 600,  conv: 25, label: 'Landscaping'         },
+    cleaning:    { missed: 15, job: 180,  conv: 35, label: 'Cleaning'            },
+    maintenance: { missed: 9,  job: 350,  conv: 28, label: 'Property maintenance'},
+  };
+  let activePreset = null;
+
+  // ── Slider helpers ───────────────────────────────────────────
+  const setFill = (el) => {
+    const min = +el.min, max = +el.max, val = +el.value;
+    const pct = ((val - min) / (max - min)) * 100;
+    el.style.setProperty('--fill', pct + '%');
+  };
+
+  let prevAnnual = null;
+  function recalc(animate) {
+    const m = +missed.value;
+    const j = +job.value;
+    const c = +conv.value / 100;
+    const weeks = 52;
+
+    const missedYear    = m * weeks;
+    const lostCustomers = missedYear * c;
+    const annualLoss    = lostCustomers * j;
+    const weeklyLoss    = annualLoss / weeks;
+    const monthlyLoss   = annualLoss / 12;
+
+    missedOut.textContent = m;
+    jobOut.textContent    = j.toLocaleString('en-GB');
+    convOut.textContent   = +conv.value;
+
+    annual.textContent    = fmt(annualLoss);
+    weekly.textContent    = fmt(weeklyLoss);
+    monthly.textContent   = fmt(monthlyLoss);
+    callsYr.textContent   = fmtInt(missedYear);
+    custYr.textContent    = fmtInt(lostCustomers);
+
+    if (animate && prevAnnual !== annualLoss) {
+      annual.classList.remove('pulse');
+      void annual.offsetWidth; // restart animation
+      annual.classList.add('pulse');
+    }
+    prevAnnual = annualLoss;
+
+    setFill(missed); setFill(job); setFill(conv);
+  }
+
+  // ── Preset button wiring ─────────────────────────────────────
+  const presetBtns = document.querySelectorAll('.calc-preset');
+  function applyPreset(key) {
+    const p = PRESETS[key];
+    if (!p) return;
+    missed.value = p.missed;
+    job.value    = p.job;
+    conv.value   = p.conv;
+    activePreset = key;
+    presetBtns.forEach((b) => {
+      b.setAttribute('aria-pressed', b.dataset.preset === key ? 'true' : 'false');
+    });
+    recalc(true);
+  }
+  function clearPreset() {
+    if (!activePreset) return;
+    activePreset = null;
+    presetBtns.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  }
+  presetBtns.forEach((b) => {
+    b.addEventListener('click', () => applyPreset(b.dataset.preset));
+  });
+
+  // Sliders — user input clears preset highlight
+  [missed, job, conv].forEach((el) => {
+    el.addEventListener('input', () => {
+      clearPreset();
+      recalc(true);
+    });
+  });
+
+  recalc(false);
+
+  // ── Email-the-results form ───────────────────────────────────
+  const emailForm    = $('calcEmailForm');
+  const emailInput   = $('calcEmailInput');
+  const emailBtn     = $('calcEmailBtn');
+  const emailSuccess = $('calcEmailSuccess');
+  const emailWrap    = $('calcEmailWrap');
+
+  if (emailForm) {
+    emailForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = (emailInput.value || '').trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!valid) {
+        emailInput.classList.add('invalid');
+        emailInput.focus();
+        return;
+      }
+      emailInput.classList.remove('invalid');
+
+      const payload = {
+        email,
+        trade_preset:        activePreset ? PRESETS[activePreset].label : null,
+        missed_calls_week:   +missed.value,
+        avg_job_value_gbp:   +job.value,
+        conversion_pct:      +conv.value,
+        annual_loss_gbp:     Math.round((+missed.value * 52) * (+conv.value / 100) * (+job.value)),
+        page:                'calculator.html',
+        source:              'LeadaLine missed-call calculator',
+        submitted_at:        new Date().toISOString(),
+      };
+
+      emailBtn.disabled = true;
+      const originalLabel = emailBtn.textContent;
+      emailBtn.textContent = 'Sending…';
+
+      if (typeof CONFIG !== 'undefined' && CONFIG.ENABLE_REAL_WEBHOOK && CONFIG.BOOKING_WEBHOOK_URL) {
+        try {
+          await fetch(CONFIG.BOOKING_WEBHOOK_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload),
+          });
+        } catch (err) {
+          console.error('Calculator email webhook error:', err);
+        }
+      } else {
+        // No webhook configured — short artificial delay so UI feels real.
+        await new Promise((r) => setTimeout(r, 600));
+      }
+
+      // Always show success — the form is a low-stakes lead capture.
+      emailForm.style.display = 'none';
+      emailSuccess.classList.add('show');
+      emailBtn.disabled = false;
+      emailBtn.textContent = originalLabel;
+    });
+
+    // Clear invalid state on edit
+    emailInput.addEventListener('input', () => {
+      if (emailInput.classList.contains('invalid')) {
+        emailInput.classList.remove('invalid');
+      }
+    });
+  }
+})();

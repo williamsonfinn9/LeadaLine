@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal — LeadaLine</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --n: #050B1A; --n2: #0A1628; --n3: #0F1F36;
+      --cy: #18D7FF; --bl: #2563FF; --vi: #7C5CFF;
+      --sl: #94A3B8; --sl2: #64748B; --wh: #F8FAFC;
+      --gr: #10B981; --rd: #EF4444;
+      --bo: rgba(148,163,184,.10); --bo2: rgba(148,163,184,.20);
+      --grad: linear-gradient(90deg,#18D7FF,#2563FF,#7C5CFF);
+      --grad135: linear-gradient(135deg,#18D7FF,#2563FF,#7C5CFF);
+    }
+    html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--n); color: var(--wh); -webkit-font-smoothing: antialiased; }
+
+    .page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; position: relative; }
+    .page::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(37,99,255,.07) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124,92,255,.05) 0%, transparent 70%);
+    }
+    .card { background: var(--n2); border: 1px solid var(--bo2); border-radius: 20px; width: 100%; max-width: 380px; padding: 40px 36px; position: relative; box-shadow: 0 32px 80px rgba(0,0,0,.45); }
+
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--n3); border: 1px solid var(--bo2); border-radius: 99px; padding: 5px 14px; font-size: 11px; color: var(--sl); margin-bottom: 24px; }
+    .logo { font-size: 26px; font-weight: 500; letter-spacing: -.5px; margin-bottom: 4px; }
+    .logo .g { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .sub { font-size: 13px; color: var(--sl); margin-bottom: 28px; line-height: 1.5; }
+
+    .err-box { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #FCA5A5; margin-bottom: 14px; display: none; }
+    .ok-box  { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #34D399; margin-bottom: 14px; display: none; }
+
+    label { display: block; font-size: 11px; color: var(--sl); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; font-weight: 500; }
+    input[type=email], input[type=password], input[type=text] {
+      display: block; width: 100%; background: var(--n3); border: 1px solid var(--bo2);
+      border-radius: 8px; padding: 11px 14px; font-size: 13px; color: var(--wh);
+      outline: none; margin-bottom: 16px; transition: border-color .2s; font-family: inherit;
+    }
+    input:focus { border-color: rgba(37,99,255,.5); }
+    input::placeholder { color: var(--sl2); }
+
+    .btn-primary { display: block; width: 100%; padding: 12px; border-radius: 8px; background: var(--grad135); border: none; color: var(--wh); font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity .15s; font-family: inherit; margin-bottom: 16px; }
+    .btn-primary:hover { opacity: .88; }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+
+    .link-btn { display: block; text-align: center; font-size: 12px; color: var(--sl); text-decoration: none; cursor: pointer; margin-bottom: 24px; background: none; border: none; font-family: inherit; transition: color .15s; width: 100%; }
+    .link-btn:hover { color: var(--cy); }
+
+    .divider { height: 1px; background: var(--bo); margin-bottom: 20px; }
+    .support { text-align: center; font-size: 12px; color: var(--sl2); }
+    .support a { color: var(--cy); text-decoration: none; }
+    .support a:hover { text-decoration: underline; }
+
+    .wordmark { margin-top: 24px; font-size: 11px; color: var(--sl2); letter-spacing: .02em; }
+    .back-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: none; color: var(--cy); cursor: pointer; font-size: 12px; padding: 0; margin-bottom: 20px; font-family: inherit; transition: opacity .15s; }
+    .back-btn:hover { opacity: .7; }
+
+    .reset-sec { display: none; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="badge"><i class="ti ti-lock" style="font-size:12px"></i>Secure client portal</div>
+
+      <!-- ── LOGIN ── -->
+      <div id="loginSec">
+        <div class="logo">Leada<span class="g">Line</span></div>
+        <p class="sub">Sign in to your lead dashboard</p>
+        <div class="err-box" id="loginErr"></div>
+        <label>Email address</label>
+        <input type="email" id="emailIn" placeholder="you@business.com" autocomplete="email">
+        <label>Password</label>
+        <input type="password" id="passIn" placeholder="••••••••" autocomplete="current-password">
+        <button class="btn-primary" id="loginBtn">Sign in →</button>
+        <button class="link-btn" id="forgotBtn">Forgot your password?</button>
+        <div class="divider"></div>
+        <div class="support">Need help? <a href="mailto:hello@leadaline.com">Contact LeadaLine</a></div>
+      </div>
+
+      <!-- ── RESET PASSWORD ── -->
+      <div class="reset-sec" id="resetSec">
+        <button class="back-btn" id="backBtn"><i class="ti ti-arrow-left" style="font-size:12px"></i>Back to sign in</button>
+        <div class="logo" style="font-size:22px;margin-bottom:4px">Reset password</div>
+        <p class="sub">Enter your email and we'll send a reset link.</p>
+        <div class="ok-box" id="resetOk"></div>
+        <div class="err-box" id="resetErr"></div>
+        <label>Email address</label>
+        <input type="email" id="resetEmailIn" placeholder="you@business.com" autocomplete="email">
+        <button class="btn-primary" id="resetBtn">Send reset link</button>
+        <div class="divider"></div>
+        <div class="support">Need help? <a href="mailto:hello@leadaline.com">Contact LeadaLine</a></div>
+      </div>
+    </div>
+    <div class="wordmark">Powered by LeadaLine</div>
+  </div>
+
+  <script>
+    const SB = supabase.createClient(
+      'https://icshqgpsehddcqwydjxc.supabase.co',
+      'sb_publishable_aa8fqwwYknRkngrnmsFUHw_kM47_zOu'
+    );
+
+    // ── Redirect if already logged in ──
+    SB.auth.getSession().then(({ data }) => {
+      if (data.session) window.location.replace('portal/');
+    });
+
+    // ── Login ──
+    async function doLogin() {
+      const email = document.getElementById('emailIn').value.trim();
+      const pass  = document.getElementById('passIn').value;
+      const err   = document.getElementById('loginErr');
+      const btn   = document.getElementById('loginBtn');
+
+      err.style.display = 'none';
+      if (!email || !pass) {
+        err.textContent = 'Please enter your email and password.';
+        err.style.display = 'block';
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+
+      const { error } = await SB.auth.signInWithPassword({ email, password: pass });
+      if (error) {
+        err.textContent = error.message === 'Invalid login credentials'
+          ? 'Incorrect email or password. Please try again.'
+          : error.message;
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Sign in →';
+        return;
+      }
+      btn.textContent = 'Redirecting…';
+      window.location.replace('portal/');
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', doLogin);
+    ['passIn','emailIn'].forEach(id =>
+      document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); })
+    );
+
+    // ── Toggle reset form ──
+    document.getElementById('forgotBtn').addEventListener('click', () => {
+      document.getElementById('loginSec').style.display = 'none';
+      document.getElementById('resetSec').style.display = 'block';
+    });
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.getElementById('loginSec').style.display = 'block';
+      document.getElementById('resetSec').style.display = 'none';
+    });
+
+    // ── Send reset link ──
+    document.getElementById('resetBtn').addEventListener('click', async () => {
+      const email = document.getElementById('resetEmailIn').value.trim();
+      const ok  = document.getElementById('resetOk');
+      const err = document.getElementById('resetErr');
+      const btn = document.getElementById('resetBtn');
+      ok.style.display = err.style.display = 'none';
+      if (!email) { err.textContent = 'Please enter your email.'; err.style.display = 'block'; return; }
+      btn.disabled = true; btn.textContent = 'Sending…';
+      const { error } = await SB.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/portal/'
+      });
+      if (error) { err.textContent = error.message; err.style.display = 'block'; }
+      else { ok.textContent = 'Reset link sent — check your inbox.'; ok.style.display = 'block'; }
+      btn.disabled = false; btn.textContent = 'Send reset link';
+    });
+  </script>
+</body>
+</html>

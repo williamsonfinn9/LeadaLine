@@ -1,0 +1,63 @@
+export default async function handler(req, res) {
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { action, token, to, subject, body } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ ok: false, error: 'Missing token' });
+    }
+
+    if (action === 'verify') {
+      const r = await fetch('https://www.googleapis.com/gmail/v1/users/me/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await r.json();
+      return res.status(r.ok ? 200 : 401).json({ ok: r.ok, ...data });
+    }
+
+    if (action === 'send') {
+      if (!to || !subject || !body) {
+        return res.status(400).json({ ok: false, error: 'Missing fields: to, subject, body required' });
+      }
+
+      const msg = [
+        `From: Finn Williamson <finn@leadaline.com>`,
+        `To: ${to}`,
+        `Subject: ${subject}`,
+        `Content-Type: text/plain; charset=utf-8`,
+        ``,
+        body
+      ].join('\r\n');
+
+      const encoded = Buffer.from(msg)
+        .toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+
+      const r = await fetch('https://www.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ raw: encoded })
+      });
+
+      const data = await r.json();
+      return res.status(r.ok ? 200 : r.status).json({ ok: r.ok, ...data });
+    }
+
+    return res.status(400).json({ ok: false, error: 'Unknown action' });
+  } catch (err) {
+    console.error('gmail-send error:', err);
+    return res.status(500).json({ ok: false, error: err.message });
+  }
+}

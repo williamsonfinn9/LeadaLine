@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadaLine — Client Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --n:#050B1A;--n2:#0A1628;--n3:#0F1F36;--n4:#162840;
+  --cy:#18D7FF;--bl:#2563FF;--vi:#7C5CFF;
+  --sl:#94A3B8;--sl2:#64748B;--wh:#F8FAFC;
+  --gr:#10B981;--rd:#EF4444;--am:#F59E0B;
+  --bo:rgba(148,163,184,0.10);--bo2:rgba(148,163,184,0.18);
+  --grad:linear-gradient(90deg,#18D7FF,#2563FF,#7C5CFF);
+  --grad135:linear-gradient(135deg,#18D7FF,#2563FF,#7C5CFF);
+  --brand-primary:#2563FF;--brand-accent:#18D7FF;
+  --sw:220px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--n);color:var(--wh);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+button,input,select,textarea{font-family:'DM Sans',sans-serif}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:var(--n);display:flex;align-items:center;justify-content:center;padding:20px;z-index:500;animation:fadein .3s ease}
+.lc{background:var(--n2);border:1px solid var(--bo2);border-radius:16px;width:100%;max-width:380px;padding:36px 32px}
+.lc-logo{font-size:22px;font-weight:600;letter-spacing:-0.4px;margin-bottom:3px}
+.lc-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lc-sub{font-size:13px;color:var(--sl);margin-bottom:28px}
+.lf{font-size:10px;color:var(--sl);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;margin-top:14px}
+.lf:first-of-type{margin-top:0}
+.li{width:100%;background:var(--n3);border:1px solid var(--bo2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--wh);outline:none;transition:border-color .2s;margin-bottom:4px}
+.li:focus{border-color:rgba(37,99,255,0.5)}
+.lb{width:100%;padding:11px;border-radius:8px;background:var(--grad135);border:none;color:var(--wh);font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;margin-top:16px}
+.lb:hover{opacity:.88}
+.lb:disabled{opacity:.5;cursor:not-allowed}
+.le{font-size:12px;color:#FCA5A5;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:10px 12px;margin-bottom:10px;display:none}
+.lc-foot{font-size:11px;color:var(--sl2);text-align:center;margin-top:18px}
+.lc-foot a{color:var(--cy);text-decoration:none}
+
+/* ── SHELL ── */
+#appScreen{display:none;height:100vh;overflow:hidden}
+.shell{display:grid;grid-template-columns:var(--sw) 1fr;height:100vh}
+
+/* ── SIDEBAR ── */
+.sb{background:var(--n2);border-right:1px solid var(--bo);display:flex;flex-direction:column;overflow:hidden}
+.sb-logo{padding:16px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px}
+.sb-mark{width:32px;height:32px;border-radius:8px;background:var(--grad135);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--wh);flex-shrink:0}
+.sb-name{font-size:13px;font-weight:500;letter-spacing:-0.3px}
+.sb-name span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-biz{font-size:10px;color:var(--sl2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.sb-body{flex:1;overflow-y:auto;padding:8px}
+.sb-sec{font-size:9px;font-weight:500;color:var(--sl2);letter-spacing:.12em;text-transform:uppercase;padding:10px 10px 4px;font-family:'DM Mono',monospace}
+.si{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;font-size:12px;cursor:pointer;color:var(--sl);background:transparent;border:none;width:100%;text-align:left;transition:all .15s;margin-bottom:1px;position:relative}
+.si:hover{color:var(--wh);background:var(--bo)}
+.si.active{background:rgba(24,215,255,0.07);color:var(--cy)}
+.si.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:14px;width:2px;background:var(--brand-accent,var(--cy));border-radius:0 2px 2px 0}
+.si i{font-size:15px;width:16px;text-align:center;flex-shrink:0}
+.si-ct{font-size:10px;padding:1px 6px;border-radius:99px;background:rgba(239,68,68,0.15);color:#FCA5A5;flex-shrink:0;margin-left:auto}
+.si-ct.blue{background:rgba(37,99,255,0.15);color:#93C5FD}
+.sb-foot{border-top:1px solid var(--bo);padding:12px 14px}
+.sb-user{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sb-av{width:28px;height:28px;border-radius:50%;background:var(--grad135);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--wh);flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-urole{font-size:10px;color:var(--sl2)}
+.sb-logout{width:100%;padding:7px;border-radius:7px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#FCA5A5;font-size:11px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.sb-logout:hover{background:rgba(239,68,68,0.15)}
+.sb-help{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:7px;font-size:11px;color:var(--sl2);text-decoration:none;transition:all .15s;margin-bottom:6px}
+.sb-help:hover{color:var(--wh);background:var(--bo)}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:50px;background:var(--n2);border-bottom:1px solid var(--bo);display:flex;align-items:center;padding:0 20px;gap:8px;flex-shrink:0}
+.tb-title{font-size:14px;font-weight:500}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.tb-live{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--cy);font-family:'DM Mono',monospace}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--cy);animation:pulse 2s infinite}
+.pages{flex:1;overflow-y:auto;padding:20px}
+.page{display:none;animation:fadein .2s ease}
+.page.active{display:block}
+
+/* ── METRICS ── */
+.mg{display:grid;gap:10px;margin-bottom:14px}
+.m4{grid-template-columns:repeat(4,1fr)}
+.m3{grid-template-columns:repeat(3,1fr)}
+.mc{background:var(--n3);border:1px solid var(--bo);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden}
+.mc.hl::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--brand-primary),var(--brand-accent))}
+.mc-l{font-size:10px;color:var(--sl);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.mc-v{font-size:22px;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.mc-s{font-size:10px;color:var(--sl);margin-top:3px}
+
+/* ── CARDS ── */
+.card{background:var(--n3);border:1px solid var(--bo);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-t{font-size:13px;font-weight:500}
+
+/* ── BUTTONS ── */
+.btn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--bo2);background:transparent;color:var(--sl);transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{border-color:var(--cy);color:var(--cy)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-p{background:var(--grad135);border:none;color:var(--wh)}
+.btn-p:hover{opacity:.88}
+.btn-gr{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:#34D399}
+.btn-am{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#FCD34D}
+
+/* ── PILLS ── */
+.pill{font-size:10px;font-weight:500;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.p-new{background:rgba(37,99,255,0.15);color:#93C5FD}
+.p-contacted{background:rgba(124,92,255,0.15);color:#C4B5FD}
+.p-quoted{background:rgba(24,215,255,0.1);color:var(--cy)}
+.p-booked{background:rgba(16,185,129,0.15);color:#6EE7B7}
+.p-won{background:rgba(16,185,129,0.2);color:#34D399}
+.p-lost{background:rgba(239,68,68,0.12);color:#FCA5A5}
+.p-active{background:rgba(16,185,129,0.15);color:#34D399}
+.p-inactive{background:rgba(148,163,184,0.1);color:var(--sl)}
+
+/* ── TABLE ── */
+.tbl{background:var(--n3);border:1px solid var(--bo);border-radius:10px;overflow:hidden;margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:500;color:var(--sl2);letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid var(--bo);background:rgba(0,0,0,.06)}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--bo);font-size:12px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover td{background:rgba(255,255,255,.02)}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
+.u-High{color:#FCA5A5;font-weight:500}
+.u-Medium{color:#FCD34D}
+.u-Low,.u-Normal{color:var(--sl)}
+.vbtn{padding:4px 9px;border-radius:5px;font-size:10px;border:1px solid var(--bo2);background:transparent;color:var(--sl);cursor:pointer;transition:all .15s}
+.vbtn:hover{border-color:var(--cy);color:var(--cy)}
+.empty{text-align:center;padding:36px 20px;color:var(--sl);font-size:12px}
+.empty i{font-size:28px;display:block;margin-bottom:8px;opacity:.4}
+
+/* ── PIPELINE BAR ── */
+.pipe-bar{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:2px;margin-bottom:8px}
+.pipe-seg{border-radius:3px;transition:flex .4s}
+.pipe-legend{display:flex;gap:12px;flex-wrap:wrap}
+.pipe-dot{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--sl)}
+.pipe-c{width:6px;height:6px;border-radius:2px}
+
+/* ── INPUTS ── */
+.finput{background:var(--n4);border:1px solid var(--bo2);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--wh);outline:none;transition:border-color .2s;width:100%}
+.finput:focus{border-color:rgba(37,99,255,.5)}
+.finput::placeholder{color:var(--sl2)}
+.fsel{background:var(--n4);border:1px solid var(--bo2);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--wh);outline:none;cursor:pointer;appearance:none;width:100%}
+.fta{background:var(--n4);border:1px solid var(--bo2);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--wh);resize:none;height:70px;outline:none;width:100%;transition:border-color .2s}
+.fta:focus{border-color:rgba(37,99,255,.5)}
+.flbl{font-size:10px;color:var(--sl);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block;font-family:'DM Mono',monospace}
+
+/* ── MODAL ── */
+.modal-bd{display:none;position:fixed;inset:0;background:rgba(5,11,26,.88);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px}
+.modal-bd.open{display:flex}
+.modal{background:var(--n2);border:1px solid var(--bo2);border-radius:13px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5);animation:fadein .2s ease}
+.mh{padding:15px 18px 12px;border-bottom:1px solid var(--bo);display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:var(--n2);z-index:2}
+.mt{font-size:14px;font-weight:500}
+.ms{font-size:11px;color:var(--sl);margin-top:2px}
+.mx{background:transparent;border:none;color:var(--sl);cursor:pointer;font-size:18px;line-height:1}
+.mx:hover{color:var(--wh)}
+.mb{padding:15px 18px}
+.mf{padding:10px 18px;border-top:1px solid var(--bo);display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+
+/* ── LEAD DETAIL SECTIONS ── */
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.df{background:var(--n3);border-radius:7px;padding:9px 11px}
+.dl{font-size:9px;color:var(--sl2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.dv{font-size:12px}
+.dv a{color:var(--cy);text-decoration:none}
+.ai-box{background:rgba(37,99,255,0.07);border:1px solid rgba(37,99,255,0.18);border-radius:8px;padding:11px 13px;margin-bottom:10px}
+.ai-lbl{font-size:9px;color:var(--cy);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.ai-txt{font-size:11px;color:var(--sl);line-height:1.65}
+.nx-box{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18);border-radius:8px;padding:9px 11px;margin-bottom:12px}
+.nx-lbl{font-size:9px;color:#34D399;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.nx-txt{font-size:11px;color:var(--sl);line-height:1.6}
+.tl-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--bo);font-size:11px}
+.tl-item:last-child{border-bottom:none}
+.tl-dot{width:6px;height:6px;border-radius:50%;background:var(--cy);flex-shrink:0;margin-top:4px}
+.tl-time{color:var(--sl2);flex-shrink:0;font-family:'DM Mono',monospace;font-size:10px}
+
+/* ── EMPLOYEE CARDS ── */
+.emp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.emp-card{background:var(--n4);border:1px solid var(--bo);border-radius:9px;padding:12px;position:relative;overflow:hidden}
+.emp-card.active-emp{border-color:rgba(16,185,129,0.25)}
+.emp-card.active-emp::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gr)}
+.emp-card.inactive-emp{opacity:.5}
+.emp-icon{font-size:20px;margin-bottom:7px}
+.emp-name{font-size:12px;font-weight:500;margin-bottom:3px}
+.emp-desc{font-size:10px;color:var(--sl);line-height:1.5}
+.emp-status{display:flex;align-items:center;gap:5px;margin-top:7px;font-size:10px}
+.emp-dot{width:5px;height:5px;border-radius:50%}
+
+/* ── REPORTS ── */
+.report-card{background:var(--n4);border:1px solid var(--bo);border-radius:9px;padding:14px;margin-bottom:8px}
+.report-week{font-size:11px;color:var(--sl2);margin-bottom:4px;font-family:'DM Mono',monospace}
+.report-summary{font-size:12px;color:var(--sl);line-height:1.65;margin-top:8px}
+.report-stats{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.rs{font-size:11px;color:var(--sl)}
+.rs strong{color:var(--wh)}
+
+/* ── ACCOUNT ── */
+.acc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bo);font-size:12px}
+.acc-row:last-child{border-bottom:none}
+.acc-lbl{color:var(--sl);font-size:11px}
+.acc-val{font-weight:500;text-align:right}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:18px;right:18px;background:var(--n3);border:1px solid rgba(16,185,129,.3);border-radius:9px;padding:9px 14px;font-size:12px;color:var(--wh);z-index:600;display:flex;align-items:center;gap:7px;box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(60px);opacity:0;transition:all .3s;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{border-color:rgba(239,68,68,.3)}
+
+/* ── LOADING ── */
+.loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--sl);gap:8px;font-size:12px}
+.spin{animation:spin .8s linear infinite;display:inline-block}
+
+/* ── MOBILE ── */
+@media(max-width:700px){
+  .shell{grid-template-columns:1fr}
+  .sb{display:none}
+  .m4{grid-template-columns:repeat(2,1fr)}
+  .m3{grid-template-columns:repeat(2,1fr)}
+  .dg{grid-template-columns:1fr}
+  .emp-grid{grid-template-columns:1fr}
+  .modal{max-width:100%;border-radius:13px 13px 0 0;position:fixed;bottom:0;left:0;right:0;max-height:85vh}
+  .modal-bd.open{align-items:flex-end;padding:0}
+}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:2px}
+</style>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="lc">
+    <div class="lc-logo">Leada<span>Line</span></div>
+    <div class="lc-sub">Sign in to your AI Office Team portal</div>
+    <div class="le" id="loginErr"></div>
+    <div class="lf">Email address</div>
+    <input class="li" type="email" id="loginEmail" placeholder="you@yourbusiness.co.uk" autocomplete="email">
+    <div class="lf">Password</div>
+    <input class="li" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    <button class="lb" id="loginBtn" onclick="doLogin()">Sign in to my portal →</button>
+    <div class="lc-foot">Need help logging in? <a href="mailto:admin@leadaline.com">Contact LeadaLine</a></div>
+  </div>
+</div>
+
+<!-- ══ LEAD MODAL ══ -->
+<div class="modal-bd" id="leadModal" onclick="if(event.target===this)closeLead()">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mt" id="lmName">Lead</div><div class="ms" id="lmSvc"></div></div>
+      <button class="mx" onclick="closeLead()">&#x2715;</button>
+    </div>
+    <div class="mb">
+      <div class="dg" id="lmGrid"></div>
+      <div class="ai-box"><div class="ai-lbl"><i class="ti ti-sparkles" style="font-size:10px" aria-hidden="true"></i>AI Sales Assistant — Summary</div><div class="ai-txt" id="lmAi">No summary available.</div></div>
+      <div class="nx-box"><div class="nx-lbl"><i class="ti ti-arrow-right" style="font-size:10px" aria-hidden="true"></i>Recommended next action</div><div class="nx-txt" id="lmNx">—</div></div>
+      <div id="lmTimeline" style="margin-bottom:12px"></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><label class="flbl">Update status</label><select class="fsel" id="lmStatus"><option value="new">New</option><option value="contacted">Contacted</option><option value="quoted">Quoted</option><option value="booked">Booked</option><option value="won">Won</option><option value="lost">Lost</option></select></div>
+        <div><label class="flbl">Add note</label><textarea class="fta" id="lmNote" placeholder="Add a note about this lead…"></textarea></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeLead()">Close</button>
+      <button class="btn btn-am" onclick="openReviewFromLead()"><i class="ti ti-star" aria-hidden="true"></i>Review</button>
+      <button class="btn btn-gr" onclick="openBookingFromLead()"><i class="ti ti-calendar" aria-hidden="true"></i>Book</button>
+      <button class="btn btn-p" id="lmSaveBtn" onclick="saveLead()"><i class="ti ti-check" aria-hidden="true"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="modal-bd" id="bookingModal" onclick="if(event.target===this)closeBooking()">
+  <div class="modal" style="max-width:440px">
+    <div class="mh">
+      <div><div class="mt">Book appointment</div><div class="ms" id="bkSvc"></div></div>
+      <button class="mx" onclick="closeBooking()">&#x2715;</button>
+    </div>
+    <div class="mb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><label class="flbl">Date</label><input type="date" id="bkDate" class="finput"></div>
+        <div><label class="flbl">Time</label><input type="time" id="bkTime" class="finput"></div>
+      </div>
+      <div style="margin-bottom:10px"><label class="flbl">Location / postcode</label><input class="finput" id="bkLocation" placeholder="14 High Street, RH4 1BT"></div>
+      <div><label class="flbl">Job notes</label><textarea class="fta" id="bkNotes" placeholder="Access details, special instructions…"></textarea></div>
+      <div id="bkMsg" style="margin-top:8px"></div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeBooking()">Cancel</button>
+      <button class="btn btn-p" id="bkBtn" onclick="confirmBooking()"><i class="ti ti-calendar-check" aria-hidden="true"></i>Confirm booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REVIEW MODAL ══ -->
+<div class="modal-bd" id="reviewModal" onclick="if(event.target===this)closeReview()">
+  <div class="modal" style="max-width:400px">
+    <div class="mh">
+      <div><div class="mt">Request Google review</div><div class="ms" id="rvSvc"></div></div>
+      <button class="mx" onclick="closeReview()">&#x2715;</button>
+    </div>
+    <div class="mb">
+      <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 12px;font-size:12px;color:#FCD34D;margin-bottom:12px;line-height:1.6">
+        <i class="ti ti-info-circle" aria-hidden="true"></i> An SMS will be sent to this customer in 24 hours asking for a Google review.
+      </div>
+      <label class="flbl">Your Google review URL</label>
+      <input class="finput" id="rvUrl" placeholder="https://g.page/r/your-business/review">
+      <div style="font-size:10px;color:var(--sl2);margin-top:5px">Find this in Google Business Profile → Get more reviews</div>
+      <div id="rvMsg" style="margin-top:8px"></div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="closeReview()">Cancel</button>
+      <button class="btn btn-p" id="rvBtn" onclick="sendReview()"><i class="ti ti-send" aria-hidden="true"></i>Send request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP SHELL ══ -->
+<div id="appScreen">
+  <div class="shell">
+    <aside class="sb">
+      <div class="sb-logo">
+        <div class="sb-mark" id="sbMark">LL</div>
+        <div style="min-width:0">
+          <div class="sb-name">Leada<span>Line</span></div>
+          <div class="sb-biz" id="sbBiz">Loading…</div>
+        </div>
+      </div>
+      <div class="sb-body">
+        <div class="sb-sec">My portal</div>
+        <button class="si active" data-page="dashboard" onclick="goPage('dashboard',this)"><i class="ti ti-home-2" aria-hidden="true"></i>Dashboard<span class="si-ct blue" id="sbNew">0</span></button>
+        <button class="si" data-page="leads" onclick="goPage('leads',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>My leads<span class="si-ct" id="sbTotal">0</span></button>
+        <div class="sb-sec">My team</div>
+        <button class="si" data-page="team" onclick="goPage('team',this)"><i class="ti ti-users" aria-hidden="true"></i>AI Office Team</button>
+        <button class="si" data-page="reports" onclick="goPage('reports',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i>Reports</button>
+        <div class="sb-sec">Account</div>
+        <button class="si" data-page="account" onclick="goPage('account',this)"><i class="ti ti-settings" aria-hidden="true"></i>Account &amp; plan</button>
+      </div>
+      <div class="sb-foot">
+        <a href="mailto:admin@leadaline.com" class="sb-help"><i class="ti ti-headset" aria-hidden="true"></i>Need help? Contact LeadaLine</a>
+        <div class="sb-user">
+          <div class="sb-av" id="sbAv">—</div>
+          <div style="min-width:0"><div class="sb-uname" id="sbUname">—</div><div class="sb-urole">Client portal</div></div>
+        </div>
+        <button class="sb-logout" onclick="doLogout()"><i class="ti ti-logout" aria-hidden="true"></i>Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <span class="tb-title" id="tbTitle">Dashboard</span>
+        <div class="tb-right">
+          <div class="tb-live"><div class="tb-dot"></div>Live data</div>
+          <button class="btn" onclick="loadAll()" style="font-size:11px"><i class="ti ti-refresh" aria-hidden="true"></i></button>
+          <button class="btn btn-p" onclick="exportCsv()" style="font-size:11px"><i class="ti ti-download" aria-hidden="true"></i>Export</button>
+        </div>
+      </div>
+
+      <div class="pages">
+
+        <!-- DASHBOARD -->
+        <div class="page active" id="page-dashboard">
+          <div class="mg m4">
+            <div class="mc hl"><div class="mc-l"><i class="ti ti-users" style="font-size:11px" aria-hidden="true"></i>Total leads</div><div class="mc-v" id="dTotal">—</div></div>
+            <div class="mc"><div class="mc-l"><i class="ti ti-inbox" style="font-size:11px" aria-hidden="true"></i>New</div><div class="mc-v" id="dNew" style="color:#93C5FD">—</div></div>
+            <div class="mc"><div class="mc-l"><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i>Won</div><div class="mc-v" id="dWon" style="color:#34D399">—</div></div>
+            <div class="mc"><div class="mc-l"><i class="ti ti-alert-triangle" style="font-size:11px" aria-hidden="true"></i>High urgency</div><div class="mc-v" id="dUrgent" style="color:#FCA5A5">—</div></div>
+          </div>
+          <div class="card" style="padding:11px 14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><span style="font-size:11px;color:var(--sl)">Pipeline</span></div>
+            <div class="pipe-bar" id="dPipe"></div>
+            <div class="pipe-legend" id="dLegend"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="card">
+              <div class="card-h"><span class="card-t">Recent leads</span><button class="btn" onclick="goPage('leads',document.querySelector('[data-page=leads]'))" style="font-size:11px">All leads →</button></div>
+              <div id="dRecent"><div class="loader"><span class="spin">⟳</span>Loading…</div></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><span class="card-t">This week</span></div>
+              <div id="dWeek"><div class="loader"><span class="spin">⟳</span>Loading…</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEADS -->
+        <div class="page" id="page-leads">
+          <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+            <input class="finput" id="srch" placeholder="Search leads…" oninput="renderLeads()" style="max-width:170px;padding:6px 10px;font-size:11px">
+            <button class="btn" style="font-size:11px" onclick="setFilter('all')">All</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('new')">New</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('contacted')">Contacted</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('quoted')">Quoted</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('booked')">Booked</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('won')">Won</button>
+            <button class="btn" style="font-size:11px" onclick="setFilter('lost')">Lost</button>
+            <button class="btn btn-p" onclick="exportCsv()" style="font-size:11px;margin-left:auto"><i class="ti ti-download" aria-hidden="true"></i>Export CSV</button>
+          </div>
+          <div class="tbl">
+            <table><thead><tr>
+              <th style="width:22%">Customer</th><th style="width:20%">Service</th>
+              <th style="width:10%">Urgency</th><th style="width:11%">Status</th>
+              <th style="width:11%">Follow-ups</th><th style="width:10%">Date</th>
+              <th style="width:16%;text-align:right">Action</th>
+            </tr></thead>
+            <tbody id="leadsBody"></tbody></table>
+          </div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="page" id="page-team">
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-h"><span class="card-t">Your AI Office Team</span></div>
+            <p style="font-size:12px;color:var(--sl);margin-bottom:14px;line-height:1.65">These are the AI employees working inside your business. Active employees are running 24/7 on your behalf.</p>
+            <div class="emp-grid" id="empGrid"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="card-t">Recent team activity</span></div>
+            <div id="teamActivity"><div class="loader"><span class="spin">⟳</span>Loading…</div></div>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="page" id="page-reports">
+          <div class="mg m3" style="margin-bottom:14px">
+            <div class="mc hl"><div class="mc-l">This week</div><div class="mc-v" id="rWeek">—</div><div class="mc-s">leads</div></div>
+            <div class="mc"><div class="mc-l">This month</div><div class="mc-v" id="rMonth">—</div><div class="mc-s">leads</div></div>
+            <div class="mc"><div class="mc-l">Won jobs</div><div class="mc-v" id="rWon" style="color:#34D399">—</div></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="card-t">Weekly reports</span><span style="font-size:11px;color:var(--sl)">Sent every Monday 8am</span></div>
+            <div id="reportsList"><div class="loader"><span class="spin">⟳</span>Loading…</div></div>
+          </div>
+        </div>
+
+        <!-- ACCOUNT -->
+        <div class="page" id="page-account">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="card">
+              <div class="card-h"><span class="card-t">Business details</span></div>
+              <div id="accDetails"><div class="loader"><span class="spin">⟳</span>Loading…</div></div>
+            </div>
+            <div class="card">
+              <div class="card-h"><span class="card-t">Notification settings</span></div>
+              <div style="margin-bottom:10px"><label class="flbl">Notification phone</label><input class="finput" id="accPhone" placeholder="+44 7700 900000" style="margin-bottom:8px"><button class="btn btn-p" onclick="savePhone()" style="font-size:11px;width:100%"><i class="ti ti-check" aria-hidden="true"></i>Save phone number</button></div>
+              <div><label class="flbl">Notification type</label>
+                <select class="fsel" id="accNotif">
+                  <option value="sms">SMS</option><option value="whatsapp">WhatsApp</option><option value="email">Email only</option>
+                </select>
+                <button class="btn btn-p" onclick="saveNotif()" style="font-size:11px;width:100%;margin-top:8px"><i class="ti ti-check" aria-hidden="true"></i>Save preference</button>
+              </div>
+              <div id="accMsg" style="margin-top:8px"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-h"><span class="card-t">Support</span></div>
+            <p style="font-size:12px;color:var(--sl);margin-bottom:14px;line-height:1.65">Our team is here to help with anything about your AI Office Team — adding new employees, adjusting scripts, or any technical queries.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <a href="mailto:admin@leadaline.com" class="btn btn-p" style="text-decoration:none"><i class="ti ti-mail" aria-hidden="true"></i>Email LeadaLine</a>
+              <a href="https://leadaline.com" target="_blank" class="btn" style="text-decoration:none"><i class="ti ti-world" aria-hidden="true"></i>leadaline.com</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i id="toastIcon" class="ti ti-check" aria-hidden="true"></i><span id="toastMsg"></span></div>
+
+<script>
+const SB_URL='https://icshqgpsehddcqwydjxc.supabase.co';
+const SB_KEY='sb_publishable_aa8fqwwYknRkngrnmsFUHw_kM47_zOu';
+const {createClient}=supabase;
+const sb=createClient(SB_URL,SB_KEY);
+
+const PIPE_C={new:'#3B82F6',contacted:'#8B5CF6',quoted:'#18D7FF',booked:'#10B981',won:'#34D399',lost:'#EF4444'};
+const AVC=[['rgba(37,99,255,0.22)','#93C5FD'],['rgba(124,92,255,0.22)','#C4B5FD'],['rgba(24,215,255,0.15)','#67E8F9'],['rgba(16,185,129,0.18)','#6EE7B7'],['rgba(239,68,68,0.18)','#FCA5A5'],['rgba(245,158,11,0.18)','#FCD34D']];
+const EMP_META={
+  receptionist:{name:'AI Receptionist',icon:'📞',desc:'Answers every call, web and WhatsApp enquiry 24/7. Captures all customer details and passes them to the Sales Assistant.',color:'#7C5CFF'},
+  sales:{name:'AI Sales Assistant',icon:'📊',desc:'Qualifies every lead using AI. Scores urgency, identifies the best action and summarises each enquiry for you.',color:'#2563FF'},
+  booking:{name:'AI Booking Assistant',icon:'📅',desc:'Books appointments directly from your CRM. Sends calendar invites and confirmation SMS to customers automatically.',color:'#10B981'},
+  followup:{name:'AI Follow-Up Assistant',icon:'🔔',desc:'Chases stale leads automatically. Sends up to 3 personalised follow-up messages. Notifies you if a lead goes cold.',color:'#F59E0B'},
+  admin:{name:'AI Admin Assistant',icon:'📋',desc:'Keeps your CRM updated after every event. Sends you lead notifications and processes your CONFIRM/DECLINE replies.',color:'#18D7FF'},
+  reporting:{name:'AI Reporting Assistant',icon:'📈',desc:'Sends you a personalised weekly report every Monday at 8am. Requests Google reviews after won jobs.',color:'#EF4444'}
+};
+
+let LEADS=[],CLIENT=null,USER=null,leadsFilter='all',activeLeadId=null,toastTimer;
+
+function ini(n){return(n||'?').split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase()}
+function avc(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xFFFF;return AVC[h%AVC.length]}
+function fmtD(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'—'}
+function fmtDShort(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—'}
+function since(d){if(!d)return'Never';const h=(Date.now()-new Date(d))/3600000;if(h<1)return'Just now';if(h<24)return Math.floor(h)+'h ago';return Math.floor(h/24)+'d ago'}
+function cap(s){return s?s[0].toUpperCase()+s.slice(1).replace(/_/g,' '):'—'}
+
+// ── LOGIN ──────────────────────────────────────────────────────────────
+document.getElementById('loginEmail').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginPass').focus()});
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('loginErr');
+  const btn=document.getElementById('loginBtn');
+  if(!email||!pass){err.textContent='Please enter your email and password';err.style.display='block';return}
+  btn.disabled=true;btn.textContent='Signing in…';err.style.display='none';
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){
+    err.textContent=error.message==='Invalid login credentials'?'Incorrect email or password. Please try again.':error.message;
+    err.style.display='block';btn.disabled=false;btn.textContent='Sign in to my portal →';return;
+  }
+  await bootPortal(data.user);
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginPass').value='';
+  CLIENT=null;USER=null;LEADS=[];
+}
+
+// ── BOOT ───────────────────────────────────────────────────────────────
+async function bootPortal(user){
+  USER=user;
+  // Get client_id via client_users (RLS ensures they only see their own row)
+  const{data:cu,error:cuErr}=await sb.from('client_users').select('client_id,role').eq('user_id',user.id).single();
+  if(cuErr||!cu){
+    await sb.auth.signOut();
+    document.getElementById('loginErr').textContent='No client account found for this user. Please contact LeadaLine.';
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('loginBtn').disabled=false;
+    document.getElementById('loginBtn').textContent='Sign in to my portal →';
+    return;
+  }
+  // Get client record (RLS scoped)
+  const{data:client}=await sb.from('clients').select('*').eq('id',cu.client_id).single();
+  if(!client){
+    document.getElementById('loginErr').textContent='Client record not found. Please contact LeadaLine.';
+    document.getElementById('loginErr').style.display='block';
+    return;
+  }
+  CLIENT=client;
+
+  // Apply brand colours
+  if(client.brand_primary)document.documentElement.style.setProperty('--brand-primary',client.brand_primary);
+  if(client.brand_accent)document.documentElement.style.setProperty('--brand-accent',client.brand_accent);
+
+  // Update sidebar
+  const biz=client.business_name;
+  document.getElementById('sbMark').textContent=ini(biz);
+  document.getElementById('sbBiz').textContent=biz;
+  document.getElementById('sbAv').textContent=ini(user.email);
+  document.getElementById('sbUname').textContent=client.owner_name||user.email;
+
+  // Show app
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+
+  await loadAll();
+}
+
+async function loadAll(){
+  if(!CLIENT)return;
+  // Leads — RLS ensures client_id match enforced at DB level
+  const{data:leads}=await sb.from('leads').select('*').eq('client_id',CLIENT.id).order('created_at',{ascending:false});
+  LEADS=leads||[];
+  updateSidebarCounts();
+  renderDashboard();
+  renderLeads();
+  renderTeam();
+  renderReports();
+  renderAccount();
+}
+
+function updateSidebarCounts(){
+  document.getElementById('sbTotal').textContent=LEADS.length;
+  document.getElementById('sbNew').textContent=LEADS.filter(l=>l.status==='new').length;
+}
+
+// ── NAV ────────────────────────────────────────────────────────────────
+const PAGE_TITLES={dashboard:'Dashboard',leads:'My Leads',team:'AI Office Team',reports:'Reports',account:'Account & Plan'};
+function goPage(p,btn){
+  document.querySelectorAll('.si').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('tbTitle').textContent=PAGE_TITLES[p]||p;
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────────────
+function renderDashboard(){
+  const now=Date.now();
+  const thisWeek=LEADS.filter(l=>now-new Date(l.created_at)<7*86400000);
+  document.getElementById('dTotal').textContent=LEADS.length;
+  document.getElementById('dNew').textContent=LEADS.filter(l=>l.status==='new').length;
+  document.getElementById('dWon').textContent=LEADS.filter(l=>l.status==='won').length;
+  document.getElementById('dUrgent').textContent=LEADS.filter(l=>l.urgency==='High').length;
+
+  // Pipeline bar
+  const statuses=['new','contacted','quoted','booked','won','lost'];
+  const counts={};statuses.forEach(s=>counts[s]=LEADS.filter(l=>l.status===s).length);
+  document.getElementById('dPipe').innerHTML=statuses.filter(s=>counts[s]>0).map(s=>`<div class="pipe-seg" style="flex:${counts[s]};background:${PIPE_C[s]}"></div>`).join('');
+  document.getElementById('dLegend').innerHTML=statuses.filter(s=>counts[s]>0).map(s=>`<div class="pipe-dot"><div class="pipe-c" style="background:${PIPE_C[s]}"></div>${cap(s)} ${counts[s]}</div>`).join('');
+
+  // Recent leads
+  document.getElementById('dRecent').innerHTML=LEADS.slice(0,5).map(l=>{
+    const[bg,fg]=avc(l.name);
+    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo);cursor:pointer" onclick="openLead('${l.id}')">
+      <div class="av" style="background:${bg};color:${fg};width:24px;height:24px;font-size:9px">${ini(l.name)}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.name}</div><div style="font-size:10px;color:var(--sl)">${l.service_required||'—'}</div></div>
+      <span class="pill p-${l.status||'new'}">${cap(l.status||'new')}</span>
+    </div>`;
+  }).join('')||'<div class="empty"><i class="ti ti-inbox" aria-hidden="true"></i>No leads yet</div>';
+
+  // This week stats
+  document.getElementById('dWeek').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--sl)">Leads received</span><strong>${thisWeek.length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--sl)">Won this week</span><strong style="color:#34D399">${thisWeek.filter(l=>l.status==='won').length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--sl)">Booked</span><strong style="color:#6EE7B7">${thisWeek.filter(l=>l.status==='booked').length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo);font-size:12px"><span style="color:var(--sl)">High urgency</span><strong style="color:#FCA5A5">${thisWeek.filter(l=>l.urgency==='High').length}</strong></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:12px"><span style="color:var(--sl)">Follow-ups sent</span><strong>${LEADS.reduce((s,l)=>s+(l.follow_up_count||0),0)}</strong></div>
+    </div>`;
+}
+
+// ── LEADS ──────────────────────────────────────────────────────────────
+function setFilter(f){leadsFilter=f;renderLeads()}
+function renderLeads(){
+  let leads=[...LEADS];
+  if(leadsFilter!=='all')leads=leads.filter(l=>l.status===leadsFilter);
+  const q=(document.getElementById('srch')||{}).value?.toLowerCase()||'';
+  if(q)leads=leads.filter(l=>(l.name+l.service_required+l.location+l.source+'').toLowerCase().includes(q));
+  const tbody=document.getElementById('leadsBody');
+  if(!leads.length){tbody.innerHTML=`<tr><td colspan="7"><div class="empty"><i class="ti ti-database-off" aria-hidden="true"></i>${leadsFilter==='all'?'No leads yet — your AI Receptionist will capture leads here':'No leads with this status'}</div></td></tr>`;return}
+  tbody.innerHTML=leads.map(l=>{
+    const[bg,fg]=avc(l.name);
+    return`<tr onclick="openLead('${l.id}')">
+      <td><div style="display:flex;align-items:center;gap:7px"><div class="av" style="background:${bg};color:${fg}">${ini(l.name)}</div><div><div style="font-size:12px;font-weight:500">${l.name}</div><div style="font-size:10px;color:var(--sl)">${l.location||'—'}</div></div></div></td>
+      <td style="font-size:11px;color:var(--sl)">${l.service_required||'—'}</td>
+      <td class="u-${l.urgency||'Low'}" style="font-size:11px">${l.urgency||'—'}</td>
+      <td><span class="pill p-${l.status||'new'}">${cap(l.status||'new')}</span></td>
+      <td style="font-size:11px;color:var(--sl);text-align:center">${l.follow_up_count||0}</td>
+      <td style="font-size:11px;color:var(--sl)">${fmtDShort(l.created_at)}</td>
+      <td style="text-align:right"><button class="vbtn" onclick="event.stopPropagation();openLead('${l.id}')">View →</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── LEAD MODAL ─────────────────────────────────────────────────────────
+async function openLead(id){
+  const l=LEADS.find(x=>x.id===id);if(!l)return;
+  activeLeadId=id;
+  document.getElementById('lmName').textContent=l.name;
+  document.getElementById('lmSvc').textContent=(l.service_required||'—')+' · '+(l.location||'—');
+  document.getElementById('lmGrid').innerHTML=[
+    ['Phone',l.phone?`<a href="tel:${l.phone}">${l.phone}</a>`:'-'],
+    ['Email',l.email?`<a href="mailto:${l.email}">${l.email}</a>`:'-'],
+    ['Urgency',`<span class="u-${l.urgency||'Low'}">${l.urgency||'—'}</span>`],
+    ['Source',l.source||'—'],
+    ['Date',fmtD(l.created_at)],
+    ['Follow-ups sent',l.follow_up_count||0],
+    ['Last contact',since(l.last_contact_at)],
+    ['Assigned to',l.assigned_employee||'AI Receptionist']
+  ].map(([k,v])=>`<div class="df"><div class="dl">${k}</div><div class="dv">${v}</div></div>`).join('');
+  document.getElementById('lmAi').textContent=l.conversation_summary||'No AI summary available for this lead.';
+  document.getElementById('lmNx').textContent=l.recommended_next_action||'No recommendation available.';
+  document.getElementById('lmStatus').value=l.status||'new';
+  document.getElementById('lmNote').value='';
+
+  // Load timeline events
+  const{data:events}=await sb.from('lead_events').select('*').eq('lead_id',id).order('created_at',{ascending:false}).limit(10);
+  const tl=document.getElementById('lmTimeline');
+  if(events&&events.length){
+    tl.innerHTML=`<div style="font-size:10px;color:var(--sl2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Timeline</div>`+
+      events.map(e=>`<div class="tl-item"><div class="tl-dot"></div><div style="flex:1"><span style="color:var(--wh)">${e.event_type}</span>${e.event_note?` — <span style="color:var(--sl)">${e.event_note}</span>`:''}</div><div class="tl-time">${fmtDShort(e.created_at)}</div></div>`).join('');
+  } else {tl.innerHTML=''}
+
+  document.getElementById('leadModal').classList.add('open');
+}
+function closeLead(){document.getElementById('leadModal').classList.remove('open');activeLeadId=null}
+
+async function saveLead(){
+  if(!activeLeadId||!CLIENT)return;
+  const btn=document.getElementById('lmSaveBtn');btn.disabled=true;btn.textContent='Saving…';
+  const newStatus=document.getElementById('lmStatus').value;
+  const note=document.getElementById('lmNote').value.trim();
+  const l=LEADS.find(x=>x.id===activeLeadId);
+
+  // Update lead — RLS ensures this only works for their own leads
+  const{error}=await sb.from('leads').update({
+    status:newStatus,
+    notes:note?((l.notes||'')+'\n'+note).trim():l.notes,
+    assigned_employee:'AI Admin Assistant'
+  }).eq('id',activeLeadId).eq('client_id',CLIENT.id);
+
+  if(!error){
+    // Log event
+    await sb.from('lead_events').insert({
+      lead_id:activeLeadId,client_id:CLIENT.id,
+      event_type:'Status updated to '+cap(newStatus),
+      event_note:note||null,
+      created_by:USER.id
+    });
+    if(l){l.status=newStatus;if(note)l.notes=((l.notes||'')+'\n'+note).trim()}
+    renderLeads();renderDashboard();
+    showToast('Lead updated');
+  } else {showToast('Update failed: '+error.message,'error')}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-check" aria-hidden="true"></i>Save';
+}
+
+function openBookingFromLead(){
+  const l=LEADS.find(x=>x.id===activeLeadId);if(!l)return;
+  document.getElementById('bkSvc').textContent=l.service_required+' — '+l.name;
+  document.getElementById('bkLocation').value=l.location||'';
+  const tom=new Date();tom.setDate(tom.getDate()+1);
+  document.getElementById('bkDate').value=tom.toISOString().slice(0,10);
+  document.getElementById('bkTime').value='09:00';
+  document.getElementById('bkMsg').innerHTML='';
+  document.getElementById('bookingModal').classList.add('open');
+}
+function closeBooking(){document.getElementById('bookingModal').classList.remove('open')}
+
+async function confirmBooking(){
+  const l=LEADS.find(x=>x.id===activeLeadId);if(!l)return;
+  const date=document.getElementById('bkDate').value,time=document.getElementById('bkTime').value;
+  if(!date||!time){document.getElementById('bkMsg').innerHTML=alertBox('Please select a date and time','err');return}
+  const btn=document.getElementById('bkBtn');btn.disabled=true;btn.textContent='Booking…';
+  try{
+    // Log portal action
+    await sb.from('portal_actions').insert({client_id:CLIENT.id,lead_id:activeLeadId,action_type:'booking_request',payload:{date,time,location:document.getElementById('bkLocation').value,notes:document.getElementById('bkNotes').value},created_by:USER.id});
+    // Fire Make webhook
+    await fetch('https://hook.eu1.make.com/nx6ehtcsuwkv8me6foddlfc15dongdcq',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_id:l.id,customer_name:l.name,customer_phone:l.phone,customer_email:l.email||'',service_required:l.service_required,location:document.getElementById('bkLocation').value||l.location||'',booking_date:date,booking_time:time,notes:document.getElementById('bkNotes').value,business_name:CLIENT.business_name})});
+    // Update lead
+    await sb.from('leads').update({status:'booked',booking_date:date,booking_time:time,assigned_employee:'AI Booking Assistant'}).eq('id',l.id).eq('client_id',CLIENT.id);
+    await sb.from('lead_events').insert({lead_id:l.id,client_id:CLIENT.id,event_type:'Appointment booked',event_note:date+' at '+time,created_by:USER.id});
+    if(l){l.status='booked';l.booking_date=date;l.booking_time=time}
+    renderLeads();renderDashboard();closeBooking();closeLead();
+    showToast('Appointment booked — calendar invite and SMS sent to '+l.name);
+  }catch(e){document.getElementById('bkMsg').innerHTML=alertBox(e.message,'err')}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-calendar-check" aria-hidden="true"></i>Confirm booking';
+}
+
+function openReviewFromLead(){
+  const l=LEADS.find(x=>x.id===activeLeadId);if(!l)return;
+  document.getElementById('rvSvc').textContent='Send to '+l.name;
+  document.getElementById('rvMsg').innerHTML='';
+  document.getElementById('reviewModal').classList.add('open');
+}
+function closeReview(){document.getElementById('reviewModal').classList.remove('open')}
+
+async function sendReview(){
+  const l=LEADS.find(x=>x.id===activeLeadId);if(!l)return;
+  const btn=document.getElementById('rvBtn');btn.disabled=true;btn.textContent='Sending…';
+  try{
+    await sb.from('portal_actions').insert({client_id:CLIENT.id,lead_id:activeLeadId,action_type:'review_request',payload:{google_review_url:document.getElementById('rvUrl').value||''},created_by:USER.id});
+    await fetch('https://hook.eu1.make.com/kxi3zbu629wgv63ct83s3d8m3tn3kxp3',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lead_id:l.id,status:'won',customer_name:l.name,customer_phone:l.phone,service_required:l.service_required,business_name:CLIENT.business_name,google_review_url:document.getElementById('rvUrl').value||'https://g.page/r/review'})});
+    await sb.from('leads').update({status:'won',assigned_employee:'AI Reporting Assistant'}).eq('id',l.id).eq('client_id',CLIENT.id);
+    await sb.from('lead_events').insert({lead_id:l.id,client_id:CLIENT.id,event_type:'Google review requested',event_note:'SMS will be sent in 24 hours',created_by:USER.id});
+    if(l){l.status='won'}
+    renderLeads();renderDashboard();closeReview();closeLead();
+    showToast('Review request queued — SMS sends to '+l.name+' in 24 hours ⭐');
+  }catch(e){document.getElementById('rvMsg').innerHTML=alertBox(e.message,'err')}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-send" aria-hidden="true"></i>Send request';
+}
+
+// ── TEAM ───────────────────────────────────────────────────────────────
+function renderTeam(){
+  const active=CLIENT.active_employees||['receptionist','sales','admin'];
+  const allEmps=['receptionist','sales','booking','followup','admin','reporting'];
+  document.getElementById('empGrid').innerHTML=allEmps.map(e=>{
+    const m=EMP_META[e];const isActive=active.includes(e);
+    return`<div class="emp-card ${isActive?'active-emp':'inactive-emp'}">
+      <div class="emp-icon">${m.icon}</div>
+      <div class="emp-name">${m.name}</div>
+      <div class="emp-desc">${m.desc}</div>
+      <div class="emp-status">
+        <div class="emp-dot" style="background:${isActive?'#34D399':'#64748B'}"></div>
+        <span style="color:${isActive?'#34D399':'#64748B'};font-size:10px">${isActive?'Active in your team':'Not in your package'}</span>
+      </div>
+      ${!isActive?`<div style="margin-top:8px"><a href="mailto:admin@leadaline.com?subject=Add ${m.name} to my package" style="font-size:10px;color:var(--cy);text-decoration:none">+ Add to my team →</a></div>`:''}
+    </div>`;
+  }).join('');
+
+  // Activity feed from recent leads
+  const recent=LEADS.slice(0,8);
+  document.getElementById('teamActivity').innerHTML=recent.length?recent.map(l=>{
+    const emp=l.assigned_employee||'AI Receptionist';
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bo);font-size:11px">
+      <span style="background:rgba(37,99,255,0.12);color:#93C5FD;padding:2px 7px;border-radius:99px;font-size:9px;white-space:nowrap;flex-shrink:0">${emp.replace('AI ','')}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.name} — ${l.service_required||'enquiry'}</span>
+      <span class="pill p-${l.status}" style="flex-shrink:0">${cap(l.status)}</span>
+      <span style="color:var(--sl2);flex-shrink:0;font-size:10px">${since(l.created_at)}</span>
+    </div>`;
+  }).join(''):'<div class="empty"><i class="ti ti-activity" aria-hidden="true"></i>No activity yet</div>';
+}
+
+// ── REPORTS ────────────────────────────────────────────────────────────
+async function renderReports(){
+  const now=Date.now();
+  const week=LEADS.filter(l=>now-new Date(l.created_at)<7*86400000);
+  const month=LEADS.filter(l=>now-new Date(l.created_at)<30*86400000);
+  document.getElementById('rWeek').textContent=week.length;
+  document.getElementById('rMonth').textContent=month.length;
+  document.getElementById('rWon').textContent=LEADS.filter(l=>l.status==='won').length;
+
+  const{data:reports}=await sb.from('reports').select('*').eq('client_id',CLIENT.id).order('created_at',{ascending:false}).limit(8);
+  const el=document.getElementById('reportsList');
+  if(!reports||!reports.length){
+    el.innerHTML='<div class="empty"><i class="ti ti-chart-bar" aria-hidden="true"></i>Your first weekly report will appear here next Monday at 8am.</div>';return;
+  }
+  el.innerHTML=reports.map(r=>`
+    <div class="report-card">
+      <div class="report-week">${fmtD(r.period_start)} — ${fmtD(r.period_end)}</div>
+      <div class="report-stats">
+        <span class="rs"><strong>${r.total_leads}</strong> leads</span>
+        <span class="rs"><strong style="color:#34D399">${r.won_leads}</strong> won</span>
+        <span class="rs"><strong style="color:#6EE7B7">${r.booked_leads}</strong> booked</span>
+        <span class="rs"><strong style="color:#FCA5A5">${r.lost_leads}</strong> lost</span>
+      </div>
+      ${r.ai_summary?`<div class="report-summary">${r.ai_summary}</div>`:''}
+    </div>`).join('');
+}
+
+// ── ACCOUNT ────────────────────────────────────────────────────────────
+function renderAccount(){
+  if(!CLIENT)return;
+  const tierLabels={starter:'Starter — £297/mo',growth:'Growth — £447/mo',pro:'Pro — £597/mo',enterprise:'Enterprise',custom:'Custom package'};
+  document.getElementById('accDetails').innerHTML=`
+    <div class="acc-row"><span class="acc-lbl">Business name</span><span class="acc-val">${CLIENT.business_name}</span></div>
+    <div class="acc-row"><span class="acc-lbl">Owner</span><span class="acc-val">${CLIENT.owner_name||'—'}</span></div>
+    <div class="acc-row"><span class="acc-lbl">Email</span><span class="acc-val" style="font-size:11px">${CLIENT.owner_email||'—'}</span></div>
+    <div class="acc-row"><span class="acc-lbl">Plan</span><span class="acc-val">${tierLabels[CLIENT.tier||'starter']||CLIENT.tier||'—'}</span></div>
+    <div class="acc-row"><span class="acc-lbl">Monthly amount</span><span class="acc-val" style="color:#34D399">${CLIENT.monthly_amount?'£'+(CLIENT.monthly_amount/100).toLocaleString('en-GB')+'/mo':'—'}</span></div>
+    <div class="acc-row"><span class="acc-lbl">Billing status</span><span class="acc-val"><span class="pill p-${CLIENT.billing_status||'pending'}">${cap(CLIENT.billing_status||'pending')}</span></span></div>
+    <div class="acc-row"><span class="acc-lbl">Active since</span><span class="acc-val">${fmtD(CLIENT.created_at)}</span></div>`;
+  document.getElementById('accPhone').value=CLIENT.owner_phone||'';
+  document.getElementById('accNotif').value=CLIENT.notification_preference||'sms';
+}
+
+async function savePhone(){
+  const phone=document.getElementById('accPhone').value.trim();
+  if(!phone){showToast('Please enter a phone number','error');return}
+  const{error}=await sb.from('clients').update({owner_phone:phone}).eq('id',CLIENT.id);
+  if(!error){CLIENT.owner_phone=phone;showToast('Phone number updated')}
+  else showToast('Failed: '+error.message,'error');
+}
+
+async function saveNotif(){
+  const pref=document.getElementById('accNotif').value;
+  const{error}=await sb.from('clients').update({notification_preference:pref}).eq('id',CLIENT.id);
+  if(!error){CLIENT.notification_preference=pref;showToast('Notification preference saved')}
+  else showToast('Failed: '+error.message,'error');
+}
+
+// ── CSV EXPORT ─────────────────────────────────────────────────────────
+function exportCsv(){
+  if(!LEADS.length){showToast('No leads to export','error');return}
+  const h=['Name','Phone','Email','Service','Location','Urgency','Status','Source','Follow-ups','Date'];
+  const rows=LEADS.map(l=>[l.name,l.phone,l.email,l.service_required,l.location,l.urgency,l.status,l.source,l.follow_up_count,fmtD(l.created_at)].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent([h.join(','),...rows].join('\n'));
+  a.download=CLIENT.business_name.replace(/\s+/g,'-').toLowerCase()+'-leads-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();showToast('CSV exported — '+LEADS.length+' leads');
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────
+function alertBox(msg,type){return`<div style="background:rgba(${type==='err'?'239,68,68':'16,185,129'},0.08);border:1px solid rgba(${type==='err'?'239,68,68':'16,185,129'},0.2);border-radius:7px;padding:8px 10px;font-size:11px;color:${type==='err'?'#FCA5A5':'#34D399'};margin-top:6px">${msg}</div>`}
+
+window.showToast=function(msg,type='success'){
+  clearTimeout(toastTimer);
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.className='toast show'+(type==='error'?' error':'');
+  document.getElementById('toastIcon').className=type==='error'?'ti ti-alert-circle':'ti ti-check';
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+};
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.getElementById('leadModal').classList.remove('open');
+    document.getElementById('bookingModal').classList.remove('open');
+    document.getElementById('reviewModal').classList.remove('open');
+  }
+});
+
+// Auto refresh every 60s
+setInterval(()=>{if(CLIENT)loadAll()},60000);
+
+// Check existing session on load
+sb.auth.getSession().then(({data})=>{
+  if(data.session?.user)bootPortal(data.session.user);
+});
+</script>

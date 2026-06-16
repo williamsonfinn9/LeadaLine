@@ -1,0 +1,116 @@
+/* ============================================================
+   LeadaLine — Shared Tweaks panel
+   Per-page defaults are set via window.LL_TWEAKS_DEFAULTS in an
+   inline <script> block in each page, between EDITMODE markers so
+   user adjustments are persisted by the host.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const DEFAULTS = Object.assign(
+    { navX: 0, logoH: 48, navGap: 20 },
+    window.LL_TWEAKS_DEFAULTS || {}
+  );
+
+  let state = { ...DEFAULTS };
+
+  // ── Build panel UI ──────────────────────────────────────────
+  const panel = document.createElement('div');
+  panel.id = 'llTweaks';
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-label', 'Page tweaks');
+  panel.innerHTML = `
+    <h4>Tweaks
+      <button type="button" data-ll-act="close" aria-label="Close">×</button>
+    </h4>
+
+    <div class="ll-row">
+      <div class="ll-row-head">
+        <span>Nav links shift</span>
+        <span class="ll-row-val" data-ll-val="navX">0px</span>
+      </div>
+      <input type="range" min="-120" max="60" step="1" data-ll-input="navX">
+    </div>
+
+    <div class="ll-row">
+      <div class="ll-row-head">
+        <span>Logo height</span>
+        <span class="ll-row-val" data-ll-val="logoH">48px</span>
+      </div>
+      <input type="range" min="28" max="80" step="1" data-ll-input="logoH">
+    </div>
+
+    <div class="ll-row">
+      <div class="ll-row-head">
+        <span>Logo &harr; nav gap</span>
+        <span class="ll-row-val" data-ll-val="navGap">20px</span>
+      </div>
+      <input type="range" min="0" max="80" step="1" data-ll-input="navGap">
+    </div>
+
+    <div class="ll-foot">
+      <span>Saves automatically</span>
+      <button type="button" data-ll-act="reset">Reset</button>
+    </div>
+  `;
+  document.body.appendChild(panel);
+
+  // ── Apply state to page ─────────────────────────────────────
+  function apply(s) {
+    document.body.style.setProperty('--ll-nav-x',   s.navX  + 'px');
+    document.body.style.setProperty('--ll-logo-h',  s.logoH + 'px');
+    document.body.style.setProperty('--ll-nav-gap', s.navGap + 'px');
+    Object.keys(s).forEach(k => {
+      const v = panel.querySelector(`[data-ll-val="${k}"]`);
+      const i = panel.querySelector(`[data-ll-input="${k}"]`);
+      const unit = (k === 'navX' || k === 'logoH' || k === 'navGap') ? 'px' : '';
+      if (v) v.textContent = s[k] + unit;
+      if (i) i.value = s[k];
+    });
+  }
+  apply(state);
+
+  // ── Persist via host edit-mode mechanism ────────────────────
+  function persist() {
+    try {
+      window.parent.postMessage({
+        type: '__edit_mode_set_keys',
+        edits: { ...state }
+      }, '*');
+    } catch (_) {}
+  }
+
+  // ── Show/hide on host activate/deactivate ───────────────────
+  window.addEventListener('message', (e) => {
+    const d = e.data || {};
+    if (d.type === '__activate_edit_mode')   panel.classList.add('open');
+    if (d.type === '__deactivate_edit_mode') panel.classList.remove('open');
+  });
+
+  // Announce that this page supports tweaks
+  try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (_) {}
+
+  // ── Wire controls ───────────────────────────────────────────
+  panel.addEventListener('input', (e) => {
+    const inp = e.target.closest('[data-ll-input]');
+    if (!inp) return;
+    const k = inp.dataset.llInput;
+    state[k] = parseInt(inp.value, 10) || 0;
+    apply(state);
+    persist();
+  });
+
+  panel.addEventListener('click', (e) => {
+    const act = e.target.closest('[data-ll-act]');
+    if (!act) return;
+    if (act.dataset.llAct === 'close') {
+      panel.classList.remove('open');
+      try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (_) {}
+    }
+    if (act.dataset.llAct === 'reset') {
+      state = { navX: 0, logoH: 48, navGap: 20 };
+      apply(state);
+      persist();
+    }
+  });
+})();

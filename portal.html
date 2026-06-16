@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Your AI Office Team — LeadaLine Live Demo</title>
+  <meta name="description" content="Try the AI Receptionist live and explore how each AI Employee helps a busy service business answer enquiries, qualify leads, book work and keep the pipeline organised.">
+  <meta property="og:title" content="Meet Your AI Office Team — LeadaLine Live Demo">
+  <meta property="og:description" content="Try the LeadaLine AI Receptionist live. Explore six AI Employees working together inside a service business.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.leadaline.com/demo.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/logo-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/bg-fx.css">
+  <style>
+  /* ── Demo page specific styles ── */
+
+  /* Page header — matches pricing page style */
+  .pr-header { padding: 40px 0 30px; border-bottom: 1px solid var(--border); }
+  .pr-header-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .pr-meta { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-bottom: 10px; }
+  .pr-h1 { font-size: clamp(1.75rem, 3.5vw, 2.4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+  @media (max-width: 640px) { .pr-header-inner { flex-direction: column; align-items: flex-start; gap: 16px; } }
+
+  /* Fix: page-wrapper has overflow-x:hidden which creates a scroll container
+     and silently breaks position:sticky. clip does the same visual crop
+     without creating a scroll container, so sticky works against the viewport. */
+  .page-wrapper { overflow-x: clip !important; }
+
+  /* Sticky employee nav */
+  .emp-nav { position: sticky; top: var(--nav-height); z-index: 90; background: rgba(240,244,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+  .emp-nav-inner { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .emp-nav-inner::-webkit-scrollbar { display: none; }
+  .emp-nav-btn { flex-shrink: 0; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); padding: 14px 18px; border: none; background: none; cursor: pointer; font-family: inherit; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+  .emp-nav-btn:hover { color: var(--text-primary); }
+  .emp-nav-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
+
+  /* AI employee section */
+  .ai-emp-section { padding: 72px 0; }
+  .ai-emp-section + .ai-emp-section { border-top: 1px solid var(--border); }
+  .ai-emp-section.bg-surface { background: var(--bg-surface); }
+  .ai-emp-head { display: flex; gap: 14px; align-items: center; margin-bottom: 10px; }
+  .ai-emp-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 11px; border-radius: 100px; }
+  .ai-emp-badge.live   { background: rgba(34,197,94,0.15); color: #15803d; border: 1px solid rgba(34,197,94,0.35); }
+  .ai-emp-badge.preview { background: rgba(67,120,230,0.12); color: #2563EB; border: 1px solid rgba(67,120,230,0.30); }
+  .ai-emp-badge.workflow { background: rgba(124,58,237,0.12); color: #7C3AED; border: 1px solid rgba(124,58,237,0.30); }
+  .ai-emp-num { width: 32px; height: 32px; border-radius: 9px; background: var(--grad-primary); color: #ffffff; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ai-emp-title { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 850; margin-bottom: 10px; line-height: 1.2; }
+  .ai-emp-sub { font-size: 1rem; color: var(--text-secondary); line-height: 1.6; max-width: 560px; margin-bottom: 24px; }
+  .ai-emp-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: start; }
+  @media (max-width: 880px) { .ai-emp-layout { grid-template-columns: 1fr; gap: 28px; } }
+  .ai-emp-tasks { display: flex; flex-direction: column; gap: 9px; margin-bottom: 24px; }
+  .ai-emp-task { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-secondary); }
+  .ai-emp-task-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--grad-primary); flex-shrink: 0; box-shadow: 0 0 6px rgba(37,99,235,0.5); }
+  .ai-emp-outcome { display: flex; align-items: center; gap: 12px; margin-top: 28px; padding: 16px 18px; background: rgba(37,99,235,0.05); border: 1px solid rgba(37,99,235,0.20); border-radius: var(--radius-md); }
+  .ai-emp-outcome-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(37,99,235,0.12); color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ai-emp-outcome-icon svg { width: 17px; height: 17px; }
+  .ai-emp-outcome strong { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+  .ai-emp-outcome p { font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+  /* Demo widget shell */
+  .demo-widget { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .demo-widget-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border); }
+  .demo-widget-dots { display: flex; gap: 5px; }
+  .demo-widget-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .demo-widget-dot:nth-child(1) { background: #ef4444; }
+  .demo-widget-dot:nth-child(2) { background: #f59e0b; }
+  .demo-widget-dot:nth-child(3) { background: #22c55e; }
+  .demo-widget-title { font-size: 0.75rem; color: var(--text-muted); margin-left: 6px; }
+  .demo-widget-body { padding: 20px; }
+
+  /* Chat messages */
+  .demo-chat { display: flex; flex-direction: column; gap: 10px; }
+  .demo-msg { display: flex; gap: 9px; align-items: flex-end; }
+  .demo-msg.ai { flex-direction: row; }
+  .demo-msg.user { flex-direction: row-reverse; }
+  .demo-msg-av { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; }
+  .demo-msg.ai .demo-msg-av { background: linear-gradient(135deg, #2563eb, #2563EB); color: #ffffff; }
+  .demo-msg.user .demo-msg-av { background: var(--bg-surface); color: var(--text-muted); border: 1px solid var(--border); }
+  .demo-msg-bubble { max-width: 82%; padding: 10px 13px; border-radius: 14px; font-size: 0.85rem; line-height: 1.5; }
+  .demo-msg.ai   .demo-msg-bubble { background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.18); color: var(--text-secondary); border-bottom-left-radius: 4px; }
+  .demo-msg.user .demo-msg-bubble { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); border-bottom-right-radius: 4px; }
+  .demo-chat-typing { display: flex; align-items: center; gap: 9px; padding: 6px 0; }
+  .demo-typing-dots { display: flex; gap: 4px; }
+  .demo-typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(37,99,235,0.5); animation: demoTyping 1.4s ease-in-out infinite; }
+  .demo-typing-dots span:nth-child(2) { animation-delay: .2s; }
+  .demo-typing-dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes demoTyping { 0%,60%,100% { transform: translateY(0); opacity:.4; } 30% { transform: translateY(-5px); opacity:1; } }
+
+  /* Output card */
+  .output-card { margin-top: 16px; background: var(--bg-card); border: 1px solid rgba(37,99,235,0.25); border-radius: var(--radius-md); overflow: hidden; }
+  .output-card-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: rgba(37,99,235,0.06); border-bottom: 1px solid rgba(37,99,235,0.15); }
+  .output-card-title { font-size: 0.78rem; font-weight: 700; color: #2563eb; letter-spacing: 0.04em; text-transform: uppercase; }
+  .output-card-pill { font-size: 0.66rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; }
+  .output-card-pill.hot  { background: rgba(239,68,68,0.18); color: #dc2626; border: 1px solid rgba(239,68,68,0.35); }
+  .output-card-pill.warm { background: rgba(245,158,11,0.18); color: #b45309; border: 1px solid rgba(245,158,11,0.35); }
+  .output-card-pill.good { background: rgba(34,197,94,0.18); color: #15803d; border: 1px solid rgba(34,197,94,0.35); }
+  .output-card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .output-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 0.82rem; }
+  .output-row-label { color: var(--text-muted); white-space: nowrap; }
+  .output-row-val { color: var(--text-primary); font-weight: 600; text-align: right; }
+  .output-row-val.accent { color: #2563eb; }
+  .output-row-val.red    { color: #dc2626; }
+  .output-row-val.amber  { color: #b45309; }
+  .output-row-divider { height: 1px; background: var(--border); margin: 4px 0; }
+  .output-note { font-size: 0.77rem; color: var(--text-muted); line-height: 1.5; padding-top: 6px; border-top: 1px solid var(--border); font-style: italic; }
+
+  /* Lead score meter */
+  .lead-score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .lead-score-bar { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 100px; overflow: hidden; }
+  .lead-score-fill { height: 100%; border-radius: 100px; background: var(--grad-primary); }
+
+  /* Booking sim */
+  .booking-sim { display: flex; flex-direction: column; gap: 12px; }
+  .booking-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.85rem; }
+  .booking-row-icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(37,99,235,0.10); color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .booking-row-icon svg { width: 14px; height: 14px; }
+  .booking-row-label { color: var(--text-muted); font-size: 0.75rem; }
+  .booking-row-val { color: var(--text-primary); font-weight: 600; }
+  .booking-confirm { display: flex; align-items: center; gap: 10px; padding: 13px 14px; background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.30); border-radius: var(--radius-md); }
+  .booking-confirm-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(34,197,94,0.18); color: #15803d; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .booking-confirm-icon svg { width: 14px; height: 14px; }
+  .booking-confirm strong { font-size: 0.85rem; color: #15803d; display: block; margin-bottom: 2px; }
+  .booking-confirm span  { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* Follow-up thread */
+  .followup-thread { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .followup-msg { padding: 10px 13px; border-radius: 12px; font-size: 0.83rem; line-height: 1.5; }
+  .followup-msg.sent { background: rgba(37,99,235,0.08); border: 1px solid rgba(37,99,235,0.20); color: var(--text-secondary); }
+  .followup-msg.reply { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); }
+  .followup-meta { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; letter-spacing: 0.02em; }
+  .status-change { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--text-muted); padding: 8px 0; }
+  .status-pill { font-size: 0.68rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; }
+  .status-pill.old  { background: rgba(100,116,139,0.18); color: var(--text-muted); border: 1px solid rgba(100,116,139,0.25); }
+  .status-pill.new  { background: rgba(34,197,94,0.15); color: #15803d; border: 1px solid rgba(34,197,94,0.30); }
+  .status-arrow { color: var(--text-muted); font-size: 0.8rem; }
+
+  /* CRM admin sim */
+  .crm-sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .crm-sim-grid { grid-template-columns: 1fr; } }
+  .crm-col-head { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .crm-col-head::before { content:""; display: inline-block; width:6px; height:6px; border-radius:50%; }
+  .crm-col-before .crm-col-head::before { background: #ef4444; }
+  .crm-col-after  .crm-col-head::before { background: #22c55e; }
+  .crm-item { padding: 9px 12px; border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .crm-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .crm-col-before .crm-item { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
+  .crm-col-after  .crm-item { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.18); color: var(--text-secondary); }
+  .crm-col-after  .crm-item svg { color: #15803d; }
+
+  /* Report widget */
+  .report-widget { display: flex; flex-direction: column; gap: 10px; }
+  .report-head-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .report-period { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+  .report-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .report-stat { text-align: center; padding: 12px 8px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .report-stat-num { font-size: 1.4rem; font-weight: 850; background: var(--grad-primary); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1.1; }
+  .report-stat-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 3px; }
+  .report-action { padding: 12px 14px; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.22); border-radius: var(--radius-md); }
+  .report-action-head { font-size: 0.75rem; font-weight: 700; color: #2563eb; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .report-action p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+  .report-bar-row { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 5px; }
+  .report-bar-label { min-width: 110px; color: var(--text-muted); }
+  .report-bar-track { flex: 1; height: 6px; background: var(--bg-surface); border-radius: 100px; overflow: hidden; }
+  .report-bar-fill  { height: 100%; border-radius: 100px; }
+  .report-bar-fill.captured { background: #2563eb; }
+  .report-bar-fill.qualified { background: #2563EB; }
+  .report-bar-fill.booked  { background: #22c55e; }
+  .report-bar-fill.missed  { background: #ef4444; }
+  .report-bar-val { min-width: 22px; text-align: right; font-weight: 700; }
+
+  /* Receptionist output card */
+  .recept-output { background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-top: 16px; }
+  .recept-output-head { font-size: 0.75rem; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .recept-output-head::before { content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:#22c55e; box-shadow: 0 0 6px #22c55e; }
+
+  /* Section divider numbers */
+  .emp-section-num { display: inline-flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .emp-section-num span { width: 26px; height: 26px; border-radius: 7px; background: var(--grad-primary); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; }
+
+  /* Final CTA */
+  .demo-final-cta { padding: 80px 0; text-align: center; background: var(--bg-surface); border-top: 1px solid var(--border); }
+  .demo-final-cta h2 { font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 850; margin-bottom: 14px; }
+  .demo-final-cta p  { font-size: 1rem; color: var(--text-secondary); max-width: 520px; margin: 0 auto 32px; line-height: 1.65; }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="LeadaLine home">
+      <img src="assets/logo-wordmark-dark.png" alt="LeadaLine" class="nav-logo-img">
+    </a>
+    <ul class="nav-links" role="list" aria-label="Main navigation">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="demo.html" class="nav-link active">Live Demo</a></li>
+      <li><a href="how-it-works.html" class="nav-link">AI Office Team</a></li>
+      <li><a href="what-you-get.html" class="nav-link">Client Portal</a></li>
+      <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+      <li><a href="faq.html" class="nav-link">FAQ</a></li>
+    </ul>
+    <div class="nav-ctas">
+      <a href="client-login.html" class="btn btn-sm" style="background:linear-gradient(135deg,rgba(37,99,235,0.15),rgba(124,58,237,0.15));border:1px solid rgba(37,99,235,0.35);color:#2563eb;gap:6px;display:inline-flex;align-items:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Client Portal
+      </a>
+      <a href="book-a-demo.html" class="btn btn-primary btn-sm">Book a Demo</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="nav-mobile" id="navMobile" aria-label="Mobile navigation">
+    <ul class="nav-mobile-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="demo.html">Live Demo</a></li>
+      <li><a href="how-it-works.html">AI Office Team</a></li>
+      <li><a href="what-you-get.html">Client Portal</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <div class="nav-mobile-ctas">
+      <a href="what-you-get.html" class="btn btn-outline btn-full">Client Portal</a>
+      <a href="book-a-demo.html" class="btn btn-primary btn-full">Book a Demo</a>
+    </div>
+  </nav>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── BACKGROUND DECOR ── -->
+  <div class="page-decor" aria-hidden="true">
+    <div class="orb orb-xl orb-cyan orb-f2" style="top:-150px;right:-200px;opacity:0.4"></div>
+    <div class="orb orb-lg orb-purple orb-f1" style="top:50%;left:-180px;opacity:0.35"></div>
+    <div class="orb orb-md orb-blue orb-f3" style="bottom:10%;right:15%;opacity:0.3"></div>
+    <svg class="bg-svg" style="top:100px;right:5%;width:380px;height:380px;opacity:0.045" viewBox="0 0 420 420" fill="none">
+      <circle cx="210" cy="210" r="60"  stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <circle cx="210" cy="210" r="100" stroke="#2563EB" stroke-width="1"   stroke-dasharray="8 6"/>
+      <circle cx="210" cy="210" r="145" stroke="#2563eb" stroke-width="1"   stroke-dasharray="4 8"/>
+      <circle cx="210" cy="210" r="195" stroke="#7c3aed" stroke-width="0.8" stroke-dasharray="6 10"/>
+      <circle cx="210" cy="210" r="10"  fill="#2563eb" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <!-- ── PAGE HEADER ── -->
+  <div class="pr-header">
+    <div class="container pr-header-inner">
+      <div>
+        <div class="pr-meta">LeadaLine &middot; Live Demo</div>
+        <h1 class="pr-h1">AI Office Team <span class="text-gradient">in Action</span></h1>
+        <p style="font-size:.9rem;color:var(--text-secondary);max-width:540px;margin-top:10px;line-height:1.7">Try the AI Receptionist live, then explore how each AI Employee helps a busy service business answer enquiries, qualify leads, book work and keep the pipeline organised.</p>
+      </div>
+      <div class="btn-group" style="flex-shrink:0">
+        <a href="#ai-receptionist" class="btn btn-outline btn-sm">Try AI Receptionist</a>
+        <a href="book-a-demo.html" class="btn btn-primary btn-sm">Book a Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STICKY EMPLOYEE NAV ── -->
+  <div class="emp-nav" role="navigation" aria-label="AI employee sections">
+    <div class="container">
+      <div class="emp-nav-inner">
+        <button class="emp-nav-btn active" data-target="ai-receptionist">AI Receptionist</button>
+        <button class="emp-nav-btn" data-target="ai-sales">AI Sales Assistant</button>
+        <button class="emp-nav-btn" data-target="ai-booking">AI Booking Assistant</button>
+        <button class="emp-nav-btn" data-target="ai-followup">AI Follow-Up</button>
+        <button class="emp-nav-btn" data-target="ai-admin">AI Admin Assistant</button>
+        <button class="emp-nav-btn" data-target="ai-reporting">AI Reporting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 1 — AI RECEPTIONIST (LIVE)
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section" id="ai-receptionist" data-screen-label="AI Receptionist">
+    <div class="container">
+      <div class="emp-section-num"><span>1</span>AI Receptionist</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge live">
+          <span class="pulse-dot" style="width:6px;height:6px;margin-right:5px" aria-hidden="true"></span>
+          Live Voice Demo
+        </span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Receptionist</span></h2>
+      <p class="ai-emp-sub">Answers calls, website enquiries and common questions 24/7 — so customers are never left waiting and you never miss an opportunity.</p>
+
+      <div class="ai-emp-layout">
+        <!-- Left: info + tasks -->
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Answers inbound calls instantly, day or night</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Responds to website and WhatsApp enquiries</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Captures name, phone, service and urgency</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Handles common FAQs professionally</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Passes a clean summary to the owner immediately</div>
+          </div>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin-bottom:20px">Ask the AI Receptionist how it would handle a new customer enquiry — it will collect the right details and show what the owner would receive.</p>
+
+          <!-- What happens next -->
+          <div class="recept-output">
+            <div class="recept-output-head">Example output — new enquiry captured</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div class="output-row"><span class="output-row-label">Customer name</span><span class="output-row-val">Sarah Mitchell</span></div>
+              <div class="output-row"><span class="output-row-label">Phone</span><span class="output-row-val">07xxx xxx xxx</span></div>
+              <div class="output-row"><span class="output-row-label">Service needed</span><span class="output-row-val accent">Bathroom refit</span></div>
+              <div class="output-row"><span class="output-row-label">Location</span><span class="output-row-val">Guildford, GU1</span></div>
+              <div class="output-row"><span class="output-row-label">Urgency</span><span class="output-row-val red">This week</span></div>
+              <div class="output-row"><span class="output-row-label">Best time to call</span><span class="output-row-val">Morning preferred</span></div>
+              <div class="output-row-divider"></div>
+              <div class="output-note">Summary sent to owner via SMS and email within 30 seconds of call ending.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: live Vapi demo -->
+        <div>
+          <div class="assistant-card" role="region" aria-label="Voice assistant">
+            <div class="assistant-header">
+              <div class="assistant-avatar" aria-hidden="true"><img src="assets/logo-mark.png" alt="" style="width:28px;height:28px;display:block"></div>
+              <div class="assistant-info">
+                <div class="assistant-name">LeadaLine AI Receptionist</div>
+                <div class="assistant-status">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  Ready to answer enquiries
+                </div>
+              </div>
+              <div style="margin-left:auto">
+                <span style="font-size:0.72rem;color:#15803d;background:rgba(34,197,94,0.12);padding:4px 10px;border-radius:100px;border:1px solid rgba(34,197,94,0.30);font-weight:700">Live voice demo</span>
+              </div>
+            </div>
+            <div class="assistant-body">
+              <button class="call-btn" id="callBtn" aria-label="Start voice call with the AI Receptionist">
+                🎙️
+              </button>
+              <div>
+                <p class="call-label" id="callLabel">Start Receptionist Demo</p>
+                <p class="call-sub" id="callSub">Talk to the AI Receptionist — ask how it handles a new enquiry</p>
+              </div>
+              <div style="width:100%;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;text-align:left">
+                <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.6">
+                  <strong style="color:var(--text-secondary)">Note:</strong> This is a Q&amp;A demo. The assistant answers questions and shows how it would handle real enquiries — it does not submit a live lead during the public demo.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div id="sqAnswer" style="display:none;background:var(--bg-card);border:1px solid var(--border-accent);border-radius:var(--radius-lg);padding:22px 24px;margin-top:16px" role="region" aria-live="polite" aria-label="Answer"></div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12 11 15 16 9"/></svg>
+        </div>
+        <div>
+          <strong>No missed enquiries</strong>
+          <p>Every call answered, every message captured, every customer acknowledged — 24 hours a day, without you needing to be available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 2 — AI SALES ASSISTANT
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section bg-surface" id="ai-sales" data-screen-label="AI Sales Assistant">
+    <div class="container">
+      <div class="emp-section-num"><span>2</span>AI Sales Assistant</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge preview">Interactive Preview</span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Sales Assistant</span></h2>
+      <p class="ai-emp-sub">Qualifies leads, asks the right questions, identifies urgency and recommends the best next action — so you know exactly which enquiries matter most.</p>
+
+      <div class="ai-emp-layout">
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Asks targeted qualification questions</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Identifies urgency, location and service type</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Scores leads: Hot, Warm or Low priority</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Recommends the right next action for the owner</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Creates a clear summary before you call back</div>
+          </div>
+          <!-- Output card -->
+          <div class="output-card">
+            <div class="output-card-head">
+              <span class="output-card-title">Lead qualification</span>
+              <span class="output-card-pill hot">Hot lead</span>
+            </div>
+            <div class="output-card-body">
+              <div class="lead-score-row">
+                <span style="font-size:0.75rem;color:var(--text-muted);min-width:90px">Lead score</span>
+                <div class="lead-score-bar"><div class="lead-score-fill" style="width:92%"></div></div>
+                <span style="font-size:0.75rem;font-weight:700;color:#2563eb">92/100</span>
+              </div>
+              <div class="output-row"><span class="output-row-label">Service</span><span class="output-row-val">Roof leak repair</span></div>
+              <div class="output-row"><span class="output-row-label">Urgency</span><span class="output-row-val red">High — active water ingress</span></div>
+              <div class="output-row"><span class="output-row-label">Location</span><span class="output-row-val">Manchester, M21</span></div>
+              <div class="output-row"><span class="output-row-label">Recommended action</span><span class="output-row-val accent">Call immediately</span></div>
+              <div class="output-row-divider"></div>
+              <div class="output-note">Customer has active water ingress — should be prioritised today.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat simulation -->
+        <div>
+          <div class="demo-widget">
+            <div class="demo-widget-bar">
+              <div class="demo-widget-dots"><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div></div>
+              <span class="demo-widget-title">AI Sales Assistant — qualification conversation</span>
+            </div>
+            <div class="demo-widget-body">
+              <div class="demo-chat" id="salesChat">
+                <div class="demo-msg user"><div class="demo-msg-av">C</div><div class="demo-msg-bubble">Hi, I need someone to look at a leaking roof.</div></div>
+                <div class="demo-msg ai"><div class="demo-msg-av">AI</div><div class="demo-msg-bubble">Of course. Is water currently coming into the property, or is it visible damage from outside?</div></div>
+                <div class="demo-msg user"><div class="demo-msg-av">C</div><div class="demo-msg-bubble">Water is coming in around the bedroom ceiling.</div></div>
+                <div class="demo-msg ai"><div class="demo-msg-av">AI</div><div class="demo-msg-bubble">That sounds urgent — I'll flag this as a priority. What postcode is the property in?</div></div>
+                <div class="demo-msg user"><div class="demo-msg-av">C</div><div class="demo-msg-bubble">M21, Manchester.</div></div>
+                <div class="demo-msg ai"><div class="demo-msg-av">AI</div><div class="demo-msg-bubble">Got it. And what's the best number for the team to reach you on? I'll make sure someone calls you back quickly.</div></div>
+              </div>
+              <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted)">
+                Qualification complete · Lead scored and summary sent to owner
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+        </div>
+        <div>
+          <strong>Always know which leads matter most</strong>
+          <p>You open your phone to a prioritised lead list with scores, urgency flags and a clear recommended action — not a pile of raw enquiries.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 3 — AI BOOKING ASSISTANT
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section" id="ai-booking" data-screen-label="AI Booking Assistant">
+    <div class="container">
+      <div class="emp-section-num"><span>3</span>AI Booking Assistant</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge workflow">Example Workflow</span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Booking Assistant</span></h2>
+      <p class="ai-emp-sub">Collects availability, confirms the appointment and sends the customer a confirmation — without any back-and-forth through your inbox.</p>
+
+      <div class="ai-emp-layout">
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Collects preferred dates and times from the customer</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Books consultations, quotes and jobs into the diary</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Sends the customer a confirmation SMS immediately</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Sends appointment reminders automatically</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Updates the CRM with appointment status</div>
+          </div>
+          <!-- Output card -->
+          <div class="output-card">
+            <div class="output-card-head">
+              <span class="output-card-title">Appointment request</span>
+              <span class="output-card-pill good">Ready to confirm</span>
+            </div>
+            <div class="output-card-body">
+              <div class="output-row"><span class="output-row-label">Customer</span><span class="output-row-val">Sarah Mitchell</span></div>
+              <div class="output-row"><span class="output-row-label">Service</span><span class="output-row-val">Boiler repair quote</span></div>
+              <div class="output-row"><span class="output-row-label">Preferred time</span><span class="output-row-val">Tuesday morning</span></div>
+              <div class="output-row"><span class="output-row-label">Location</span><span class="output-row-val">Guildford, GU1</span></div>
+              <div class="output-row"><span class="output-row-label">Confirmation sent</span><span class="output-row-val accent">Via SMS ✓</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking simulation -->
+        <div>
+          <div class="demo-widget">
+            <div class="demo-widget-bar">
+              <div class="demo-widget-dots"><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div></div>
+              <span class="demo-widget-title">AI Booking Assistant — appointment captured</span>
+            </div>
+            <div class="demo-widget-body">
+              <div class="booking-sim">
+                <div class="booking-row">
+                  <div class="booking-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                  <div><div class="booking-row-label">Customer</div><div class="booking-row-val">Sarah Mitchell</div></div>
+                </div>
+                <div class="booking-row">
+                  <div class="booking-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                  <div><div class="booking-row-label">Phone</div><div class="booking-row-val">07xxx xxx xxx</div></div>
+                </div>
+                <div class="booking-row">
+                  <div class="booking-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></div>
+                  <div><div class="booking-row-label">Preferred time</div><div class="booking-row-val">Tuesday morning</div></div>
+                </div>
+                <div class="booking-row">
+                  <div class="booking-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                  <div><div class="booking-row-label">Location</div><div class="booking-row-val">Guildford, GU1</div></div>
+                </div>
+                <div class="booking-row">
+                  <div class="booking-row-icon" style="background:rgba(34,197,94,0.10);color:#15803d;border-color:rgba(34,197,94,0.25)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                  <div><div class="booking-row-label">Service needed</div><div class="booking-row-val">Boiler repair quote</div></div>
+                </div>
+                <div class="booking-confirm">
+                  <div class="booking-confirm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <div>
+                    <strong>Confirmation SMS sent</strong>
+                    <span>"Hi Sarah — we've got you booked for Tuesday morning. We'll confirm the time shortly."</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 15 11 17 15 13"/></svg>
+        </div>
+        <div>
+          <strong>Less back-and-forth. More booked jobs.</strong>
+          <p>Appointments land in the diary automatically — the customer is confirmed and the owner is notified, without anyone picking up a phone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 4 — AI FOLLOW-UP ASSISTANT
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section bg-surface" id="ai-followup" data-screen-label="AI Follow-Up Assistant">
+    <div class="container">
+      <div class="emp-section-num"><span>4</span>AI Follow-Up Assistant</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge workflow">Example Workflow</span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Follow-Up Assistant</span></h2>
+      <p class="ai-emp-sub">Chases warm leads, quote requests and stale opportunities automatically — so potential jobs are never forgotten while you're busy on site.</p>
+
+      <div class="ai-emp-layout">
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Identifies leads that have gone quiet</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Sends professional follow-up messages automatically</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Updates CRM status when customer responds</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Notifies owner when a cold lead re-engages</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Recommends next action based on response</div>
+          </div>
+          <!-- Output card -->
+          <div class="output-card">
+            <div class="output-card-head">
+              <span class="output-card-title">Follow-up activity</span>
+              <span class="output-card-pill good">Re-engaged</span>
+            </div>
+            <div class="output-card-body">
+              <div class="output-row"><span class="output-row-label">Follow-up sent</span><span class="output-row-val accent">Tue 09:18</span></div>
+              <div class="output-row"><span class="output-row-label">Customer responded</span><span class="output-row-val accent">Tue 10:42</span></div>
+              <div class="output-row"><span class="output-row-label">CRM updated</span><span class="output-row-val">Quote follow-up</span></div>
+              <div class="output-row"><span class="output-row-label">Recommended action</span><span class="output-row-val red">Call today to confirm</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Follow-up simulation -->
+        <div>
+          <div class="demo-widget">
+            <div class="demo-widget-bar">
+              <div class="demo-widget-dots"><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div></div>
+              <span class="demo-widget-title">AI Follow-Up — quote chased after 3 days silence</span>
+            </div>
+            <div class="demo-widget-body">
+              <div class="followup-thread">
+                <div>
+                  <div class="followup-meta">AI Follow-Up Assistant · Tue 09:18 · SMS to James</div>
+                  <div class="followup-msg sent">Hi James, just checking whether you'd still like us to go ahead with the roof repair quote. Happy to answer any questions or confirm a date that suits you.</div>
+                </div>
+                <div>
+                  <div class="followup-meta">James (customer) · Tue 10:42 · replied</div>
+                  <div class="followup-msg reply">Hi yes, sorry for the delay — still keen. Could do Wednesday or Thursday if possible?</div>
+                </div>
+              </div>
+              <div class="status-change">
+                <span class="status-pill old">Quote sent</span>
+                <span class="status-arrow">→</span>
+                <span class="status-pill new">Interested — book in</span>
+              </div>
+              <div style="margin-top:10px;padding:10px 12px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.22);border-radius:var(--radius-sm);font-size:0.78rem;color:#15803d;font-weight:600">
+                Owner notified · Recommended action: Call today to confirm visit
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.46"/></svg>
+        </div>
+        <div>
+          <strong>More jobs recovered without manual chasing</strong>
+          <p>Quotes that would have gone cold come back to life — without the owner having to remember to follow up every single customer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 5 — AI ADMIN ASSISTANT
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section" id="ai-admin" data-screen-label="AI Admin Assistant">
+    <div class="container">
+      <div class="emp-section-num"><span>5</span>AI Admin Assistant</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge workflow">Example Workflow</span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Admin Assistant</span></h2>
+      <p class="ai-emp-sub">Updates the CRM, sends owner summaries, organises lead records and keeps the pipeline clean — without you touching a spreadsheet.</p>
+
+      <div class="ai-emp-layout">
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Adds new leads to the CRM automatically</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Tags, categorises and assigns priority levels</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Sends a clean daily summary to the owner</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Updates lead status as things progress</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Keeps the pipeline tidy and nothing overdue</div>
+          </div>
+          <!-- Output card -->
+          <div class="output-card">
+            <div class="output-card-head">
+              <span class="output-card-title">CRM updated</span>
+              <span class="output-card-pill good">Complete</span>
+            </div>
+            <div class="output-card-body">
+              <div class="output-row"><span class="output-row-label">Lead added</span><span class="output-row-val accent">James Smith</span></div>
+              <div class="output-row"><span class="output-row-label">Status set</span><span class="output-row-val">New</span></div>
+              <div class="output-row"><span class="output-row-label">Urgency</span><span class="output-row-val red">High</span></div>
+              <div class="output-row"><span class="output-row-label">Category</span><span class="output-row-val">Roofing — leak</span></div>
+              <div class="output-row"><span class="output-row-label">Owner summary</span><span class="output-row-val accent">Sent via SMS ✓</span></div>
+              <div class="output-row"><span class="output-row-label">Next action created</span><span class="output-row-val">Call today</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRM before/after + live dashboard -->
+        <div>
+          <div class="demo-widget">
+            <div class="demo-widget-bar">
+              <div class="demo-widget-dots"><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div></div>
+              <span class="demo-widget-title">CRM update — before and after</span>
+            </div>
+            <div class="demo-widget-body">
+              <div class="crm-sim-grid">
+                <div class="crm-col-before">
+                  <div class="crm-col-head">Before — raw inbox</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Unread email from James</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Missed call — no notes</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>WhatsApp — unread</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>No status. No next step.</div>
+                </div>
+                <div class="crm-col-after">
+                  <div class="crm-col-head">After — CRM updated</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Lead added — James Smith</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Urgency: High · Roofing</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Summary sent to owner</div>
+                  <div class="crm-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Next action: Call today</div>
+                </div>
+              </div>
+
+              <!-- Mini pipeline -->
+              <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+                <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">Live pipeline view</div>
+                <div class="pipeline-card">
+                  <div class="pipeline-head">
+                    <span class="pipeline-title">Lead pipeline</span>
+                    <span class="pipeline-total" id="adminPipeTotal">48 active</span>
+                  </div>
+                  <div class="pipeline-bar" role="img" aria-label="Pipeline breakdown">
+                    <span class="pipe-seg p-new"       style="flex:12"></span>
+                    <span class="pipe-seg p-contacted" style="flex:18"></span>
+                    <span class="pipe-seg p-quoted"    style="flex:9"></span>
+                    <span class="pipe-seg p-booked"    style="flex:7"></span>
+                    <span class="pipe-seg p-lost"      style="flex:1"></span>
+                  </div>
+                  <div class="pipeline-legend">
+                    <span><span class="leg-dot l-new"></span>New <b>12</b></span>
+                    <span><span class="leg-dot l-contacted"></span>Contacted <b>18</b></span>
+                    <span><span class="leg-dot l-quoted"></span>Quoted <b>9</b></span>
+                    <span><span class="leg-dot l-booked"></span>Booked <b>7</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div>
+          <strong>Less admin. Cleaner records.</strong>
+          <p>Nothing lost in inboxes, spreadsheets or voicemail — every lead is logged, categorised and ready to act on before you even knew it arrived.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 6 — AI REPORTING ASSISTANT
+  ══════════════════════════════════════════════════ -->
+  <section class="ai-emp-section bg-surface" id="ai-reporting" data-screen-label="AI Reporting Assistant">
+    <div class="container">
+      <div class="emp-section-num"><span>6</span>AI Reporting Assistant</div>
+      <div class="ai-emp-head">
+        <span class="ai-emp-badge preview">Example Output</span>
+      </div>
+      <h2 class="ai-emp-title">Meet your <span class="text-gradient">AI Reporting Assistant</span></h2>
+      <p class="ai-emp-sub">Turns lead activity into simple weekly and monthly summaries — showing what came in, what was followed up and where opportunities are being lost.</p>
+
+      <div class="ai-emp-layout">
+        <div>
+          <div class="ai-emp-tasks">
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Delivers weekly and monthly performance summaries</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Shows leads captured, qualified and booked</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Highlights missed opportunities and slow follow-ups</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Tracks response times and conversion rates</div>
+            <div class="ai-emp-task"><span class="ai-emp-task-dot"></span>Recommends where to focus next week</div>
+          </div>
+          <!-- Output card -->
+          <div class="output-card">
+            <div class="output-card-head">
+              <span class="output-card-title">Weekly summary</span>
+              <span class="output-card-pill warm">Action needed</span>
+            </div>
+            <div class="output-card-body">
+              <div class="output-row"><span class="output-row-label">Leads captured</span><span class="output-row-val accent">18</span></div>
+              <div class="output-row"><span class="output-row-label">Qualified leads</span><span class="output-row-val">12</span></div>
+              <div class="output-row"><span class="output-row-label">Booked jobs</span><span class="output-row-val accent">5</span></div>
+              <div class="output-row"><span class="output-row-label">Follow-ups required</span><span class="output-row-val amber">4</span></div>
+              <div class="output-row"><span class="output-row-label">Missed opportunities</span><span class="output-row-val red">2</span></div>
+              <div class="output-row-divider"></div>
+              <div class="output-note">Suggested improvement: Follow up all quotes older than 48 hours.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report widget -->
+        <div>
+          <div class="demo-widget">
+            <div class="demo-widget-bar">
+              <div class="demo-widget-dots"><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div><div class="demo-widget-dot"></div></div>
+              <span class="demo-widget-title">Weekly performance report — example output</span>
+            </div>
+            <div class="demo-widget-body">
+              <div class="report-widget">
+                <div class="report-head-row">
+                  <span style="font-size:0.88rem;font-weight:700;color:var(--text-primary)">AI Office Team · Weekly Report</span>
+                  <span class="report-period">w/e 31 May 2026</span>
+                </div>
+                <div class="report-stats">
+                  <div class="report-stat"><div class="report-stat-num">18</div><div class="report-stat-label">Leads captured</div></div>
+                  <div class="report-stat"><div class="report-stat-num">5</div><div class="report-stat-label">Jobs booked</div></div>
+                  <div class="report-stat"><div class="report-stat-num">4</div><div class="report-stat-label">Follow-ups needed</div></div>
+                </div>
+                <div class="report-bar-row"><span class="report-bar-label">Captured</span><div class="report-bar-track"><div class="report-bar-fill captured" style="width:100%"></div></div><span class="report-bar-val">18</span></div>
+                <div class="report-bar-row"><span class="report-bar-label">Qualified</span><div class="report-bar-track"><div class="report-bar-fill qualified" style="width:67%"></div></div><span class="report-bar-val">12</span></div>
+                <div class="report-bar-row"><span class="report-bar-label">Booked</span><div class="report-bar-track"><div class="report-bar-fill booked" style="width:28%"></div></div><span class="report-bar-val">5</span></div>
+                <div class="report-bar-row"><span class="report-bar-label">Missed</span><div class="report-bar-track"><div class="report-bar-fill missed" style="width:11%"></div></div><span class="report-bar-val">2</span></div>
+                <div class="report-action">
+                  <div class="report-action-head">Recommended action</div>
+                  <p>Follow up 4 open quotes older than 48 hours. Two opportunities showing no response — chase before end of week.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-emp-outcome">
+        <div class="ai-emp-outcome-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <div>
+          <strong>Full visibility without digging through data</strong>
+          <p>You open your report and immediately know what's working, what to chase and what your AI team handled this week — without opening a single spreadsheet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════
+       FINAL CTA
+  ══════════════════════════════════════════════════ -->
+  <section class="demo-final-cta">
+    <div class="container">
+      <h2>Ready to build your <span class="text-gradient">AI Office Team?</span></h2>
+      <p>Book a demo and we'll map out which AI Employees would make the biggest difference inside your business.</p>
+      <div class="btn-group" style="justify-content:center">
+        <a href="book-a-demo.html" class="btn btn-primary btn-lg">Book a Demo</a>
+        <a href="pricing.html" class="btn btn-outline btn-lg">View Pricing</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><img src="assets/logo-wordmark-dark.png" alt="LeadaLine" class="nav-logo-img"></a>
+        <p class="footer-tagline">AI Office Teams for UK service businesses. Answer enquiries, qualify customers, book work and keep your pipeline organised automatically.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Product</h4>
+        <ul role="list">
+          <li><a href="demo.html">Live Demo</a></li>
+          <li><a href="how-it-works.html">AI Office Team</a></li>
+          <li><a href="what-you-get.html">Client Portal</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="what-you-get.html">Client Portal</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>Contact</h4>
+        <ul role="list" class="footer-contact">
+          <li><a href="mailto:admin@leadaline.com">admin@leadaline.com</a></li>
+          <li><a href="tel:+447749342966">07749 342966</a></li>
+          <li><a href="tel:+447484657654">07484 657654</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>Company</h4>
+        <ul role="list">
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="book-a-demo.html">Book a Demo</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 LeadaLine. All rights reserved. Built for UK service businesses.</p>
+      <p>LeadaLine processes enquiry data securely and in line with GDPR principles.</p>
+    </div>
+  </div>
+</footer>
+
+<template id="__bundler_thumbnail" data-bg-color="#f0f4ff">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f0f4ff"/>
+    <circle cx="600" cy="330" r="120" fill="none" stroke="#2563eb" stroke-width="10" opacity="0.35"/>
+    <circle cx="600" cy="330" r="78" fill="#ffffff" stroke="#2563eb" stroke-width="6"/>
+    <path d="M576 300c0-7 5-12 12-12h2c4 0 8 3 9 7l4 14c1 4 0 8-3 11l-6 6a56 56 0 0 0 24 24l6-6c3-3 7-4 11-3l14 4c4 1 7 5 7 9v2c0 7-5 12-12 12a84 84 0 0 1-78-78z" fill="#2563eb"/>
+    <text x="600" y="580" font-family="Inter, sans-serif" font-size="42" font-weight="800" fill="#ffffff" text-anchor="middle">Meet Your AI Office Team</text>
+    <text x="600" y="628" font-family="Inter, sans-serif" font-size="24" font-weight="500" fill="#5b6b85" text-anchor="middle">LeadaLine Live Demo</text>
+  </svg>
+</template>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/bg-fx.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/demo.js"></script>
+
+<script>
+/* ─── Sticky employee nav — highlight active section on scroll ─── */
+(function () {
+  var btns = document.querySelectorAll('.emp-nav-btn');
+  var sections = Array.from(btns).map(function (b) { return document.getElementById(b.dataset.target); });
+  function onScroll() {
+    var scrollY = window.scrollY + 120;
+    var active = 0;
+    sections.forEach(function (s, i) { if (s && s.offsetTop <= scrollY) active = i; });
+    btns.forEach(function (b, i) { b.classList.toggle('active', i === active); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.dataset.target);
+      if (target) {
+        var y = target.getBoundingClientRect().top + window.scrollY - 110;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  });
+})();
+</script>
+
+<script>window.LL_TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "navX": 3,
+  "logoH": 44,
+  "navGap": 80
+}/*EDITMODE-END*/;</script>
+<script src="assets/js/leadaline-tweaks.js"></script>
+</body>
+</html>

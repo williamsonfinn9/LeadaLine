@@ -1,0 +1,152 @@
+// LeadaLine — Shared site JS
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Cookie notice ─────────────────────────────────────────────
+  // Light-touch: only mentions the small amount of local storage we set.
+  // No tracking/advertising cookies = no full consent UI needed under UK PECR,
+  // but a polite, dismissable notice is good practice.
+  (function mountCookieBar() {
+    const KEY = 'leadaline_cookie_ack_v1';
+    try { if (localStorage.getItem(KEY) === '1') return; } catch (e) { return; }
+
+    const bar = document.createElement('div');
+    bar.className = 'cookie-bar';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Cookie and storage notice');
+    bar.innerHTML = `
+      <span>We use a small amount of browser storage to remember things like dismissed notices. No tracking or advertising cookies. <a href="privacy.html">Read our privacy policy</a>.</span>
+      <button type="button" aria-label="Acknowledge">OK, got it</button>
+    `;
+    document.body.appendChild(bar);
+    requestAnimationFrame(() => bar.classList.add('show'));
+    bar.querySelector('button').addEventListener('click', () => {
+      bar.classList.remove('show');
+      setTimeout(() => bar.remove(), 280);
+      try { localStorage.setItem(KEY, '1'); } catch (e) { /* private mode */ }
+    });
+  })();
+
+  // ── Sitewide urgency banner ───────────────────────────────────
+  // Top-of-body red bar, dismissable, remembers dismissal in localStorage.
+  (function mountUrgencyBanner() {
+    const KEY = 'leadaline_urgency_dismissed_v1';
+    if (localStorage.getItem(KEY) === '1') return;
+    if (document.querySelector('.urgency-banner')) return;
+
+    const bar = document.createElement('div');
+    bar.className = 'urgency-banner';
+    bar.setAttribute('role', 'note');
+    bar.setAttribute('aria-label', 'Pilot programme availability');
+    bar.innerHTML = `
+      <span class="ub-dot" aria-hidden="true"></span>
+      <span><strong>Early pilot programme open.</strong> Availability is limited — setup is founder-led. Enquire to confirm suitability.</span>
+      <a href="book-a-demo.html" class="ub-link">
+        Book a demo
+        <svg class="ll-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+      <button type="button" class="ub-close" aria-label="Dismiss notification">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    `;
+    const nav = document.getElementById('mainNav');
+    if (nav && nav.parentNode) {
+      nav.parentNode.insertBefore(bar, nav.nextSibling);
+    } else {
+      const wrap = document.querySelector('.page-wrapper');
+      if (wrap) wrap.insertBefore(bar, wrap.firstChild);
+      else document.body.insertBefore(bar, document.body.firstChild);
+    }
+    bar.querySelector('.ub-close').addEventListener('click', () => {
+      bar.remove();
+      try { localStorage.setItem(KEY, '1'); } catch (e) { /* private mode */ }
+    });
+  })();
+
+  // ── Sticky nav scroll behaviour ──────────────────────────────
+  const nav = document.getElementById('mainNav');
+  if (nav) {
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // ── Mobile menu ───────────────────────────────────────────────
+  const toggle   = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('navMobile');
+  if (toggle && mobileMenu) {
+    toggle.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      toggle.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // ── Active nav link ───────────────────────────────────────────
+  const page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === page || (page === '' && href === 'index.html')) {
+      link.classList.add('active');
+    }
+  });
+
+  // ── FAQ accordion ─────────────────────────────────────────────
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(o => o.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // ── Sticky mobile CTA bar ─────────────────────────────────────
+  // Show on every page except book-a-demo (where the form IS the CTA).
+  (function mountMobileCta() {
+    const page = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    if (page === 'book-a-demo.html') return;
+    if (document.querySelector('.mobile-cta')) return;
+
+    const bar = document.createElement('div');
+    bar.className = 'mobile-cta';
+    bar.setAttribute('role', 'region');
+    bar.setAttribute('aria-label', 'Quick actions');
+    bar.innerHTML = `
+      <a href="tel:+447749342966" class="mc-btn mc-btn-secondary" aria-label="Call LeadaLine">
+        <svg class="ll-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </a>
+      <a href="book-a-demo.html" class="mc-btn mc-btn-primary">
+        Book a free demo
+        <svg class="ll-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="13 6 19 12 13 18"/>
+        </svg>
+      </a>
+    `;
+    document.body.appendChild(bar);
+    document.body.classList.add('has-mobile-cta');
+    // Slide in after a tick (matches CSS transition)
+    requestAnimationFrame(() => bar.classList.add('show'));
+  })();
+
+});

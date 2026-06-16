@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missed-Call Calculator — See What Unanswered Calls Are Costing You</title>
+  <meta name="description" content="Free calculator. Estimate how much revenue your service business is losing to missed phone calls each year, based on missed calls per week, average job value and conversion rate.">
+  <meta property="og:title" content="Missed-Call Calculator — LeadaLine">
+  <meta property="og:description" content="See in seconds how much revenue you are losing to missed phone calls. Free interactive calculator for UK service businesses.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.leadaline.com/calculator.html">
+  <link rel="icon" type="image/png" href="assets/logo-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/bg-fx.css">
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="LeadaLine home">
+      <img src="assets/logo-wordmark-dark.png" alt="LeadaLine" class="nav-logo-img">
+    </a>
+    <ul class="nav-links" role="list" aria-label="Main navigation">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="demo.html" class="nav-link">Live Demo</a></li>
+      <li><a href="how-it-works.html" class="nav-link">AI Office Team</a></li>
+      <li><a href="what-you-get.html" class="nav-link">Client Portal</a></li>
+      <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+      <li><a href="faq.html" class="nav-link">FAQ</a></li>
+    </ul>
+    <div class="nav-ctas">
+      <a href="client-login.html" class="btn btn-sm" style="background:linear-gradient(135deg,rgba(37,99,235,0.15),rgba(124,58,237,0.15));border:1px solid rgba(37,99,235,0.35);color:#2563eb;gap:6px;display:inline-flex;align-items:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Client Portal
+      </a>
+      <a href="book-a-demo.html" class="btn btn-primary btn-sm">Book a Demo</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="nav-mobile" id="navMobile" aria-label="Mobile navigation">
+    <ul class="nav-mobile-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="demo.html">Live Demo</a></li>
+      <li><a href="how-it-works.html">AI Office Team</a></li>
+      <li><a href="what-you-get.html">Client Portal</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <div class="nav-mobile-ctas">
+      <a href="what-you-get.html" class="btn btn-outline btn-full">Client Portal</a>
+      <a href="book-a-demo.html" class="btn btn-primary btn-full">Book a Demo</a>
+    </div>
+  </nav>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── BACKGROUND DECOR ── -->
+  <div class="page-decor" aria-hidden="true">
+    <div class="orb orb-xl orb-cyan orb-f2" style="top:-140px;right:-160px;opacity:0.40"></div>
+    <div class="orb orb-lg orb-blue orb-f1" style="top:50%;left:-180px;opacity:0.35"></div>
+    <div class="orb orb-md orb-purple orb-f3" style="bottom:10%;right:5%;opacity:0.30"></div>
+    <!-- Faint pound sign -->
+    <svg class="bg-svg" style="top:50%;left:50%;transform:translate(-50%,-50%);width:520px;height:520px;opacity:0.025" viewBox="0 0 520 520" fill="none">
+      <text x="50%" y="55%" font-size="440" font-family="Inter,sans-serif" font-weight="900" text-anchor="middle" dominant-baseline="middle" fill="#2563eb">£</text>
+    </svg>
+    <!-- Decline graph -->
+    <svg class="bg-svg" style="bottom:80px;right:6%;width:240px;height:160px;opacity:0.06" viewBox="0 0 240 160" fill="none">
+      <line x1="0" y1="155" x2="240" y2="155" stroke="#94a3b8" stroke-width="0.8"/>
+      <line x1="5" y1="0" x2="5" y2="160" stroke="#94a3b8" stroke-width="0.8"/>
+      <polyline points="10,30 50,55 95,42 140,90 180,110 220,140" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="220" cy="140" r="5" fill="#ef4444"/>
+    </svg>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <section class="section-sm bg-grid" style="padding-top:64px">
+    <div class="container-sm text-center">
+      <span class="section-badge">Free calculator</span>
+      <h1 class="section-title" style="font-size:clamp(1.8rem,4vw,2.75rem);margin-bottom:14px">How much are missed calls <span class="text-gradient">really costing you?</span></h1>
+      <p class="section-subtitle">Three quick inputs and we'll show you what's slipping through the cracks each year — based on UK service-business averages.</p>
+    </div>
+  </section>
+
+  <!-- ── CALCULATOR ── -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="calc-card" id="missedCallCalc" aria-label="Missed call revenue calculator">
+
+        <!-- Inputs -->
+        <div class="calc-inputs">
+          <span class="calc-eyebrow">Your numbers</span>
+          <h2 class="calc-title">Tell us about your business</h2>
+          <p class="calc-sub">Pick your trade for a sensible starting point, or drag the sliders directly.</p>
+
+          <div class="calc-presets" id="calcPresets" role="radiogroup" aria-label="Choose your trade">
+            <span class="calc-presets-label">Quick start — typical for:</span>
+            <button type="button" class="calc-preset" data-preset="roofing"      aria-pressed="false">Roofing</button>
+            <button type="button" class="calc-preset" data-preset="plumbing"     aria-pressed="false">Plumbing</button>
+            <button type="button" class="calc-preset" data-preset="electrical"   aria-pressed="false">Electrical</button>
+            <button type="button" class="calc-preset" data-preset="building"     aria-pressed="false">Building</button>
+            <button type="button" class="calc-preset" data-preset="landscaping"  aria-pressed="false">Landscaping</button>
+            <button type="button" class="calc-preset" data-preset="cleaning"     aria-pressed="false">Cleaning</button>
+            <button type="button" class="calc-preset" data-preset="maintenance"  aria-pressed="false">Property maint.</button>
+          </div>
+
+          <div class="calc-fields">
+
+            <div class="calc-field">
+              <div class="calc-field-head">
+                <label class="calc-field-label" for="calcMissed">Missed calls per week</label>
+                <span class="calc-field-value"><span id="calcMissedOut">8</span></span>
+              </div>
+              <input class="calc-slider" type="range" id="calcMissed" min="1" max="50" step="1" value="8" aria-label="Missed calls per week">
+              <span class="calc-field-hint">Calls that ring out, go to voicemail, or you can't get to while on the job.</span>
+            </div>
+
+            <div class="calc-field">
+              <div class="calc-field-head">
+                <label class="calc-field-label" for="calcJob">Average job value</label>
+                <span class="calc-field-value">£<span id="calcJobOut">400</span></span>
+              </div>
+              <input class="calc-slider" type="range" id="calcJob" min="50" max="5000" step="50" value="400" aria-label="Average job value in pounds">
+              <span class="calc-field-hint">What a typical customer is worth — single visit or first job.</span>
+            </div>
+
+            <div class="calc-field">
+              <div class="calc-field-head">
+                <label class="calc-field-label" for="calcConv">Conversion rate</label>
+                <span class="calc-field-value"><span id="calcConvOut">25</span>%</span>
+              </div>
+              <input class="calc-slider" type="range" id="calcConv" min="5" max="60" step="1" value="25" aria-label="Conversion rate percentage">
+              <span class="calc-field-hint">Of those missed calls, the share that would have turned into paid work.</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Output -->
+        <div class="calc-output">
+          <div>
+            <div class="calc-result-label">Estimated revenue lost per year</div>
+            <div class="calc-result-big" id="calcAnnual">£41,600</div>
+            <div class="calc-result-period">slipping through the cracks at your current numbers</div>
+
+            <div class="calc-breakdown">
+              <div class="calc-breakdown-cell">
+                <div class="calc-breakdown-period">Per week</div>
+                <div class="calc-breakdown-value" id="calcWeekly">£800</div>
+              </div>
+              <div class="calc-breakdown-cell">
+                <div class="calc-breakdown-period">Per month</div>
+                <div class="calc-breakdown-value" id="calcMonthly">£3,467</div>
+              </div>
+            </div>
+
+            <div class="calc-meta">
+              <div class="calc-meta-row">
+                <span class="calc-meta-label">Missed calls per year</span>
+                <span class="calc-meta-value" id="calcCallsYear">416</span>
+              </div>
+              <div class="calc-meta-row">
+                <span class="calc-meta-label">Lost customers per year</span>
+                <span class="calc-meta-value" id="calcCustomersYear">104</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="calc-cta">
+            <a href="book-a-demo.html" class="btn btn-primary btn-lg">Recover this revenue &nbsp;→</a>
+            <p class="calc-disclaimer">Figures are an estimate based on the inputs above, calculated over 52 working weeks. Your real numbers will vary by trade, season and lead source — we'll dig into yours on the demo call.</p>
+          </div>
+
+          <!-- Email-the-results -->
+          <div class="calc-email" id="calcEmailWrap">
+            <div class="calc-email-head">
+              <svg class="ll-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+              Email me these results
+            </div>
+            <p class="calc-email-sub">We'll send your figures to your inbox so you can compare them later, plus a short note on how LeadaLine could help.</p>
+            <form class="calc-email-form" id="calcEmailForm" novalidate aria-label="Email me the calculator results">
+              <input type="email" name="email" id="calcEmailInput" placeholder="you@yourbusiness.co.uk" required autocomplete="email" aria-label="Your email address">
+              <button type="submit" id="calcEmailBtn">Send</button>
+            </form>
+            <p class="calc-email-disclaimer">No spam. One results email and at most one short follow-up.</p>
+            <div class="calc-email-success" id="calcEmailSuccess" role="status" aria-live="polite">
+              <svg class="ll-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="8 12 11 15 16 9"/></svg>
+              <span>Results sent. Check your inbox in the next few minutes.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW WE GOT THERE ── -->
+  <section class="section" style="padding-top:8px">
+    <div class="container-sm">
+      <div class="review-card">
+        <div class="review-card-title">How the calculation works</div>
+        <div class="review-steps" role="list">
+          <div class="review-step" role="listitem">
+            <div class="review-step-num" aria-hidden="true">1</div>
+            <p class="review-step-text"><strong>Missed calls per year</strong> = missed calls per week × 52 weeks.</p>
+          </div>
+          <div class="review-step" role="listitem">
+            <div class="review-step-num" aria-hidden="true">2</div>
+            <p class="review-step-text"><strong>Lost customers</strong> = missed calls per year × your conversion rate.</p>
+          </div>
+          <div class="review-step" role="listitem">
+            <div class="review-step-num" aria-hidden="true">3</div>
+            <p class="review-step-text"><strong>Lost revenue</strong> = lost customers × average job value.</p>
+          </div>
+          <div class="review-step" role="listitem">
+            <div class="review-step-num" aria-hidden="true">4</div>
+            <p class="review-step-text">We don't include the repeat-business value of those customers, referrals they would have made, or their lifetime value — so the real cost is usually <em>higher</em> than this number.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHAT LEADALINE DOES ABOUT IT ── -->
+  <section class="section" style="padding-top:8px">
+    <div class="container-sm">
+      <div class="reassure-card">
+        <h3 class="reassure-title">What LeadaLine does about it</h3>
+        <p class="reassure-text">When a customer can't reach you, the LeadaLine AI Office Team catches the enquiry on your website, qualifies it, and sends you a clear summary by email and SMS — usually within seconds. You get back to a hot lead instead of an apologetic voicemail.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 class="cta-title">Ready to stop <span class="text-gradient">losing enquiries?</span></h2>
+      <p class="cta-sub">Book a demo and we'll show you what catching those calls could look like for your business.</p>
+      <div class="btn-group" style="justify-content:center">
+        <a href="book-a-demo.html" class="btn btn-primary btn-lg">Book a demo</a>
+        <a href="demo.html" class="btn btn-outline btn-lg">Try the live demo</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><img src="assets/logo-wordmark-dark.png" alt="LeadaLine" class="nav-logo-img"></a>
+        <p class="footer-tagline">AI Office Teams for UK service businesses. Answer enquiries, qualify customers, book work and keep your pipeline organised automatically.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Product</h4>
+        <ul role="list">
+          <li><a href="demo.html">Live Demo</a></li>
+          <li><a href="how-it-works.html">AI Office Team</a></li>
+          <li><a href="what-you-get.html">Client Portal</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="calculator.html">Lost Revenue Calculator</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>Contact</h4>
+        <ul role="list" class="footer-contact">
+          <li><a href="mailto:admin@leadaline.com">admin@leadaline.com</a></li>
+          <li><a href="tel:+447749342966">07749 342966</a></li>
+          <li><a href="tel:+447484657654">07484 657654</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4>Company</h4>
+        <ul role="list">
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="book-a-demo.html">Book a Demo</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 LeadaLine. All rights reserved. Built for UK service businesses.</p>
+      <p>LeadaLine processes enquiry data securely and in line with GDPR principles.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/bg-fx.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/calculator.js"></script>
+
+<script>window.LL_TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "navX": -53,
+  "logoH": 48,
+  "navGap": 80
+}/*EDITMODE-END*/;</script>
+<script src="assets/js/leadaline-tweaks.js"></script>
+</body>
+</html>
