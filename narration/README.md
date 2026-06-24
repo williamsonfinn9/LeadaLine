@@ -1,11 +1,17 @@
-# Reel Narration (ElevenLabs)
+# Reel Narration (OpenAI TTS)
 
-AI voiceover generation for LeadaLine Instagram Reels using the ElevenLabs
-text-to-speech API.
+AI voiceover generation for LeadaLine Instagram Reels using the OpenAI
+text-to-speech API (`gpt-4o-mini-tts`).
 
-The tool reads a manifest of reels (each with a narration script), calls
-ElevenLabs, and writes one MP3 voiceover per reel into `output/`. You then mux
-each MP3 onto its `.mp4` reel with ffmpeg (below).
+The tool reads a manifest of reels (each with a narration script), calls OpenAI,
+and writes one audio file per reel into `output/`. You then mix each track
+**underneath** its `.mp4` reel with ffmpeg, with the background music ducked
+behind the voice (below).
+
+**Voice direction:** confident UK British business voice, premium SaaS-advert
+feel — clear, sharp, calm, not cheesy, not robotic. "LeadaLine" is always spoken
+as **"Leader Line"** (handled automatically by a pronunciation map in
+`narrate.js`, so script files keep the normal brand spelling).
 
 ## Setup
 
@@ -14,12 +20,10 @@ Requires Node 18+ (uses the built-in `fetch`). No npm install needed.
 Set your API key in the environment — **never commit it**:
 
 ```bash
-export ELEVENLABS_API_KEY=your_key_here
+export OPENAI_API_KEY=sk-...
 ```
 
 ## Verify the key
-
-Confirms auth and prints account/tier/usage. Spends zero characters:
 
 ```bash
 node narrate.js --verify
@@ -45,9 +49,10 @@ node narrate.js my.json    # custom manifest
 ```jsonc
 {
   "defaults": {
-    "voiceId": "CwhRBWXzGAHq8TQ4Fs17",      // "Roger" — premade conversational voice
-    "modelId": "eleven_multilingual_v2",
-    "outputFormat": "mp3_44100_128"
+    "voice": "ash",                 // OpenAI voice (ash/onyx = confident male; sage/ballad also good)
+    "model": "gpt-4o-mini-tts",
+    "format": "mp3",                // mp3 | wav | opus | aac | flac
+    "instructions": "Confident UK British business voiceover ..."
   },
   "outputDir": "output",
   "reels": [
@@ -57,37 +62,23 @@ node narrate.js my.json    # custom manifest
 }
 ```
 
-Per-reel `voiceId` / `modelId` / `out` override the defaults. List your
-account's voices with:
+Per-reel `voice` / `model` / `format` / `instructions` / `out` override the
+defaults. OpenAI voices to try for a UK business read: `ash`, `onyx`, `sage`,
+`ballad`, `verse`.
+
+## Mixing the voiceover under a reel (ffmpeg)
+
+`narrate.js` produces audio only. To lay the voiceover over a video reel with
+the original music ducked behind the voice:
 
 ```bash
-curl -s https://api.elevenlabs.io/v1/voices -H "xi-api-key: $ELEVENLABS_API_KEY"
-```
-
-## Muxing the voiceover onto a reel (ffmpeg)
-
-`narrate.js` produces audio only. To lay the voiceover over a video reel:
-
-```bash
-# Replace the reel's audio with the generated narration
 ffmpeg -i reel-01.mp4 -i output/reel-01.mp3 \
-  -map 0:v -map 1:a -c:v copy -c:a aac -shortest reel-01-narrated.mp4
-
-# Or mix narration over the reel's existing audio (e.g. background music)
-ffmpeg -i reel-01.mp4 -i output/reel-01.mp3 \
-  -filter_complex "[0:a][1:a]amix=inputs=2:duration=shortest[a]" \
-  -map 0:v -map "[a]" -c:v copy reel-01-narrated.mp4
+  -filter_complex "[1:a]adelay=450|450,volume=2.0[vo];[0:a]volume=0.3[bg];[bg][vo]amix=inputs=2:duration=first:dropout_transition=0[a]" \
+  -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -shortest reel-01-narrated.mp4
 ```
 
-## Known limitation: free tier + proxy
+- `adelay=450|450` starts the voice ~0.45s in (after the headline lands).
+- `[0:a]volume=0.3` ducks the original music to 30% behind the voice.
+- `[1:a]volume=2.0` lifts the voiceover so it sits clearly on top.
 
-On a **free** ElevenLabs tier, TTS generation fails from proxy/VPN IP addresses
-with:
-
-```
-401 detected_unusual_activity — Free Tier access has been disabled.
-```
-
-The key and read endpoints still work; only generation is blocked. Run the
-script from a **non-proxied machine**, or upgrade to a **paid** plan. (This
-matters for cloud/CI environments that route through a proxy.)
+Tune the delay/volumes per reel to taste.

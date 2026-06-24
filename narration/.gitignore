@@ -1,6 +1,10 @@
 # Generated voiceover audio — regenerate from scripts, don't commit
 output/*.mp3
 output/*.wav
+output/*.opus
+output/*.aac
+output/*.flac
+output/*.pcm
 
 # Never commit secrets
 .env
