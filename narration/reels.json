@@ -1,9 +1,9 @@
 {
   "defaults": {
-    "voice": "ash",
+    "voice": "shimmer",
     "model": "gpt-4o-mini-tts",
     "format": "mp3",
-    "instructions": "Confident UK British business voiceover for a premium SaaS advert. Received Pronunciation (UK English) accent. Clear, sharp, calm and composed, with quiet authority. Measured, unhurried pace and natural emphasis. Polished and trustworthy — never cheesy, never salesy, never robotic."
+    "instructions": "Speak with a natural, authentic British English accent — Received Pronunciation, like a professional London voiceover artist. Non-rhotic British pronunciation throughout. Confident UK business tone for a premium SaaS advert: clear, sharp, calm and composed, with quiet authority. Measured, unhurried pace. Never American, never cheesy, never robotic."
   },
   "outputDir": "output",
   "reels": [
