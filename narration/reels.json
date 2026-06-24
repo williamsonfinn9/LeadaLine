@@ -94,6 +94,22 @@
     {
       "id": "reel-s8",
       "scriptFile": "scripts/reel-s8.txt"
+    },
+    {
+      "id": "reel-s9",
+      "scriptFile": "scripts/reel-s9.txt"
+    },
+    {
+      "id": "reel-s10",
+      "scriptFile": "scripts/reel-s10.txt"
+    },
+    {
+      "id": "reel-s11",
+      "scriptFile": "scripts/reel-s11.txt"
+    },
+    {
+      "id": "reel-s12",
+      "scriptFile": "scripts/reel-s12.txt"
     }
   ]
 }
