@@ -10,6 +10,10 @@
     {
       "id": "reel-01",
       "scriptFile": "scripts/reel-01.txt"
+    },
+    {
+      "id": "reel-02",
+      "scriptFile": "scripts/reel-02.txt"
     }
   ]
 }
