@@ -1,0 +1,7 @@
+# Generated voiceover audio — regenerate from scripts, don't commit
+output/*.mp3
+output/*.wav
+
+# Never commit secrets
+.env
+.env.local

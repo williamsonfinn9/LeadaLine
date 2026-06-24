@@ -1,0 +1,10 @@
+{
+  "name": "leadaline-narration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "ElevenLabs AI voiceover generation for LeadaLine Instagram Reels",
+  "scripts": {
+    "narrate": "node narrate.js"
+  }
+}
