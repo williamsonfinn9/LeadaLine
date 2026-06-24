@@ -7,13 +7,12 @@
   },
   "outputDir": "output",
   "reels": [
-    {
-      "id": "reel-01",
-      "scriptFile": "scripts/reel-01.txt"
-    },
-    {
-      "id": "reel-02",
-      "scriptFile": "scripts/reel-02.txt"
-    }
+    { "id": "reel-01", "scriptFile": "scripts/reel-01.txt" },
+    { "id": "reel-02", "scriptFile": "scripts/reel-02.txt" },
+    { "id": "reel-03", "scriptFile": "scripts/reel-03.txt" },
+    { "id": "reel-04", "scriptFile": "scripts/reel-04.txt" },
+    { "id": "reel-05", "scriptFile": "scripts/reel-05.txt" },
+    { "id": "reel-06", "scriptFile": "scripts/reel-06.txt" },
+    { "id": "reel-07", "scriptFile": "scripts/reel-07.txt" }
   ]
 }
