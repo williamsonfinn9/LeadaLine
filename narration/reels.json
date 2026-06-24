@@ -7,22 +7,93 @@
   },
   "outputDir": "output",
   "reels": [
-    { "id": "reel-01", "scriptFile": "scripts/reel-01.txt" },
-    { "id": "reel-02", "scriptFile": "scripts/reel-02.txt" },
-    { "id": "reel-03", "scriptFile": "scripts/reel-03.txt" },
-    { "id": "reel-04", "scriptFile": "scripts/reel-04.txt" },
-    { "id": "reel-05", "scriptFile": "scripts/reel-05.txt" },
-    { "id": "reel-06", "scriptFile": "scripts/reel-06.txt" },
-    { "id": "reel-07", "scriptFile": "scripts/reel-07.txt" },
-    { "id": "reel-08", "scriptFile": "scripts/reel-08.txt" },
-    { "id": "reel-09", "scriptFile": "scripts/reel-09.txt" },
-    { "id": "reel-10", "scriptFile": "scripts/reel-10.txt" },
-    { "id": "reel-a1", "scriptFile": "scripts/reel-a1.txt" },
-    { "id": "reel-a2", "scriptFile": "scripts/reel-a2.txt" },
-    { "id": "reel-a3", "scriptFile": "scripts/reel-a3.txt" },
-    { "id": "reel-a4", "scriptFile": "scripts/reel-a4.txt" },
-    { "id": "reel-a5", "scriptFile": "scripts/reel-a5.txt" },
-    { "id": "reel-s1", "scriptFile": "scripts/reel-s1.txt" },
-    { "id": "reel-s2", "scriptFile": "scripts/reel-s2.txt" }
+    {
+      "id": "reel-01",
+      "scriptFile": "scripts/reel-01.txt"
+    },
+    {
+      "id": "reel-02",
+      "scriptFile": "scripts/reel-02.txt"
+    },
+    {
+      "id": "reel-03",
+      "scriptFile": "scripts/reel-03.txt"
+    },
+    {
+      "id": "reel-04",
+      "scriptFile": "scripts/reel-04.txt"
+    },
+    {
+      "id": "reel-05",
+      "scriptFile": "scripts/reel-05.txt"
+    },
+    {
+      "id": "reel-06",
+      "scriptFile": "scripts/reel-06.txt"
+    },
+    {
+      "id": "reel-07",
+      "scriptFile": "scripts/reel-07.txt"
+    },
+    {
+      "id": "reel-08",
+      "scriptFile": "scripts/reel-08.txt"
+    },
+    {
+      "id": "reel-09",
+      "scriptFile": "scripts/reel-09.txt"
+    },
+    {
+      "id": "reel-10",
+      "scriptFile": "scripts/reel-10.txt"
+    },
+    {
+      "id": "reel-a1",
+      "scriptFile": "scripts/reel-a1.txt"
+    },
+    {
+      "id": "reel-a2",
+      "scriptFile": "scripts/reel-a2.txt"
+    },
+    {
+      "id": "reel-a3",
+      "scriptFile": "scripts/reel-a3.txt"
+    },
+    {
+      "id": "reel-a4",
+      "scriptFile": "scripts/reel-a4.txt"
+    },
+    {
+      "id": "reel-a5",
+      "scriptFile": "scripts/reel-a5.txt"
+    },
+    {
+      "id": "reel-s1",
+      "scriptFile": "scripts/reel-s1.txt"
+    },
+    {
+      "id": "reel-s2",
+      "scriptFile": "scripts/reel-s2.txt"
+    },
+    {
+      "id": "reel-s4",
+      "scriptFile": "scripts/reel-s4.txt"
+    },
+    {
+      "id": "reel-s5",
+      "scriptFile": "scripts/reel-s5.txt"
+    },
+    {
+      "id": "reel-s6",
+      "scriptFile": "scripts/reel-s6.txt"
+    },
+    {
+      "id": "reel-s7",
+      "scriptFile": "scripts/reel-s7.txt"
+    },
+    {
+      "id": "reel-s8",
+      "scriptFile": "scripts/reel-s8.txt"
+    }
   ]
 }
