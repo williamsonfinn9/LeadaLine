@@ -18,6 +18,11 @@
     { "id": "reel-09", "scriptFile": "scripts/reel-09.txt" },
     { "id": "reel-10", "scriptFile": "scripts/reel-10.txt" },
     { "id": "reel-a1", "scriptFile": "scripts/reel-a1.txt" },
-    { "id": "reel-a2", "scriptFile": "scripts/reel-a2.txt" }
+    { "id": "reel-a2", "scriptFile": "scripts/reel-a2.txt" },
+    { "id": "reel-a3", "scriptFile": "scripts/reel-a3.txt" },
+    { "id": "reel-a4", "scriptFile": "scripts/reel-a4.txt" },
+    { "id": "reel-a5", "scriptFile": "scripts/reel-a5.txt" },
+    { "id": "reel-s1", "scriptFile": "scripts/reel-s1.txt" },
+    { "id": "reel-s2", "scriptFile": "scripts/reel-s2.txt" }
   ]
 }
