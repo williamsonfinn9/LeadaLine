@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prospect Intelligence — LeadaLine</title>
   <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="AI sales preparation for UK service businesses — scan the full commercial picture and every LeadaLine opportunity in under 30 seconds." />
   <link rel="icon" href="logo-icon.svg" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
@@ -13,7 +14,7 @@
     :root {
       --n: #050B1A; --n2: #0A1628; --n3: #0F1F36; --n4: #142744;
       --cy: #18D7FF; --bl: #2563FF; --vi: #7C5CFF;
-      --sl: #94A3B8; --sl2: #64748B; --wh: #F8FAFC;
+      --sl: #A6B4C8; --sl2: #8494AC; --wh: #F8FAFC;
       --gr: #10B981; --am: #F59E0B; --rd: #EF4444;
       --bo: rgba(148,163,184,.10); --bo2: rgba(148,163,184,.18);
       --grad: linear-gradient(90deg,#18D7FF,#2563FF,#7C5CFF);
@@ -33,9 +34,32 @@
         radial-gradient(ellipse 60% 50% at 90% 10%, rgba(124,92,255,.09) 0%, transparent 60%),
         radial-gradient(ellipse 60% 40% at 50% 100%, rgba(24,215,255,.05) 0%, transparent 70%);
     }
+
+    /* ── Accessibility utilities ── */
+    .sr-only {
+      position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .skip {
+      position: absolute; left: 12px; top: -60px; z-index: 100;
+      background: var(--n3); color: var(--wh); border: 1px solid var(--cy);
+      padding: 10px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: top .18s;
+    }
+    .skip:focus { top: 12px; }
+    a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--cy); outline-offset: 2px; border-radius: 6px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important; scroll-behavior: auto !important;
+      }
+    }
+
     .wrap { position: relative; z-index: 1; max-width: 940px; margin: 0 auto; padding: 0 20px 100px; }
 
-    /* ── Nav ── */
+    /* ── Header ── */
     .nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0 8px; }
     .brand { display: flex; align-items: center; gap: 11px; }
     .brand .logo { font-size: 20px; font-weight: 600; letter-spacing: -.4px; }
@@ -68,7 +92,7 @@
       transition: border-color .18s, box-shadow .18s;
     }
     .inp::placeholder { color: var(--sl2); }
-    .inp:focus { border-color: rgba(37,99,255,.55); box-shadow: 0 0 0 3px rgba(37,99,255,.14); }
+    .inp:focus { border-color: rgba(37,99,255,.75); box-shadow: 0 0 0 3px rgba(37,99,255,.18); }
     .btn {
       margin-top: 20px; width: 100%; padding: 15px; border: none; border-radius: 12px;
       background: var(--grad135); color: #fff; font-size: 15px; font-weight: 600; font-family: inherit;
@@ -78,11 +102,13 @@
     .btn:hover { opacity: .92; }
     .btn:active { transform: translateY(1px); }
     .btn:disabled { opacity: .5; cursor: not-allowed; }
-    .form-err { display: none; margin-top: 14px; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.28); color: #FCA5A5; font-size: 13px; border-radius: 10px; padding: 11px 14px; }
+    .form-err { display: none; margin-top: 14px; background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.35); color: #FCA5A5; font-size: 13px; border-radius: 10px; padding: 11px 14px; }
+    .form-err.show { display: block; }
     .hint { text-align: center; color: var(--sl2); font-size: 12px; margin-top: 16px; }
 
     /* ── Loading ── */
     .loading { display: none; text-align: center; padding: 60px 0; }
+    .loading.show { display: block; }
     .spinner { width: 46px; height: 46px; margin: 0 auto 26px; border-radius: 50%; border: 3px solid var(--bo2); border-top-color: var(--cy); animation: spin .9s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading .lmsg { font-size: 16px; font-weight: 500; }
@@ -93,8 +119,9 @@
 
     /* ── Results ── */
     #results { display: none; }
+    #results.show { display: block; }
     .results-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 4px 0 22px; flex-wrap: wrap; }
-    .results-head .rh-title { font-size: 22px; font-weight: 600; letter-spacing: -.4px; }
+    .results-head .rh-title { font-size: 22px; font-weight: 600; letter-spacing: -.4px; outline: none; }
     .results-head .rh-sub { color: var(--sl); font-size: 13px; margin-top: 2px; }
     .rh-actions { display: flex; gap: 10px; }
     .ghost { background: var(--n2); border: 1px solid var(--bo2); color: var(--wh); font-family: inherit; font-size: 13px; font-weight: 500; border-radius: 10px; padding: 9px 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: border-color .15s, background .15s; }
@@ -102,10 +129,7 @@
     .ghost i { font-size: 15px; color: var(--cy); }
 
     /* Quick summary hero */
-    .summary {
-      position: relative; border-radius: 20px; padding: 1px; margin-bottom: 22px;
-      background: var(--grad135);
-    }
+    .summary { position: relative; border-radius: 20px; padding: 1px; margin-bottom: 22px; background: var(--grad135); }
     .summary-inner { background: linear-gradient(180deg,#0B1830,#091426); border-radius: 19px; padding: 26px 28px; }
     .summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .summary-top .biz { font-size: 20px; font-weight: 600; letter-spacing: -.3px; }
@@ -116,50 +140,51 @@
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
     @media (max-width: 640px){ .summary-grid { grid-template-columns: 1fr; } }
     .skv { background: var(--n); border: 1px solid var(--bo); border-radius: 12px; padding: 14px 16px; }
-    .skv .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl2); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .skv .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl); font-weight: 600; display: flex; align-items: center; gap: 6px; }
     .skv .k i { color: var(--cy); font-size: 13px; }
     .skv .v { font-size: 14px; margin-top: 7px; color: var(--wh); }
 
-    .stars { display: inline-flex; gap: 2px; font-size: 15px; color: var(--am); }
+    .stars { display: inline-flex; gap: 2px; font-size: 15px; color: var(--am); vertical-align: middle; }
     .stars .off { color: var(--n4); }
 
     /* Cards */
     .card { background: var(--n2); border: 1px solid var(--bo2); border-radius: 16px; margin-bottom: 14px; overflow: hidden; transition: border-color .18s; }
     .card:hover { border-color: rgba(148,163,184,.28); }
-    .card-head { display: flex; align-items: center; gap: 14px; padding: 18px 20px; cursor: pointer; user-select: none; }
+    .card-h { margin: 0; font-size: inherit; font-weight: inherit; line-height: inherit; }
+    .card-head { display: flex; align-items: center; gap: 14px; padding: 18px 20px; cursor: pointer; user-select: none; width: 100%; background: none; border: 0; color: inherit; font-family: inherit; text-align: left; }
     .card-ico { width: 38px; height: 38px; flex: none; border-radius: 11px; display: grid; place-items: center; background: rgba(37,99,255,.12); border: 1px solid rgba(37,99,255,.22); color: var(--cy); font-size: 19px; }
     .card-tt { flex: 1; min-width: 0; }
-    .card-tt .t { font-size: 15.5px; font-weight: 600; letter-spacing: -.2px; }
-    .card-tt .s { font-size: 12.5px; color: var(--sl); margin-top: 2px; }
-    .chev { color: var(--sl2); font-size: 20px; transition: transform .25s; }
+    .card-tt .t { font-size: 15.5px; font-weight: 600; letter-spacing: -.2px; display: block; }
+    .card-tt .s { font-size: 12.5px; color: var(--sl); margin-top: 2px; display: block; }
+    .chev { color: var(--sl); font-size: 20px; transition: transform .25s; }
     .card.open .chev { transform: rotate(180deg); }
     .card-body { display: none; padding: 4px 20px 22px; }
     .card.open .card-body { display: block; }
 
     .score-chip { display: inline-flex; align-items: baseline; gap: 3px; padding: 4px 11px; border-radius: 99px; font-weight: 700; font-size: 13px; border: 1px solid; }
-    .score-chip small { font-weight: 500; font-size: 11px; opacity: .7; }
-    .sc-good { color: #6EE7B7; background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.3); }
-    .sc-warn { color: #FCD34D; background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.3); }
-    .sc-bad  { color: #FCA5A5; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
+    .score-chip small { font-weight: 500; font-size: 11px; opacity: .85; }
+    .sc-good { color: #8DEBBE; background: rgba(16,185,129,.14); border-color: rgba(16,185,129,.35); }
+    .sc-warn { color: #FCD34D; background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.35); }
+    .sc-bad  { color: #FCA5A5; background: rgba(239,68,68,.14); border-color: rgba(239,68,68,.35); }
 
     /* Bullets */
     ul.bul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-    ul.bul li { position: relative; padding-left: 18px; font-size: 14px; color: #E2E8F0; }
+    ul.bul li { position: relative; padding-left: 18px; font-size: 14px; color: #E7ECF3; }
     ul.bul li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
 
     /* KV rows */
     .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
     @media (max-width: 560px){ .kv-grid { grid-template-columns: 1fr; } }
     .kv { display: flex; flex-direction: column; gap: 3px; padding: 9px 0; border-bottom: 1px solid var(--bo); }
-    .kv .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--sl2); font-weight: 600; }
+    .kv .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--sl); font-weight: 600; }
     .kv .v { font-size: 14px; color: var(--wh); }
     .kv .v a { color: var(--cy); text-decoration: none; }
     .kv .v a:hover { text-decoration: underline; }
 
     .tags { display: flex; flex-wrap: wrap; gap: 7px; }
-    .tag2 { font-size: 12.5px; background: var(--n3); border: 1px solid var(--bo2); border-radius: 8px; padding: 5px 11px; color: #CBD5E1; }
+    .tag2 { font-size: 12.5px; background: var(--n3); border: 1px solid var(--bo2); border-radius: 8px; padding: 5px 11px; color: #D4DEEA; }
 
-    .subh { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl2); font-weight: 600; margin: 18px 0 9px; }
+    .subh { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl); font-weight: 600; margin: 18px 0 9px; }
     .subh:first-child { margin-top: 0; }
 
     /* status grid (online presence) */
@@ -179,9 +204,9 @@
     .chan { display: flex; align-items: center; gap: 11px; padding: 10px 0; border-bottom: 1px solid var(--bo); }
     .chan:last-child { border-bottom: none; }
     .chan .ci { width: 22px; height: 22px; border-radius: 6px; flex: none; display: grid; place-items: center; font-size: 14px; }
-    .chan .ci.yes { background: rgba(16,185,129,.14); color: #6EE7B7; }
-    .chan .ci.no  { background: rgba(239,68,68,.12); color: #FCA5A5; }
-    .chan .ci.unk { background: var(--n3); color: var(--sl2); }
+    .chan .ci.yes { background: rgba(16,185,129,.16); color: #8DEBBE; }
+    .chan .ci.no  { background: rgba(239,68,68,.14); color: #FCA5A5; }
+    .chan .ci.unk { background: var(--n3); color: var(--sl); }
     .chan .cl { flex: 1; font-size: 14px; }
     .chan .cn { font-size: 12px; color: var(--sl); }
 
@@ -191,7 +216,7 @@
     .opp-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .opp-top .ot { font-size: 15px; font-weight: 600; }
     .opp-row { display: grid; grid-template-columns: 92px 1fr; gap: 6px 12px; margin-top: 12px; font-size: 13.5px; }
-    .opp-row .lb { color: var(--sl2); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; padding-top: 1px; }
+    .opp-row .lb { color: var(--sl); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; padding-top: 1px; }
     .opp-row .lb.sol { color: var(--cy); }
 
     /* discovery Qs */
@@ -204,72 +229,80 @@
     .obj:last-child { border-bottom: none; }
     .obj .oq { font-size: 14px; font-weight: 600; display: flex; gap: 8px; }
     .obj .oq i { color: var(--am); font-size: 16px; flex: none; margin-top: 1px; }
-    .obj .oa { font-size: 13.5px; color: #CBD5E1; margin-top: 7px; padding-left: 24px; position: relative; }
+    .obj .oa { font-size: 13.5px; color: #D4DEEA; margin-top: 7px; padding-left: 24px; position: relative; }
     .obj .oa i { position: absolute; left: 0; top: 1px; color: var(--gr); font-size: 15px; }
 
     .angle-hero { background: var(--grad135); border-radius: 13px; padding: 16px 18px; margin-bottom: 16px; }
-    .angle-hero .l { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.75); font-weight: 600; }
+    .angle-hero .l { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.9); font-weight: 600; }
     .angle-hero .h { font-size: 16px; font-weight: 600; margin-top: 6px; color: #fff; }
 
-    .ice { background: var(--n3); border: 1px solid var(--bo2); border-left: 3px solid var(--cy); border-radius: 10px; padding: 15px 18px; font-size: 15px; font-style: italic; color: #E2E8F0; }
+    .ice { background: var(--n3); border: 1px solid var(--bo2); border-left: 3px solid var(--cy); border-radius: 10px; padding: 15px 18px; font-size: 15px; font-style: italic; color: #E7ECF3; }
 
     .sources a { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--sl); text-decoration: none; background: var(--n3); border: 1px solid var(--bo); border-radius: 8px; padding: 6px 10px; margin: 0 8px 8px 0; transition: color .15s, border-color .15s; }
     .sources a:hover { color: var(--cy); border-color: var(--bo2); }
     .sources a i { font-size: 13px; }
 
-    .na { color: var(--sl2); font-style: italic; }
+    .na { color: var(--sl); font-style: italic; }
     .footer { text-align: center; color: var(--sl2); font-size: 12px; margin-top: 40px; }
+
+    @media print {
+      body::before { display: none; }
+      .card { break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to main content</a>
   <div class="wrap">
-    <nav class="nav">
+    <header class="nav">
       <div class="brand">
         <span class="logo">Leada<span class="g">Line</span></span>
-        <span class="div"></span>
+        <span class="div" aria-hidden="true"></span>
         <span class="tag">Prospect Intelligence</span>
       </div>
-      <span class="pill"><i class="ti ti-shield-lock"></i>Internal tool</span>
-    </nav>
+      <span class="pill"><i class="ti ti-shield-lock" aria-hidden="true"></i>Internal tool</span>
+    </header>
 
-    <!-- INPUT -->
-    <section id="inputView">
-      <div class="hero">
-        <h1>Know your prospect<br /><span class="g">before you call.</span></h1>
-        <p>AI sales preparation for UK service businesses. Scan the full commercial picture — and every LeadaLine opportunity — in under 30 seconds.</p>
-      </div>
-
-      <div class="panel">
-        <div class="field-grid">
-          <div class="field">
-            <label>Business Name</label>
-            <input class="inp" id="inBiz" placeholder="e.g. Bright Spark Electrical" autocomplete="off" />
-          </div>
-          <div class="field">
-            <label>Website URL</label>
-            <input class="inp" id="inUrl" placeholder="e.g. brightspark.co.uk" autocomplete="off" />
-          </div>
-          <div class="field span2">
-            <label>Phone Number <span class="opt">— optional</span></label>
-            <input class="inp" id="inPhone" placeholder="e.g. 0161 123 4567" autocomplete="off" />
-          </div>
+    <main id="main">
+      <!-- INPUT -->
+      <section id="inputView" aria-labelledby="heroTitle">
+        <div class="hero">
+          <h1 id="heroTitle">Know your prospect<br /><span class="g">before you call.</span></h1>
+          <p>AI sales preparation for UK service businesses. Scan the full commercial picture — and every LeadaLine opportunity — in under 30 seconds.</p>
         </div>
-        <button class="btn" id="goBtn"><i class="ti ti-sparkles" style="font-size:18px"></i>Analyse Prospect</button>
-        <div class="form-err" id="formErr"></div>
-        <div class="hint">Gathers only publicly available information. Never invents data.</div>
-      </div>
-    </section>
 
-    <!-- LOADING -->
-    <section class="loading" id="loadingView">
-      <div class="spinner"></div>
-      <div class="lmsg" id="lmsg">Reading the website…</div>
-      <div class="lsub">This takes 20–60 seconds. We're doing the homework so you don't have to.</div>
-      <div class="lbar"><span></span></div>
-    </section>
+        <form class="panel" id="piForm" novalidate>
+          <div class="field-grid">
+            <div class="field">
+              <label for="inBiz">Business Name</label>
+              <input class="inp" id="inBiz" name="businessName" placeholder="e.g. Bright Spark Electrical" autocomplete="off" aria-required="true" />
+            </div>
+            <div class="field">
+              <label for="inUrl">Website URL</label>
+              <input class="inp" id="inUrl" name="websiteUrl" type="url" inputmode="url" placeholder="e.g. brightspark.co.uk" autocomplete="off" aria-required="true" />
+            </div>
+            <div class="field span2">
+              <label for="inPhone">Phone Number <span class="opt">— optional</span></label>
+              <input class="inp" id="inPhone" name="phone" type="tel" inputmode="tel" placeholder="e.g. 0161 123 4567" autocomplete="off" />
+            </div>
+          </div>
+          <button class="btn" id="goBtn" type="submit"><i class="ti ti-sparkles" style="font-size:18px" aria-hidden="true"></i>Analyse Prospect</button>
+          <div class="form-err" id="formErr" role="alert"></div>
+          <p class="hint" id="formHint">Gathers only publicly available information. Never invents data.</p>
+        </form>
+      </section>
 
-    <!-- RESULTS -->
-    <section id="results"></section>
+      <!-- LOADING -->
+      <section class="loading" id="loadingView" role="status" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <p class="lmsg" id="lmsg">Reading the website…</p>
+        <p class="lsub">This takes 20–60 seconds. We're doing the homework so you don't have to.</p>
+        <div class="lbar" aria-hidden="true"><span></span></div>
+      </section>
+
+      <!-- RESULTS -->
+      <section id="results" aria-label="Prospect briefing"></section>
+    </main>
 
     <div class="footer" id="footer" style="display:none">
       Prospect Intelligence · Powered by LeadaLine · Public sources only
@@ -279,6 +312,8 @@
   <script>
     const $ = (id) => document.getElementById(id);
     const inputView = $('inputView'), loadingView = $('loadingView'), results = $('results'), footer = $('footer');
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
 
     const LOAD_MSGS = [
       'Reading the website…',
@@ -295,9 +330,9 @@
 
     function startLoading() {
       inputView.style.display = 'none';
-      results.style.display = 'none';
+      results.classList.remove('show');
       footer.style.display = 'none';
-      loadingView.style.display = 'block';
+      loadingView.classList.add('show');
       let i = 0;
       $('lmsg').textContent = LOAD_MSGS[0];
       loadTimer = setInterval(() => {
@@ -305,7 +340,12 @@
         $('lmsg').textContent = LOAD_MSGS[i];
       }, 6000);
     }
-    function stopLoading() { clearInterval(loadTimer); loadingView.style.display = 'none'; }
+    function stopLoading() { clearInterval(loadTimer); loadingView.classList.remove('show'); }
+
+    // Mark all icon-font glyphs as decorative for assistive tech.
+    function markDecorative(root) {
+      (root || document).querySelectorAll('i.ti').forEach((i) => i.setAttribute('aria-hidden', 'true'));
+    }
 
     // ── helpers ──
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -315,15 +355,15 @@
 
     function stars(n, max = 5) {
       n = Math.max(0, Math.min(max, parseInt(n, 10) || 0));
-      let s = '<span class="stars">';
-      for (let i = 0; i < max; i++) s += `<i class="ti ti-star-filled ${i < n ? '' : 'off'}"></i>`;
+      let s = `<span class="stars" role="img" aria-label="${n} out of ${max} stars">`;
+      for (let i = 0; i < max; i++) s += `<i class="ti ti-star-filled ${i < n ? '' : 'off'}" aria-hidden="true"></i>`;
       return s + '</span>';
     }
     function scoreChip(score, max = 10) {
       const n = parseInt(score, 10);
       if (isNaN(n)) return '';
       const cls = n >= 7 ? 'sc-good' : n >= 4 ? 'sc-warn' : 'sc-bad';
-      return `<span class="score-chip ${cls}">${n}<small>/ ${max}</small></span>`;
+      return `<span class="score-chip ${cls}" role="img" aria-label="Score ${n} out of ${max}">${n}<small aria-hidden="true">/ ${max}</small></span>`;
     }
     function bullets(list) {
       const items = arr(list);
@@ -334,17 +374,20 @@
     let cardIndex = 0;
     function card(icon, title, subtitle, bodyHtml, opts = {}) {
       const open = opts.open ? 'open' : '';
+      const expanded = opts.open ? 'true' : 'false';
       const badge = opts.badge || '';
       const id = 'card' + cardIndex++;
       return `
         <div class="card ${open}" id="${id}">
-          <div class="card-head" data-toggle="${id}">
-            <div class="card-ico"><i class="ti ti-${icon}"></i></div>
-            <div class="card-tt"><div class="t">${title}</div><div class="s">${subtitle}</div></div>
-            ${badge}
-            <i class="chev ti ti-chevron-down"></i>
-          </div>
-          <div class="card-body">${bodyHtml}</div>
+          <h2 class="card-h">
+            <button type="button" class="card-head" id="${id}-btn" aria-expanded="${expanded}" aria-controls="${id}-body">
+              <span class="card-ico" aria-hidden="true"><i class="ti ti-${icon}"></i></span>
+              <span class="card-tt"><span class="t">${title}</span><span class="s">${subtitle}</span></span>
+              ${badge}
+              <i class="chev ti ti-chevron-down" aria-hidden="true"></i>
+            </button>
+          </h2>
+          <div class="card-body" id="${id}-body" role="region" aria-labelledby="${id}-btn">${bodyHtml}</div>
         </div>`;
     }
 
@@ -360,38 +403,37 @@
       const fit = r.fitScore || {};
       let html = '';
 
-      // Head
       html += `
         <div class="results-head">
           <div>
-            <div class="rh-title">${val(qs.businessName || bo.companyName || r.meta?.input?.businessName)}</div>
-            <div class="rh-sub">${val(bo.industry)} · Briefing generated ${new Date(r.meta?.generatedAt || Date.now()).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</div>
+            <h1 class="rh-title" id="rhTitle" tabindex="-1">${val(qs.businessName || bo.companyName || (r.meta && r.meta.input && r.meta.input.businessName))}</h1>
+            <div class="rh-sub">${val(bo.industry)} · Briefing generated ${new Date((r.meta && r.meta.generatedAt) || Date.now()).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</div>
           </div>
           <div class="rh-actions">
-            <button class="ghost" id="printBtn"><i class="ti ti-printer"></i>Print</button>
-            <button class="ghost" id="newBtn"><i class="ti ti-plus"></i>New</button>
+            <button class="ghost" id="printBtn" type="button"><i class="ti ti-printer" aria-hidden="true"></i>Print</button>
+            <button class="ghost" id="newBtn" type="button"><i class="ti ti-plus" aria-hidden="true"></i>New</button>
           </div>
         </div>`;
 
       // Quick summary hero
       html += `
-        <div class="summary">
+        <section class="summary" aria-label="Quick summary">
           <div class="summary-inner">
             <div class="summary-top">
               <div>
                 <div class="biz">${val(qs.businessName || bo.companyName)}</div>
                 <div class="stars">${stars(qs.prospectStars)} <span style="color:var(--sl);font-size:12.5px;margin-left:6px">Prospect strength</span></div>
               </div>
-              <div class="grade-badge"><span class="g">${val(fit.grade)}</span><span class="l">Fit Score</span></div>
+              <div class="grade-badge"><span class="g" aria-hidden="true">${val(fit.grade)}</span><span class="l">Fit Score</span><span class="sr-only">LeadaLine fit score: ${has(fit.grade) ? esc(fit.grade) : 'not available'}</span></div>
             </div>
             <div class="summary-grid">
-              <div class="skv"><div class="k"><i class="ti ti-alert-triangle"></i>Primary Pain Point</div><div class="v">${val(qs.primaryPainPoint)}</div></div>
-              <div class="skv"><div class="k"><i class="ti ti-device-desktop"></i>Recommended Demo</div><div class="v">${val(qs.recommendedDemo)}</div></div>
-              <div class="skv"><div class="k"><i class="ti ti-message"></i>Opening Line</div><div class="v">${val(qs.openingLine)}</div></div>
-              <div class="skv"><div class="k"><i class="ti ti-coin"></i>Estimated Value</div><div class="v">${val(qs.estimatedValue)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Primary Pain Point</div><div class="v">${val(qs.primaryPainPoint)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-device-desktop" aria-hidden="true"></i>Recommended Demo</div><div class="v">${val(qs.recommendedDemo)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-message" aria-hidden="true"></i>Opening Line</div><div class="v">${val(qs.openingLine)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-coin" aria-hidden="true"></i>Estimated Value</div><div class="v">${val(qs.estimatedValue)}</div></div>
             </div>
           </div>
-        </div>`;
+        </section>`;
 
       // 1. Business overview
       const socials = Array.isArray(bo.socialLinks) ? bo.socialLinks.filter((s) => s && has(s.url)) : [];
@@ -411,22 +453,23 @@
       if (socials.length) {
         boBody += '<div class="subh">Social Media</div><div class="tags">' + socials.map((s) => `<a class="tag2" style="text-decoration:none;color:var(--cy)" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.platform || 'Link')}</a>`).join('') + '</div>';
       }
-      html += card('building-store', 'Business Overview', 'Who they are & what they do', boBody, { open: true });
+      html += card('building-store', 'Business Overview', 'Who they are &amp; what they do', boBody, { open: true });
 
       // 2. Online presence
       let opBody = '';
       const opItems = Array.isArray(op.items) ? op.items : [];
+      const statusWord = { good: 'good', warn: 'needs work', bad: 'poor', unknown: 'unknown' };
       if (opItems.length) {
         opBody += '<div class="stat-grid">' + opItems.map((it) => {
           const st = ['good', 'warn', 'bad', 'unknown'].includes(it.status) ? it.status : 'unknown';
-          return `<div class="stat"><span class="dot ${st}"></span><div class="sl"><div class="lab">${esc(it.label)}</div><div class="val">${val(it.value)}</div></div></div>`;
+          return `<div class="stat"><span class="dot ${st}" aria-hidden="true"></span><div class="sl"><div class="lab">${esc(it.label)}</div><div class="val">${val(it.value)}</div></div><span class="sr-only"> — ${statusWord[st]}</span></div>`;
         }).join('') + '</div>';
       } else { opBody = '<div class="na">Not publicly available.</div>'; }
       html += card('world', 'Online Presence', 'Website quality assessment', opBody, { badge: scoreChip(op.websiteScore) });
 
       // 3. Google Business
       let gbBody = '<div class="kv-grid">';
-      gbBody += `<div class="kv"><div class="k">Rating</div><div class="v">${has(gb.rating) ? '<i class="ti ti-star-filled" style="color:var(--am);font-size:13px"></i> ' + esc(gb.rating) : val(gb.rating)}</div></div>`;
+      gbBody += `<div class="kv"><div class="k">Rating</div><div class="v">${has(gb.rating) ? '<i class="ti ti-star-filled" style="color:var(--am);font-size:13px" aria-hidden="true"></i> ' + esc(gb.rating) : val(gb.rating)}</div></div>`;
       gbBody += `<div class="kv"><div class="k">Total Reviews</div><div class="v">${val(gb.totalReviews)}</div></div>`;
       gbBody += `<div class="kv"><div class="k">Busy Times</div><div class="v">${val(gb.busyTimes)}</div></div>`;
       gbBody += `<div class="kv"><div class="k">Photos</div><div class="v">${val(gb.photos)}</div></div>`;
@@ -435,7 +478,8 @@
       gbBody += '<div class="subh">Latest Reviews</div>' + bullets(gb.latestReviewSummary);
       gbBody += '<div class="subh">Common Praise</div>' + bullets(gb.commonPraise);
       gbBody += '<div class="subh">Common Complaints</div>' + bullets(gb.commonComplaints);
-      html += card('brand-google', 'Google Business Profile', 'Reputation & reviews', gbBody, { badge: has(gb.rating) ? `<span class="score-chip sc-good"><i class="ti ti-star-filled" style="font-size:11px"></i>&nbsp;${esc(gb.rating)}</span>` : '' });
+      const gbBadge = has(gb.rating) ? `<span class="score-chip sc-good" role="img" aria-label="Google rating ${esc(gb.rating)}"><i class="ti ti-star-filled" style="font-size:11px" aria-hidden="true"></i>&nbsp;${esc(gb.rating)}</span>` : '';
+      html += card('brand-google', 'Google Business Profile', 'Reputation &amp; reviews', gbBody, { badge: gbBadge });
 
       // 4. Lead capture
       let lcBody = '';
@@ -444,7 +488,8 @@
         lcBody = chans.map((c) => {
           const p = c.present === true ? 'yes' : c.present === false ? 'no' : 'unk';
           const ic = p === 'yes' ? 'check' : p === 'no' ? 'x' : 'minus';
-          return `<div class="chan"><span class="ci ${p}"><i class="ti ti-${ic}"></i></span><span class="cl">${esc(c.label)}</span><span class="cn">${has(c.note) ? esc(c.note) : ''}</span></div>`;
+          const word = p === 'yes' ? 'Available' : p === 'no' ? 'Not available' : 'Unknown';
+          return `<div class="chan"><span class="ci ${p}" aria-hidden="true"><i class="ti ti-${ic}"></i></span><span class="cl">${esc(c.label)}</span><span class="sr-only">: ${word}.</span><span class="cn">${has(c.note) ? esc(c.note) : ''}</span></div>`;
         }).join('');
       } else { lcBody = '<div class="na">Not publicly available.</div>'; }
       html += card('inbox', 'Lead Capture Review', 'How customers can reach them', lcBody, { badge: scoreChip(lc.score) });
@@ -472,7 +517,8 @@
             </div>
           </div>`).join('');
       } else { soBody = '<div class="na">Not publicly available.</div>'; }
-      html += card('target-arrow', 'Sales Opportunities', 'Ranked by potential impact', soBody, { open: true, badge: opps.length ? `<span class="score-chip sc-warn">${opps.length}</span>` : '' });
+      const soBadge = opps.length ? `<span class="score-chip sc-warn" role="img" aria-label="${opps.length} opportunities">${opps.length}</span>` : '';
+      html += card('target-arrow', 'Sales Opportunities', 'Ranked by potential impact', soBody, { open: true, badge: soBadge });
 
       // 7. Recommended angle
       const ra = r.recommendedAngle || {};
@@ -493,8 +539,8 @@
       const objs = Array.isArray(r.objections) ? r.objections.filter((o) => o && has(o.objection)) : [];
       const objBody = objs.length ? objs.map((o) => `
         <div class="obj">
-          <div class="oq"><i class="ti ti-quote"></i><span>${esc(o.objection)}</span></div>
-          <div class="oa"><i class="ti ti-arrow-back-up"></i>${val(o.response)}</div>
+          <div class="oq"><i class="ti ti-quote" aria-hidden="true"></i><span>${esc(o.objection)}</span></div>
+          <div class="oa"><i class="ti ti-arrow-back-up" aria-hidden="true"></i>${val(o.response)}</div>
         </div>`).join('') : '<div class="na">Not publicly available.</div>';
       html += card('shield-half', 'Likely Objections', 'And your best response', objBody);
 
@@ -503,37 +549,49 @@
 
       // 11. Fit score
       let fitBody = `<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-        <div class="grade-badge" style="min-width:90px"><span class="g">${val(fit.grade)}</span><span class="l">LeadaLine Fit</span></div>
-        <div style="flex:1;min-width:200px;font-size:14px;color:#E2E8F0">${val(fit.explanation)}</div></div>`;
+        <div class="grade-badge" style="min-width:90px"><span class="g" aria-hidden="true">${val(fit.grade)}</span><span class="l">LeadaLine Fit</span><span class="sr-only">Grade ${has(fit.grade) ? esc(fit.grade) : 'not available'}</span></div>
+        <div style="flex:1;min-width:200px;font-size:14px;color:#E7ECF3">${val(fit.explanation)}</div></div>`;
       html += card('award', 'LeadaLine Fit Score', 'How suitable this prospect is', fitBody);
 
-      // Sources
+      // 12. Sources
       const src = Array.isArray(r.sources) ? r.sources.filter((s) => s && has(s.url)) : [];
       if (src.length) {
-        html += `<div class="card open"><div class="card-head" style="cursor:default"><div class="card-ico"><i class="ti ti-link"></i></div><div class="card-tt"><div class="t">Sources</div><div class="s">Public information used</div></div></div><div class="card-body sources">${src.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>${esc(s.title || s.url)}</a>`).join('')}</div></div>`;
+        const srcBody = `<div class="sources">${src.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener"><i class="ti ti-external-link" aria-hidden="true"></i>${esc(s.title || s.url)}</a>`).join('')}</div>`;
+        html += card('link', 'Sources', 'Public information used', srcBody);
       }
 
       results.innerHTML = html;
-      results.style.display = 'block';
+      results.classList.add('show');
       footer.style.display = 'block';
+      markDecorative(results);
 
-      // wire toggles
-      results.querySelectorAll('[data-toggle]').forEach((el) => {
-        el.addEventListener('click', () => $(el.getAttribute('data-toggle')).classList.toggle('open'));
+      // wire accordion buttons
+      results.querySelectorAll('button.card-head').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const cardEl = btn.closest('.card');
+          const isOpen = cardEl.classList.toggle('open');
+          btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
       });
       $('newBtn').addEventListener('click', reset);
       $('printBtn').addEventListener('click', () => {
         results.querySelectorAll('.card').forEach((c) => c.classList.add('open'));
+        results.querySelectorAll('button.card-head').forEach((b) => b.setAttribute('aria-expanded', 'true'));
         window.print();
       });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      scrollTop();
+      // Move focus to the briefing heading for screen-reader + keyboard users.
+      const heading = $('rhTitle');
+      if (heading) heading.focus();
     }
 
     function reset() {
-      results.style.display = 'none';
+      results.classList.remove('show');
       footer.style.display = 'none';
       inputView.style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollTop();
+      $('inBiz').focus();
     }
 
     async function analyse() {
@@ -541,11 +599,12 @@
       const websiteUrl = $('inUrl').value.trim();
       const phone = $('inPhone').value.trim();
       const err = $('formErr');
-      err.style.display = 'none';
+      err.classList.remove('show');
 
       if (!businessName || !websiteUrl) {
         err.textContent = 'Please enter both a business name and website URL.';
-        err.style.display = 'block';
+        err.classList.add('show');
+        (!businessName ? $('inBiz') : $('inUrl')).focus();
         return;
       }
 
@@ -565,7 +624,8 @@
         if (!resp.ok || !data.report) {
           inputView.style.display = 'block';
           err.textContent = data.error || 'Something went wrong. Please try again.';
-          err.style.display = 'block';
+          err.classList.add('show');
+          $('goBtn').focus();
           return;
         }
         render(data.report);
@@ -574,14 +634,13 @@
         $('goBtn').disabled = false;
         inputView.style.display = 'block';
         err.textContent = 'Network error — please check your connection and try again.';
-        err.style.display = 'block';
+        err.classList.add('show');
+        $('goBtn').focus();
       }
     }
 
-    $('goBtn').addEventListener('click', analyse);
-    ['inBiz', 'inUrl', 'inPhone'].forEach((id) =>
-      $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') analyse(); })
-    );
+    $('piForm').addEventListener('submit', (e) => { e.preventDefault(); analyse(); });
+    markDecorative(document);
   </script>
 </body>
 </html>
