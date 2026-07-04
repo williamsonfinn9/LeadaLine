@@ -1,0 +1,22 @@
+{
+  "name": "leadaline-remotion",
+  "version": "1.0.0",
+  "description": "LeadaLine — premium SaaS product demo (Remotion motion-code)",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render LeadaLineDemo out/video.mp4",
+    "render": "remotion render LeadaLineDemo renders/LeadaLine_Demo.mp4 --codec=h264",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.484",
+    "@remotion/transitions": "4.0.484",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.484"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.4.0"
+  }
+}
