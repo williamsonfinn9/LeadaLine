@@ -286,7 +286,7 @@
               <input class="inp" id="inPhone" name="phone" type="tel" inputmode="tel" placeholder="e.g. 0161 123 4567" autocomplete="off" />
             </div>
           </div>
-          <button class="btn" id="goBtn" type="submit"><i class="ti ti-sparkles" style="font-size:18px" aria-hidden="true"></i>Analyse Prospect</button>
+          <button class="btn" id="goBtn" type="button"><i class="ti ti-sparkles" style="font-size:18px" aria-hidden="true"></i>Analyse Prospect</button>
           <div class="form-err" id="formErr" role="alert"></div>
           <p class="hint" id="formHint">Gathers only publicly available information. Never invents data.</p>
         </form>
@@ -639,7 +639,11 @@
       }
     }
 
+    // Click handler works even inside sandboxed iframes (where form submit is blocked);
+    // form submit + Enter keep it working as a normal page.
+    $('goBtn').addEventListener('click', analyse);
     $('piForm').addEventListener('submit', (e) => { e.preventDefault(); analyse(); });
+    ['inBiz', 'inUrl', 'inPhone'].forEach((id) => $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); analyse(); } }));
     markDecorative(document);
   </script>
 </body>
