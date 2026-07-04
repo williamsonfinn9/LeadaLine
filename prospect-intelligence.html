@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prospect Intelligence — LeadaLine</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" href="logo-icon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --n: #050B1A; --n2: #0A1628; --n3: #0F1F36; --n4: #142744;
+      --cy: #18D7FF; --bl: #2563FF; --vi: #7C5CFF;
+      --sl: #94A3B8; --sl2: #64748B; --wh: #F8FAFC;
+      --gr: #10B981; --am: #F59E0B; --rd: #EF4444;
+      --bo: rgba(148,163,184,.10); --bo2: rgba(148,163,184,.18);
+      --grad: linear-gradient(90deg,#18D7FF,#2563FF,#7C5CFF);
+      --grad135: linear-gradient(135deg,#18D7FF,#2563FF,#7C5CFF);
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      background: var(--n); color: var(--wh);
+      -webkit-font-smoothing: antialiased; line-height: 1.5;
+      min-height: 100vh; position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 0%, rgba(37,99,255,.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(124,92,255,.09) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(24,215,255,.05) 0%, transparent 70%);
+    }
+    .wrap { position: relative; z-index: 1; max-width: 940px; margin: 0 auto; padding: 0 20px 100px; }
+
+    /* ── Nav ── */
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 0 8px; }
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .brand .logo { font-size: 20px; font-weight: 600; letter-spacing: -.4px; }
+    .brand .logo .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand .div { width: 1px; height: 18px; background: var(--bo2); }
+    .brand .tag { font-size: 12.5px; color: var(--sl); font-weight: 500; }
+    .nav .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--sl); background: var(--n2); border: 1px solid var(--bo2); border-radius: 99px; padding: 5px 12px; }
+    .nav .pill i { color: var(--cy); font-size: 13px; }
+
+    /* ── Hero / input ── */
+    .hero { text-align: center; padding: 46px 0 30px; }
+    .hero h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 600; letter-spacing: -1px; line-height: 1.1; }
+    .hero h1 .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--sl); font-size: 15px; margin-top: 14px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(15,31,54,.85), rgba(10,22,40,.85));
+      border: 1px solid var(--bo2); border-radius: 20px; padding: 28px;
+      box-shadow: 0 30px 70px rgba(0,0,0,.4); backdrop-filter: blur(8px);
+    }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px){ .field-grid { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; }
+    .field.span2 { grid-column: 1 / -1; }
+    label { font-size: 11px; color: var(--sl); text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-bottom: 8px; }
+    label .opt { color: var(--sl2); text-transform: none; letter-spacing: 0; font-weight: 400; }
+    .inp {
+      width: 100%; background: var(--n); border: 1px solid var(--bo2); border-radius: 11px;
+      padding: 13px 15px; font-size: 14px; color: var(--wh); font-family: inherit; outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .inp::placeholder { color: var(--sl2); }
+    .inp:focus { border-color: rgba(37,99,255,.55); box-shadow: 0 0 0 3px rgba(37,99,255,.14); }
+    .btn {
+      margin-top: 20px; width: 100%; padding: 15px; border: none; border-radius: 12px;
+      background: var(--grad135); color: #fff; font-size: 15px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: opacity .15s, transform .05s; display: inline-flex;
+      align-items: center; justify-content: center; gap: 9px;
+    }
+    .btn:hover { opacity: .92; }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .form-err { display: none; margin-top: 14px; background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.28); color: #FCA5A5; font-size: 13px; border-radius: 10px; padding: 11px 14px; }
+    .hint { text-align: center; color: var(--sl2); font-size: 12px; margin-top: 16px; }
+
+    /* ── Loading ── */
+    .loading { display: none; text-align: center; padding: 60px 0; }
+    .spinner { width: 46px; height: 46px; margin: 0 auto 26px; border-radius: 50%; border: 3px solid var(--bo2); border-top-color: var(--cy); animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading .lmsg { font-size: 16px; font-weight: 500; }
+    .loading .lsub { color: var(--sl); font-size: 13px; margin-top: 8px; }
+    .lbar { width: 220px; height: 4px; border-radius: 4px; background: var(--n3); margin: 24px auto 0; overflow: hidden; }
+    .lbar span { display: block; height: 100%; width: 40%; background: var(--grad); border-radius: 4px; animation: slide 1.6s ease-in-out infinite; }
+    @keyframes slide { 0%{ transform: translateX(-100%);} 100%{ transform: translateX(350%);} }
+
+    /* ── Results ── */
+    #results { display: none; }
+    .results-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 4px 0 22px; flex-wrap: wrap; }
+    .results-head .rh-title { font-size: 22px; font-weight: 600; letter-spacing: -.4px; }
+    .results-head .rh-sub { color: var(--sl); font-size: 13px; margin-top: 2px; }
+    .rh-actions { display: flex; gap: 10px; }
+    .ghost { background: var(--n2); border: 1px solid var(--bo2); color: var(--wh); font-family: inherit; font-size: 13px; font-weight: 500; border-radius: 10px; padding: 9px 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: border-color .15s, background .15s; }
+    .ghost:hover { border-color: var(--bo2); background: var(--n3); }
+    .ghost i { font-size: 15px; color: var(--cy); }
+
+    /* Quick summary hero */
+    .summary {
+      position: relative; border-radius: 20px; padding: 1px; margin-bottom: 22px;
+      background: var(--grad135);
+    }
+    .summary-inner { background: linear-gradient(180deg,#0B1830,#091426); border-radius: 19px; padding: 26px 28px; }
+    .summary-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .summary-top .biz { font-size: 20px; font-weight: 600; letter-spacing: -.3px; }
+    .summary-top .stars { margin-top: 6px; }
+    .grade-badge { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-width: 74px; padding: 10px 14px; border-radius: 14px; background: var(--n); border: 1px solid var(--bo2); }
+    .grade-badge .g { font-size: 28px; font-weight: 700; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .grade-badge .l { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--sl); margin-top: 5px; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+    @media (max-width: 640px){ .summary-grid { grid-template-columns: 1fr; } }
+    .skv { background: var(--n); border: 1px solid var(--bo); border-radius: 12px; padding: 14px 16px; }
+    .skv .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl2); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .skv .k i { color: var(--cy); font-size: 13px; }
+    .skv .v { font-size: 14px; margin-top: 7px; color: var(--wh); }
+
+    .stars { display: inline-flex; gap: 2px; font-size: 15px; color: var(--am); }
+    .stars .off { color: var(--n4); }
+
+    /* Cards */
+    .card { background: var(--n2); border: 1px solid var(--bo2); border-radius: 16px; margin-bottom: 14px; overflow: hidden; transition: border-color .18s; }
+    .card:hover { border-color: rgba(148,163,184,.28); }
+    .card-head { display: flex; align-items: center; gap: 14px; padding: 18px 20px; cursor: pointer; user-select: none; }
+    .card-ico { width: 38px; height: 38px; flex: none; border-radius: 11px; display: grid; place-items: center; background: rgba(37,99,255,.12); border: 1px solid rgba(37,99,255,.22); color: var(--cy); font-size: 19px; }
+    .card-tt { flex: 1; min-width: 0; }
+    .card-tt .t { font-size: 15.5px; font-weight: 600; letter-spacing: -.2px; }
+    .card-tt .s { font-size: 12.5px; color: var(--sl); margin-top: 2px; }
+    .chev { color: var(--sl2); font-size: 20px; transition: transform .25s; }
+    .card.open .chev { transform: rotate(180deg); }
+    .card-body { display: none; padding: 4px 20px 22px; }
+    .card.open .card-body { display: block; }
+
+    .score-chip { display: inline-flex; align-items: baseline; gap: 3px; padding: 4px 11px; border-radius: 99px; font-weight: 700; font-size: 13px; border: 1px solid; }
+    .score-chip small { font-weight: 500; font-size: 11px; opacity: .7; }
+    .sc-good { color: #6EE7B7; background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.3); }
+    .sc-warn { color: #FCD34D; background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.3); }
+    .sc-bad  { color: #FCA5A5; background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.3); }
+
+    /* Bullets */
+    ul.bul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    ul.bul li { position: relative; padding-left: 18px; font-size: 14px; color: #E2E8F0; }
+    ul.bul li::before { content: ''; position: absolute; left: 2px; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
+
+    /* KV rows */
+    .kv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 22px; }
+    @media (max-width: 560px){ .kv-grid { grid-template-columns: 1fr; } }
+    .kv { display: flex; flex-direction: column; gap: 3px; padding: 9px 0; border-bottom: 1px solid var(--bo); }
+    .kv .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--sl2); font-weight: 600; }
+    .kv .v { font-size: 14px; color: var(--wh); }
+    .kv .v a { color: var(--cy); text-decoration: none; }
+    .kv .v a:hover { text-decoration: underline; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tag2 { font-size: 12.5px; background: var(--n3); border: 1px solid var(--bo2); border-radius: 8px; padding: 5px 11px; color: #CBD5E1; }
+
+    .subh { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--sl2); font-weight: 600; margin: 18px 0 9px; }
+    .subh:first-child { margin-top: 0; }
+
+    /* status grid (online presence) */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 560px){ .stat-grid { grid-template-columns: 1fr; } }
+    .stat { display: flex; align-items: center; gap: 10px; background: var(--n3); border: 1px solid var(--bo); border-radius: 10px; padding: 10px 12px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .dot.good { background: var(--gr); box-shadow: 0 0 8px rgba(16,185,129,.5); }
+    .dot.warn { background: var(--am); box-shadow: 0 0 8px rgba(245,158,11,.5); }
+    .dot.bad  { background: var(--rd); box-shadow: 0 0 8px rgba(239,68,68,.5); }
+    .dot.unknown { background: var(--sl2); }
+    .stat .sl { flex: 1; min-width: 0; }
+    .stat .sl .lab { font-size: 13px; font-weight: 500; }
+    .stat .sl .val { font-size: 11.5px; color: var(--sl); margin-top: 1px; }
+
+    /* channels checklist */
+    .chan { display: flex; align-items: center; gap: 11px; padding: 10px 0; border-bottom: 1px solid var(--bo); }
+    .chan:last-child { border-bottom: none; }
+    .chan .ci { width: 22px; height: 22px; border-radius: 6px; flex: none; display: grid; place-items: center; font-size: 14px; }
+    .chan .ci.yes { background: rgba(16,185,129,.14); color: #6EE7B7; }
+    .chan .ci.no  { background: rgba(239,68,68,.12); color: #FCA5A5; }
+    .chan .ci.unk { background: var(--n3); color: var(--sl2); }
+    .chan .cl { flex: 1; font-size: 14px; }
+    .chan .cn { font-size: 12px; color: var(--sl); }
+
+    /* opportunities */
+    .opp { border: 1px solid var(--bo2); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; background: var(--n3); }
+    .opp:last-child { margin-bottom: 0; }
+    .opp-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .opp-top .ot { font-size: 15px; font-weight: 600; }
+    .opp-row { display: grid; grid-template-columns: 92px 1fr; gap: 6px 12px; margin-top: 12px; font-size: 13.5px; }
+    .opp-row .lb { color: var(--sl2); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; padding-top: 1px; }
+    .opp-row .lb.sol { color: var(--cy); }
+
+    /* discovery Qs */
+    ol.qs { list-style: none; counter-reset: q; display: flex; flex-direction: column; gap: 9px; }
+    ol.qs li { counter-increment: q; position: relative; padding: 11px 14px 11px 44px; background: var(--n3); border: 1px solid var(--bo); border-radius: 10px; font-size: 14px; }
+    ol.qs li::before { content: counter(q); position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 6px; background: var(--grad135); color: #fff; font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+
+    /* objections */
+    .obj { padding: 13px 0; border-bottom: 1px solid var(--bo); }
+    .obj:last-child { border-bottom: none; }
+    .obj .oq { font-size: 14px; font-weight: 600; display: flex; gap: 8px; }
+    .obj .oq i { color: var(--am); font-size: 16px; flex: none; margin-top: 1px; }
+    .obj .oa { font-size: 13.5px; color: #CBD5E1; margin-top: 7px; padding-left: 24px; position: relative; }
+    .obj .oa i { position: absolute; left: 0; top: 1px; color: var(--gr); font-size: 15px; }
+
+    .angle-hero { background: var(--grad135); border-radius: 13px; padding: 16px 18px; margin-bottom: 16px; }
+    .angle-hero .l { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.75); font-weight: 600; }
+    .angle-hero .h { font-size: 16px; font-weight: 600; margin-top: 6px; color: #fff; }
+
+    .ice { background: var(--n3); border: 1px solid var(--bo2); border-left: 3px solid var(--cy); border-radius: 10px; padding: 15px 18px; font-size: 15px; font-style: italic; color: #E2E8F0; }
+
+    .sources a { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--sl); text-decoration: none; background: var(--n3); border: 1px solid var(--bo); border-radius: 8px; padding: 6px 10px; margin: 0 8px 8px 0; transition: color .15s, border-color .15s; }
+    .sources a:hover { color: var(--cy); border-color: var(--bo2); }
+    .sources a i { font-size: 13px; }
+
+    .na { color: var(--sl2); font-style: italic; }
+    .footer { text-align: center; color: var(--sl2); font-size: 12px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <div class="brand">
+        <span class="logo">Leada<span class="g">Line</span></span>
+        <span class="div"></span>
+        <span class="tag">Prospect Intelligence</span>
+      </div>
+      <span class="pill"><i class="ti ti-shield-lock"></i>Internal tool</span>
+    </nav>
+
+    <!-- INPUT -->
+    <section id="inputView">
+      <div class="hero">
+        <h1>Know your prospect<br /><span class="g">before you call.</span></h1>
+        <p>AI sales preparation for UK service businesses. Scan the full commercial picture — and every LeadaLine opportunity — in under 30 seconds.</p>
+      </div>
+
+      <div class="panel">
+        <div class="field-grid">
+          <div class="field">
+            <label>Business Name</label>
+            <input class="inp" id="inBiz" placeholder="e.g. Bright Spark Electrical" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label>Website URL</label>
+            <input class="inp" id="inUrl" placeholder="e.g. brightspark.co.uk" autocomplete="off" />
+          </div>
+          <div class="field span2">
+            <label>Phone Number <span class="opt">— optional</span></label>
+            <input class="inp" id="inPhone" placeholder="e.g. 0161 123 4567" autocomplete="off" />
+          </div>
+        </div>
+        <button class="btn" id="goBtn"><i class="ti ti-sparkles" style="font-size:18px"></i>Analyse Prospect</button>
+        <div class="form-err" id="formErr"></div>
+        <div class="hint">Gathers only publicly available information. Never invents data.</div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="loading" id="loadingView">
+      <div class="spinner"></div>
+      <div class="lmsg" id="lmsg">Reading the website…</div>
+      <div class="lsub">This takes 20–60 seconds. We're doing the homework so you don't have to.</div>
+      <div class="lbar"><span></span></div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results"></section>
+
+    <div class="footer" id="footer" style="display:none">
+      Prospect Intelligence · Powered by LeadaLine · Public sources only
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const inputView = $('inputView'), loadingView = $('loadingView'), results = $('results'), footer = $('footer');
+
+    const LOAD_MSGS = [
+      'Reading the website…',
+      'Finding the Google Business Profile…',
+      'Scanning reviews & reputation…',
+      'Checking how customers can get in touch…',
+      'Mapping the customer experience…',
+      'Hunting for LeadaLine opportunities…',
+      'Building your sales angle…',
+      'Writing discovery questions…',
+      'Finishing the briefing…'
+    ];
+    let loadTimer = null;
+
+    function startLoading() {
+      inputView.style.display = 'none';
+      results.style.display = 'none';
+      footer.style.display = 'none';
+      loadingView.style.display = 'block';
+      let i = 0;
+      $('lmsg').textContent = LOAD_MSGS[0];
+      loadTimer = setInterval(() => {
+        i = Math.min(i + 1, LOAD_MSGS.length - 1);
+        $('lmsg').textContent = LOAD_MSGS[i];
+      }, 6000);
+    }
+    function stopLoading() { clearInterval(loadTimer); loadingView.style.display = 'none'; }
+
+    // ── helpers ──
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const has = (v) => v != null && String(v).trim() !== '' && String(v).trim().toLowerCase() !== 'not publicly available.';
+    function val(v) { return has(v) ? esc(v) : '<span class="na">Not publicly available.</span>'; }
+    function arr(a) { return Array.isArray(a) ? a.filter((x) => has(x)) : []; }
+
+    function stars(n, max = 5) {
+      n = Math.max(0, Math.min(max, parseInt(n, 10) || 0));
+      let s = '<span class="stars">';
+      for (let i = 0; i < max; i++) s += `<i class="ti ti-star-filled ${i < n ? '' : 'off'}"></i>`;
+      return s + '</span>';
+    }
+    function scoreChip(score, max = 10) {
+      const n = parseInt(score, 10);
+      if (isNaN(n)) return '';
+      const cls = n >= 7 ? 'sc-good' : n >= 4 ? 'sc-warn' : 'sc-bad';
+      return `<span class="score-chip ${cls}">${n}<small>/ ${max}</small></span>`;
+    }
+    function bullets(list) {
+      const items = arr(list);
+      if (!items.length) return '<div class="na">Not publicly available.</div>';
+      return '<ul class="bul">' + items.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>';
+    }
+
+    let cardIndex = 0;
+    function card(icon, title, subtitle, bodyHtml, opts = {}) {
+      const open = opts.open ? 'open' : '';
+      const badge = opts.badge || '';
+      const id = 'card' + cardIndex++;
+      return `
+        <div class="card ${open}" id="${id}">
+          <div class="card-head" data-toggle="${id}">
+            <div class="card-ico"><i class="ti ti-${icon}"></i></div>
+            <div class="card-tt"><div class="t">${title}</div><div class="s">${subtitle}</div></div>
+            ${badge}
+            <i class="chev ti ti-chevron-down"></i>
+          </div>
+          <div class="card-body">${bodyHtml}</div>
+        </div>`;
+    }
+
+    // ── render ──
+    function render(r) {
+      cardIndex = 0;
+      const qs = r.quickSummary || {};
+      const bo = r.businessOverview || {};
+      const op = r.onlinePresence || {};
+      const gb = r.googleBusiness || {};
+      const lc = r.leadCapture || {};
+      const cx = r.customerExperience || {};
+      const fit = r.fitScore || {};
+      let html = '';
+
+      // Head
+      html += `
+        <div class="results-head">
+          <div>
+            <div class="rh-title">${val(qs.businessName || bo.companyName || r.meta?.input?.businessName)}</div>
+            <div class="rh-sub">${val(bo.industry)} · Briefing generated ${new Date(r.meta?.generatedAt || Date.now()).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+          <div class="rh-actions">
+            <button class="ghost" id="printBtn"><i class="ti ti-printer"></i>Print</button>
+            <button class="ghost" id="newBtn"><i class="ti ti-plus"></i>New</button>
+          </div>
+        </div>`;
+
+      // Quick summary hero
+      html += `
+        <div class="summary">
+          <div class="summary-inner">
+            <div class="summary-top">
+              <div>
+                <div class="biz">${val(qs.businessName || bo.companyName)}</div>
+                <div class="stars">${stars(qs.prospectStars)} <span style="color:var(--sl);font-size:12.5px;margin-left:6px">Prospect strength</span></div>
+              </div>
+              <div class="grade-badge"><span class="g">${val(fit.grade)}</span><span class="l">Fit Score</span></div>
+            </div>
+            <div class="summary-grid">
+              <div class="skv"><div class="k"><i class="ti ti-alert-triangle"></i>Primary Pain Point</div><div class="v">${val(qs.primaryPainPoint)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-device-desktop"></i>Recommended Demo</div><div class="v">${val(qs.recommendedDemo)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-message"></i>Opening Line</div><div class="v">${val(qs.openingLine)}</div></div>
+              <div class="skv"><div class="k"><i class="ti ti-coin"></i>Estimated Value</div><div class="v">${val(qs.estimatedValue)}</div></div>
+            </div>
+          </div>
+        </div>`;
+
+      // 1. Business overview
+      const socials = Array.isArray(bo.socialLinks) ? bo.socialLinks.filter((s) => s && has(s.url)) : [];
+      let boBody = '<div class="kv-grid">';
+      const boRows = [
+        ['Industry', val(bo.industry)], ['Years Trading', val(bo.yearsTrading)],
+        ['Company Size', val(bo.companySizeEstimate)], ['Employees (est.)', val(bo.employeesEstimate)],
+        ['Emergency Services', val(bo.emergencyServices)], ['Commercial', val(bo.commercial)],
+        ['Domestic', val(bo.domestic)], ['Email', has(bo.email) ? `<a href="mailto:${esc(bo.email)}">${esc(bo.email)}</a>` : val(bo.email)],
+      ];
+      boRows.forEach(([k, v]) => { boBody += `<div class="kv"><div class="k">${k}</div><div class="v">${v}</div></div>`; });
+      boBody += `<div class="kv"><div class="k">Website</div><div class="v">${has(bo.website) ? `<a href="${esc(bo.website)}" target="_blank" rel="noopener">${esc(bo.website)}</a>` : val(bo.website)}</div></div>`;
+      boBody += `<div class="kv"><div class="k">Contact Numbers</div><div class="v">${arr(bo.contactNumbers).map(esc).join(' · ') || '<span class="na">Not publicly available.</span>'}</div></div>`;
+      boBody += '</div>';
+      boBody += '<div class="subh">Service Areas</div>' + (arr(bo.serviceAreas).length ? `<div class="tags">${arr(bo.serviceAreas).map((t) => `<span class="tag2">${esc(t)}</span>`).join('')}</div>` : '<div class="na">Not publicly available.</div>');
+      boBody += '<div class="subh">Primary Services</div>' + bullets(bo.primaryServices);
+      if (socials.length) {
+        boBody += '<div class="subh">Social Media</div><div class="tags">' + socials.map((s) => `<a class="tag2" style="text-decoration:none;color:var(--cy)" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.platform || 'Link')}</a>`).join('') + '</div>';
+      }
+      html += card('building-store', 'Business Overview', 'Who they are & what they do', boBody, { open: true });
+
+      // 2. Online presence
+      let opBody = '';
+      const opItems = Array.isArray(op.items) ? op.items : [];
+      if (opItems.length) {
+        opBody += '<div class="stat-grid">' + opItems.map((it) => {
+          const st = ['good', 'warn', 'bad', 'unknown'].includes(it.status) ? it.status : 'unknown';
+          return `<div class="stat"><span class="dot ${st}"></span><div class="sl"><div class="lab">${esc(it.label)}</div><div class="val">${val(it.value)}</div></div></div>`;
+        }).join('') + '</div>';
+      } else { opBody = '<div class="na">Not publicly available.</div>'; }
+      html += card('world', 'Online Presence', 'Website quality assessment', opBody, { badge: scoreChip(op.websiteScore) });
+
+      // 3. Google Business
+      let gbBody = '<div class="kv-grid">';
+      gbBody += `<div class="kv"><div class="k">Rating</div><div class="v">${has(gb.rating) ? '<i class="ti ti-star-filled" style="color:var(--am);font-size:13px"></i> ' + esc(gb.rating) : val(gb.rating)}</div></div>`;
+      gbBody += `<div class="kv"><div class="k">Total Reviews</div><div class="v">${val(gb.totalReviews)}</div></div>`;
+      gbBody += `<div class="kv"><div class="k">Busy Times</div><div class="v">${val(gb.busyTimes)}</div></div>`;
+      gbBody += `<div class="kv"><div class="k">Photos</div><div class="v">${val(gb.photos)}</div></div>`;
+      gbBody += '</div>';
+      gbBody += '<div class="subh">Opening Hours</div>' + bullets(gb.openingHours);
+      gbBody += '<div class="subh">Latest Reviews</div>' + bullets(gb.latestReviewSummary);
+      gbBody += '<div class="subh">Common Praise</div>' + bullets(gb.commonPraise);
+      gbBody += '<div class="subh">Common Complaints</div>' + bullets(gb.commonComplaints);
+      html += card('brand-google', 'Google Business Profile', 'Reputation & reviews', gbBody, { badge: has(gb.rating) ? `<span class="score-chip sc-good"><i class="ti ti-star-filled" style="font-size:11px"></i>&nbsp;${esc(gb.rating)}</span>` : '' });
+
+      // 4. Lead capture
+      let lcBody = '';
+      const chans = Array.isArray(lc.channels) ? lc.channels : [];
+      if (chans.length) {
+        lcBody = chans.map((c) => {
+          const p = c.present === true ? 'yes' : c.present === false ? 'no' : 'unk';
+          const ic = p === 'yes' ? 'check' : p === 'no' ? 'x' : 'minus';
+          return `<div class="chan"><span class="ci ${p}"><i class="ti ti-${ic}"></i></span><span class="cl">${esc(c.label)}</span><span class="cn">${has(c.note) ? esc(c.note) : ''}</span></div>`;
+        }).join('');
+      } else { lcBody = '<div class="na">Not publicly available.</div>'; }
+      html += card('inbox', 'Lead Capture Review', 'How customers can reach them', lcBody, { badge: scoreChip(lc.score) });
+
+      // 5. Customer experience
+      let cxBody = '<div class="kv-grid">';
+      [['Find their phone number?', cx.findPhone], ['Request a quote?', cx.requestQuote], ['Book work?', cx.bookWork], ['Ask questions?', cx.askQuestions]]
+        .forEach(([k, v]) => { cxBody += `<div class="kv"><div class="k">${k}</div><div class="v">${val(v)}</div></div>`; });
+      cxBody += `<div class="kv"><div class="k">Likely Response Speed</div><div class="v">${val(cx.responseSpeed)}</div></div>`;
+      cxBody += '</div>';
+      if (arr(cx.notes).length) cxBody += '<div class="subh">Notes</div>' + bullets(cx.notes);
+      html += card('user-heart', 'Customer Experience', 'Playing the potential customer', cxBody, { badge: scoreChip(cx.score) });
+
+      // 6. Sales opportunities
+      let soBody = '';
+      const opps = Array.isArray(r.salesOpportunities) ? r.salesOpportunities : [];
+      if (opps.length) {
+        soBody = opps.map((o) => `
+          <div class="opp">
+            <div class="opp-top"><div class="ot">${esc(o.title)}</div>${stars(o.stars)}</div>
+            <div class="opp-row">
+              <div class="lb">Issue</div><div>${val(o.issue)}</div>
+              <div class="lb sol">LeadaLine</div><div>${val(o.solution)}</div>
+              <div class="lb">Benefit</div><div>${val(o.benefit)}</div>
+            </div>
+          </div>`).join('');
+      } else { soBody = '<div class="na">Not publicly available.</div>'; }
+      html += card('target-arrow', 'Sales Opportunities', 'Ranked by potential impact', soBody, { open: true, badge: opps.length ? `<span class="score-chip sc-warn">${opps.length}</span>` : '' });
+
+      // 7. Recommended angle
+      const ra = r.recommendedAngle || {};
+      let raBody = '';
+      if (has(ra.headline)) raBody += `<div class="angle-hero"><div class="l">Your one primary angle</div><div class="h">${esc(ra.headline)}</div></div>`;
+      raBody += '<div class="kv-grid">';
+      [['Problem', ra.problem], ['Impact', ra.impact], ['Suggested Demo', ra.suggestedDemo], ['Likely ROI', ra.likelyRoi]]
+        .forEach(([k, v]) => { raBody += `<div class="kv"><div class="k">${k}</div><div class="v">${val(v)}</div></div>`; });
+      raBody += '</div>';
+      html += card('bulb', 'Recommended Sales Angle', 'Lead with this one thing', raBody, { open: true });
+
+      // 8. Discovery questions
+      const dq = arr(r.discoveryQuestions);
+      const dqBody = dq.length ? '<ol class="qs">' + dq.map((q) => `<li>${esc(q)}</li>`).join('') + '</ol>' : '<div class="na">Not publicly available.</div>';
+      html += card('message-question', 'Discovery Questions', '10 natural questions to ask', dqBody);
+
+      // 9. Objections
+      const objs = Array.isArray(r.objections) ? r.objections.filter((o) => o && has(o.objection)) : [];
+      const objBody = objs.length ? objs.map((o) => `
+        <div class="obj">
+          <div class="oq"><i class="ti ti-quote"></i><span>${esc(o.objection)}</span></div>
+          <div class="oa"><i class="ti ti-arrow-back-up"></i>${val(o.response)}</div>
+        </div>`).join('') : '<div class="na">Not publicly available.</div>';
+      html += card('shield-half', 'Likely Objections', 'And your best response', objBody);
+
+      // 10. Ice breaker
+      html += card('flame', 'Ice Breaker', 'One genuine opener', has(r.iceBreaker) ? `<div class="ice">“${esc(r.iceBreaker)}”</div>` : '<div class="na">Not publicly available.</div>');
+
+      // 11. Fit score
+      let fitBody = `<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <div class="grade-badge" style="min-width:90px"><span class="g">${val(fit.grade)}</span><span class="l">LeadaLine Fit</span></div>
+        <div style="flex:1;min-width:200px;font-size:14px;color:#E2E8F0">${val(fit.explanation)}</div></div>`;
+      html += card('award', 'LeadaLine Fit Score', 'How suitable this prospect is', fitBody);
+
+      // Sources
+      const src = Array.isArray(r.sources) ? r.sources.filter((s) => s && has(s.url)) : [];
+      if (src.length) {
+        html += `<div class="card open"><div class="card-head" style="cursor:default"><div class="card-ico"><i class="ti ti-link"></i></div><div class="card-tt"><div class="t">Sources</div><div class="s">Public information used</div></div></div><div class="card-body sources">${src.map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>${esc(s.title || s.url)}</a>`).join('')}</div></div>`;
+      }
+
+      results.innerHTML = html;
+      results.style.display = 'block';
+      footer.style.display = 'block';
+
+      // wire toggles
+      results.querySelectorAll('[data-toggle]').forEach((el) => {
+        el.addEventListener('click', () => $(el.getAttribute('data-toggle')).classList.toggle('open'));
+      });
+      $('newBtn').addEventListener('click', reset);
+      $('printBtn').addEventListener('click', () => {
+        results.querySelectorAll('.card').forEach((c) => c.classList.add('open'));
+        window.print();
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function reset() {
+      results.style.display = 'none';
+      footer.style.display = 'none';
+      inputView.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function analyse() {
+      const businessName = $('inBiz').value.trim();
+      const websiteUrl = $('inUrl').value.trim();
+      const phone = $('inPhone').value.trim();
+      const err = $('formErr');
+      err.style.display = 'none';
+
+      if (!businessName || !websiteUrl) {
+        err.textContent = 'Please enter both a business name and website URL.';
+        err.style.display = 'block';
+        return;
+      }
+
+      $('goBtn').disabled = true;
+      startLoading();
+
+      try {
+        const resp = await fetch('/api/prospect-intelligence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ businessName, websiteUrl, phone }),
+        });
+        const data = await resp.json();
+        stopLoading();
+        $('goBtn').disabled = false;
+
+        if (!resp.ok || !data.report) {
+          inputView.style.display = 'block';
+          err.textContent = data.error || 'Something went wrong. Please try again.';
+          err.style.display = 'block';
+          return;
+        }
+        render(data.report);
+      } catch (e) {
+        stopLoading();
+        $('goBtn').disabled = false;
+        inputView.style.display = 'block';
+        err.textContent = 'Network error — please check your connection and try again.';
+        err.style.display = 'block';
+      }
+    }
+
+    $('goBtn').addEventListener('click', analyse);
+    ['inBiz', 'inUrl', 'inPhone'].forEach((id) =>
+      $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') analyse(); })
+    );
+  </script>
+</body>
+</html>
