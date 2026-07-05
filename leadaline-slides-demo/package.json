@@ -1,0 +1,17 @@
+{
+  "name": "leadaline-slides-demo",
+  "version": "1.0.0",
+  "description": "LeadaLine — 60s AI Office Team slide demo (Remotion, image-driven Ken Burns)",
+  "scripts": {
+    "start": "remotion studio",
+    "render": "remotion render src/index.ts LeadaLineSlides renders/leadaline-ai-office-team-demo-60s.mp4 --codec=h264"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.484",
+    "@remotion/transitions": "4.0.484",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.484"
+  },
+  "devDependencies": {"@types/react": "^19.0.0", "typescript": "^5.4.0"}
+}
