@@ -4,18 +4,19 @@
   "fps": 60,
   "durationFrames": 3600,
   "durationSeconds": 60,
-  "voiceover": "UK female (warm, confident, modern SaaS), 1.2x pacing to fit <60s",
-  "music": "synthesised premium bed (low, non-distracting)",
+  "source": "10 approved slides from client Google Drive (upscaled to 1920x1080)",
+  "voiceover": "UK female (coral), ~1.22x pacing to fit 10 scenes under 60s",
+  "music": "synthesised premium bed (low, non-distracting) + transition SFX",
   "scenes": [
-    {"n": 1,  "slide": "slide-01.png", "purpose": "Opening — LeadaLine brand + AI Office Team", "start": "0:00.0", "end": "0:05.5", "enter": "zoomIn"},
-    {"n": 2,  "slide": "slide-02.png", "purpose": "AI Receptionist — answers/captures the enquiry", "start": "0:05.5", "end": "0:13.9", "enter": "slideL"},
-    {"n": 3,  "slide": "slide-03.png", "purpose": "AI Sales Assistant — lead qualification", "start": "0:13.9", "end": "0:18.7", "enter": "slideU"},
-    {"n": 4,  "slide": "slide-04.png", "purpose": "Owner Summary — clean lead summary", "start": "0:18.7", "end": "0:24.4", "enter": "zoomIn"},
-    {"n": 5,  "slide": "slide-05.png", "purpose": "Booking — next step into the diary", "start": "0:24.4", "end": "0:30.3", "enter": "slideL"},
-    {"n": 6,  "slide": "slide-06.png", "purpose": "AI Follow-Up — chases quiet quotes", "start": "0:30.3", "end": "0:36.9", "enter": "slideU"},
-    {"n": 7,  "slide": "slide-07.png", "purpose": "AI Review — asks for a review at the right moment", "start": "0:36.9", "end": "0:43.7", "enter": "zoomIn"},
-    {"n": 8,  "slide": "slide-08.png", "purpose": "AI Reporting — performance and stats", "start": "0:43.7", "end": "0:49.4", "enter": "slideL"},
-    {"n": 9,  "slide": "slide-09.png", "purpose": "Closing CTA — Book a Demo Call Today (held to end)", "start": "0:49.4", "end": "1:00.0", "enter": "zoomIn", "accent": "glow pulse"}
-  ],
-  "notes": "Scene 10 in the brief = final hold; here slide-09 (CTA) is held to 1:00. slide-10.png (CRM Tracking) was an extra image not in the 9-scene voiceover/timing — left out of this cut; can be inserted on request."
+    {"n": 1,  "slide": "slide-01.png", "purpose": "Opening — Meet your AI Office Team", "start": "0:00.0", "end": "0:05.4"},
+    {"n": 2,  "slide": "slide-02.png", "purpose": "AI Receptionist — answers/captures the enquiry", "start": "0:05.4", "end": "0:11.7"},
+    {"n": 3,  "slide": "slide-03.png", "purpose": "AI Sales Assistant — lead qualification", "start": "0:11.7", "end": "0:16.35"},
+    {"n": 4,  "slide": "slide-04.png", "purpose": "Owner Summary — clean lead to your pocket", "start": "0:16.35", "end": "0:21.9"},
+    {"n": 5,  "slide": "slide-05.png", "purpose": "CRM Tracking — every lead in one place", "start": "0:21.9", "end": "0:26.8"},
+    {"n": 6,  "slide": "slide-06.png", "purpose": "Booking — next step into the diary", "start": "0:26.8", "end": "0:32.6"},
+    {"n": 7,  "slide": "slide-07.png", "purpose": "AI Follow-Up — chases quiet quotes", "start": "0:32.6", "end": "0:39.0"},
+    {"n": 8,  "slide": "slide-08.png", "purpose": "AI Review — 5-star review at the right moment", "start": "0:39.0", "end": "0:45.7"},
+    {"n": 9,  "slide": "slide-09.png", "purpose": "AI Reporting — performance and stats", "start": "0:45.7", "end": "0:51.2"},
+    {"n": 10, "slide": "slide-10.png", "purpose": "Closing CTA — Book a Demo Call Today (held to end)", "start": "0:51.2", "end": "1:00.0", "accent": "glow pulse"}
+  ]
 }

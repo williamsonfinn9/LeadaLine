@@ -13,7 +13,7 @@ export const entrance = (kind: Enter, p: number) => {
   if (kind === 'slideU')
     return {opacity: p, tx: 0, ty: (1 - p) * 110, scale: 1.02 - 0.02 * p, blur};
   // zoomIn (dolly)
-  return {opacity: p, tx: 0, ty: 0, scale: 1.09 - 0.09 * p, blur};
+  return {opacity: p, tx: 0, ty: 0, scale: 1.06 - 0.06 * p, blur};
 };
 
 /** Quick exit (q: 0..1) — fade + slight scale-up + blur for a motion-blur match cut. */
