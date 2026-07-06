@@ -1,3 +1,7 @@
 
 # Bundled reel download (large; individual MP4s are tracked under leadaline-reels/renders/)
 leadaline-reels/*.zip
+
+# Python bytecode cache
+__pycache__/
+*.pyc
