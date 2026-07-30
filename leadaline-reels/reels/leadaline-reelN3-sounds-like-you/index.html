@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><style>
+@font-face{font-family:'Archivo';font-weight:800;font-display:block;src:url('fonts/Archivo-800.woff2') format('woff2');}
+@font-face{font-family:'Archivo';font-weight:900;font-display:block;src:url('fonts/Archivo-900.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:400;font-display:block;src:url('fonts/DMSans-400.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:500;font-display:block;src:url('fonts/DMSans-500.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:600;font-display:block;src:url('fonts/DMSans-600.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:700;font-display:block;src:url('fonts/DMSans-700.woff2') format('woff2');}
+@font-face{font-family:'DM Mono';font-weight:500;font-display:block;src:url('fonts/DMMono-500.woff2') format('woff2');}
+*{margin:0;padding:0;box-sizing:border-box;}body{background:#050B1A;}
+#r{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;color:#F8FAFC;
+  background:radial-gradient(135% 100% at 50% 14%,#0E2240 0%,#091833 42%,#050B1A 80%);
+  --cy:#18D7FF;--bl:#2563FF;--vi:#7C5CFF;}
+#r .world{position:absolute;inset:0;transform-origin:50% 42%;}
+#r .orb{position:absolute;border-radius:50%;filter:blur(74px);z-index:0;opacity:0;}
+#r .orb.a{width:760px;height:760px;left:-200px;top:520px;background:radial-gradient(circle,rgba(37,99,255,.30),rgba(37,99,255,0) 68%);}
+#r .orb.b{width:680px;height:680px;right:-220px;top:1120px;background:radial-gradient(circle,rgba(124,92,255,.26),rgba(124,92,255,0) 68%);}
+#r .grain{position:absolute;inset:0;z-index:6;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+#r .vignette{position:absolute;inset:0;z-index:5;background:radial-gradient(125% 85% at 50% 40%,transparent 56%,rgba(2,6,16,.55) 100%);}
+#r .content{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;padding:172px 90px 150px;}
+#r .kick{font-family:'DM Mono',monospace;font-weight:500;font-size:30px;letter-spacing:5px;text-transform:uppercase;color:#8FB4E8;opacity:0;}
+#r .head{font-family:'Archivo';font-weight:900;text-transform:uppercase;text-align:center;font-size:96px;line-height:.95;letter-spacing:-2px;margin-top:24px;}
+#r .head .g{background:linear-gradient(120deg,#18D7FF,#2563FF 55%,#7C5CFF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+#r .head .l{display:block;opacity:0;}
+/* phone chat frame */
+#r .phone{margin-top:60px;width:640px;height:770px;border-radius:52px;position:relative;
+  background:linear-gradient(165deg,#0C1830,#0A1226);border:1.5px solid rgba(120,180,255,.22);
+  box-shadow:0 50px 120px rgba(2,8,24,.6),0 0 70px rgba(37,99,255,.18),inset 0 1px 0 rgba(255,255,255,.05);
+  padding:30px 30px;overflow:hidden;opacity:0;display:flex;flex-direction:column;}
+#r .phone .bar{display:flex;align-items:center;gap:14px;padding:6px 8px 22px;border-bottom:1px solid rgba(148,163,184,.14);flex:0 0 auto;}
+#r .phone .av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--bl));flex:0 0 56px;box-shadow:0 0 20px rgba(24,215,255,.5);}
+#r .phone .who{font-size:30px;font-weight:700;}
+#r .phone .st{font-size:22px;color:#7FE6A6;font-weight:600;margin-top:2px;display:flex;align-items:center;gap:8px;}
+#r .phone .st .d{width:12px;height:12px;border-radius:50%;background:#7CF6B0;box-shadow:0 0 12px rgba(124,246,176,.9);}
+#r .chat{flex:1;display:flex;flex-direction:column;gap:16px;justify-content:flex-end;overflow:hidden;padding:24px 6px 2px;}
+#r .bub{max-width:80%;padding:19px 24px;border-radius:26px;font-size:27px;line-height:1.32;font-weight:500;opacity:0;}
+#r .bub.in{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(148,163,184,.14);color:#E6EEF8;border-bottom-left-radius:8px;}
+#r .bub.out{align-self:flex-end;background:linear-gradient(135deg,#2C7CE6,#2148C8);color:#fff;border-bottom-right-radius:8px;box-shadow:0 12px 30px rgba(37,99,255,.4);}
+#r .bub .tm{display:block;font-size:19px;opacity:.7;margin-top:8px;}
+#r .typing{align-self:flex-start;display:flex;gap:10px;padding:24px 26px;background:rgba(255,255,255,.06);border-radius:28px;border-bottom-left-radius:8px;opacity:0;}
+#r .typing i{width:14px;height:14px;border-radius:50%;background:#9FB2CC;}
+/* reveal banner */
+#r .reveal{margin-top:56px;position:relative;opacity:0;text-align:center;}
+#r .reveal .rt{font-family:'Archivo';font-weight:800;font-size:60px;letter-spacing:-1px;line-height:1.05;}
+#r .reveal .rt .g{background:linear-gradient(120deg,#18D7FF,#7C5CFF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+#r .reveal .rs{font-size:32px;font-weight:500;color:#BFD0E6;margin-top:16px;}
+#r .logo{position:absolute;left:0;right:0;bottom:118px;display:flex;align-items:center;justify-content:center;gap:20px;opacity:0;}
+#r .logo .mark{width:60px;height:60px;filter:drop-shadow(0 6px 18px rgba(37,99,255,.45));}
+#r .logo .wm{font-size:54px;font-weight:600;letter-spacing:-.5px;color:#F4F8FF;}
+</style></head>
+<body>
+<div id="r" data-composition-id="reelN3" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+  <div class="world">
+    <div class="orb a"></div><div class="orb b"></div>
+    <div class="content">
+      <div class="kick">Sounds just like you</div>
+      <div class="head"><span class="l">YOUR CUSTOMERS</span><span class="l g">WON'T KNOW IT'S AI</span></div>
+      <div class="phone">
+        <div class="bar"><div class="av"></div><div><div class="who">New enquiry</div><div class="st"><span class="d"></span>Answered instantly</div></div></div>
+        <div class="chat">
+          <div class="bub in" id="m1">Hi, do you cover EV charger installs in Harrogate?<span class="tm">18:52</span></div>
+          <div class="bub out" id="m2">Hi! Yes, we do — 7kW and 22kW. Is it for home or business?<span class="tm">18:52</span></div>
+          <div class="bub in" id="m3">Home. When could someone come out?<span class="tm">18:53</span></div>
+          <div class="typing" id="ty"><i></i><i></i><i></i></div>
+          <div class="bub out" id="m4">I can pop you in Thursday at 2pm — shall I book it?<span class="tm">18:53</span></div>
+        </div>
+      </div>
+      <div class="reveal"><div class="rt">…that whole chat was <span class="g">LeadaLine.</span></div><div class="rs">Warm, on-brand, and booking jobs 24/7.</div></div>
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#18D7FF"/><stop offset=".5" stop-color="#2563FF"/><stop offset="1" stop-color="#7C5CFF"/></linearGradient></defs><rect x="13" y="7" width="14" height="50" rx="7" fill="url(#lg)"/><rect x="13" y="43" width="40" height="14" rx="7" fill="url(#lg)"/><rect x="33" y="7" width="11" height="28" rx="5.5" fill="#18D7FF"/></svg>
+        <div class="wm">LeadaLine</div>
+      </div>
+    </div>
+    <div class="vignette"></div><div class="grain"></div>
+  </div>
+  <script src="./gsap.min.js"></script>
+  <script>
+  window.__timelines=window.__timelines||{};
+  const tl=gsap.timeline({paused:true});
+  const snap="back.out(1.9)",soft="power3.out";
+  tl.to("#r .orb.a",{opacity:1,duration:1,ease:"sine.out"},0);
+  tl.to("#r .orb.b",{opacity:1,duration:1.1,ease:"sine.out"},.1);
+  tl.from("#r .world",{scale:1.05,duration:.6,ease:"power3.out"},0);
+  tl.to("#r .kick",{opacity:1,duration:.3,ease:soft},.2);
+  tl.from("#r .head .l",{y:38,opacity:0,duration:.4,stagger:.13,ease:snap},.3);
+  tl.to("#r .head .l",{opacity:1,duration:.01},.3);
+  // phone in
+  tl.fromTo("#r .phone",{y:60,scale:.94,opacity:0},{y:0,scale:1,opacity:1,duration:.5,ease:soft},1.15);
+  tl.fromTo("#r .phone .bar",{y:16,opacity:0},{y:0,opacity:1,duration:.34,ease:soft},1.35);
+  // chat bubbles pop in as a real conversation
+  function bub(id,at){ tl.fromTo(id,{opacity:0,y:24,scale:.9},{opacity:1,y:0,scale:1,duration:.34,ease:snap},at); }
+  bub("#m1",1.75);
+  bub("#m2",2.55);
+  bub("#m3",3.35);
+  // typing indicator then AI reply
+  tl.fromTo("#r .typing",{opacity:0,y:16},{opacity:1,y:0,duration:.28,ease:soft},4.05);
+  tl.to("#r .typing i",{y:-10,duration:.28,ease:"sine.inOut",stagger:.12,yoyo:true,repeat:3},4.15);
+  tl.to("#r .typing",{opacity:0,duration:.2,ease:"power2.in"},4.95);
+  tl.set("#r .typing",{display:"none"},4.98);
+  bub("#m4",5.0);
+  tl.fromTo("#r #m4",{boxShadow:"0 12px 30px rgba(37,99,255,.4)"},{boxShadow:"0 12px 46px rgba(37,99,255,.85)",duration:.4,ease:"sine.inOut",yoyo:true,repeat:1},5.1);
+  // pull phone up slightly + reveal twist
+  tl.to("#r .phone",{y:-30,scale:.97,duration:.5,ease:"power2.inOut"},5.7);
+  tl.to("#r .reveal",{opacity:1,duration:.01},5.85);
+  tl.from("#r .reveal .rt",{y:24,opacity:0,duration:.44,ease:soft},5.85);
+  tl.from("#r .reveal .rs",{y:18,opacity:0,duration:.4,ease:soft},6.1);
+  // logo
+  tl.to("#r .logo",{opacity:1,duration:.4},6.5);
+  tl.from("#r .logo .mark",{scale:.55,opacity:0,duration:.5,ease:"back.out(2)"},6.5);
+  tl.from("#r .logo .wm",{x:-20,opacity:0,duration:.5,ease:soft},6.65);
+  tl.to("#r .logo .mark",{filter:"drop-shadow(0 6px 30px rgba(24,215,255,.9))",duration:.7,ease:"sine.inOut",yoyo:true,repeat:1},6.85);
+  window.__timelines["reelN3"]=tl;
+  </script>
+</div></body></html>
