@@ -4,6 +4,13 @@
       "maxDuration": 60
     }
   },
+  "rewrites": [
+    { "source": "/contractor-audit", "destination": "/contractor-audit.html" },
+    { "source": "/contractor-audit/start", "destination": "/contractor-audit-start.html" },
+    { "source": "/contractor-audit/analysing", "destination": "/contractor-audit-start.html" },
+    { "source": "/contractor-audit/report/:token", "destination": "/contractor-audit-report.html" },
+    { "source": "/contractor-audit/admin", "destination": "/contractor-audit-admin.html" }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
@@ -20,6 +27,13 @@
           "key": "Access-Control-Allow-Headers",
           "value": "Content-Type, Authorization"
         }
+      ]
+    },
+    {
+      "source": "/contractor-audit/report/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
       ]
     }
   ]
