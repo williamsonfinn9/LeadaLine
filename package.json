@@ -1,8 +1,11 @@
 {
   "name": "leadaline",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "description": "LeadaLine — website, marketing assets, serverless API functions and the Remotion demo project.",
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
     "framer-motion": "^12.39.0"
   }
 }

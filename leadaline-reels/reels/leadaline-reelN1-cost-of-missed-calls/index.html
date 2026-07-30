@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><style>
+@font-face{font-family:'Archivo';font-weight:800;font-display:block;src:url('fonts/Archivo-800.woff2') format('woff2');}
+@font-face{font-family:'Archivo';font-weight:900;font-display:block;src:url('fonts/Archivo-900.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:400;font-display:block;src:url('fonts/DMSans-400.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:500;font-display:block;src:url('fonts/DMSans-500.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:600;font-display:block;src:url('fonts/DMSans-600.woff2') format('woff2');}
+@font-face{font-family:'DM Sans';font-weight:700;font-display:block;src:url('fonts/DMSans-700.woff2') format('woff2');}
+@font-face{font-family:'DM Mono';font-weight:500;font-display:block;src:url('fonts/DMMono-500.woff2') format('woff2');}
+*{margin:0;padding:0;box-sizing:border-box;}body{background:#050B1A;}
+#r{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;color:#F8FAFC;
+  background:radial-gradient(135% 100% at 50% 14%,#0E2240 0%,#091833 42%,#050B1A 80%);
+  --cy:#18D7FF;--bl:#2563FF;--vi:#7C5CFF;--rd:#FF5A5A;}
+#r .world{position:absolute;inset:0;transform-origin:50% 42%;}
+#r .orb{position:absolute;border-radius:50%;filter:blur(74px);z-index:0;opacity:0;}
+#r .orb.a{width:760px;height:760px;left:-200px;top:360px;background:radial-gradient(circle,rgba(37,99,255,.30),rgba(37,99,255,0) 68%);}
+#r .orb.b{width:680px;height:680px;right:-220px;top:1040px;background:radial-gradient(circle,rgba(124,92,255,.26),rgba(124,92,255,0) 68%);}
+#r .orb.r{width:900px;height:900px;left:50%;top:520px;transform:translateX(-50%);background:radial-gradient(circle,rgba(255,80,80,.24),rgba(255,80,80,0) 66%);opacity:0;}
+#r .flash{position:absolute;inset:0;z-index:2;opacity:0;background:radial-gradient(120% 80% at 50% 34%,rgba(255,60,60,.55),rgba(255,60,60,0) 60%);}
+#r .grain{position:absolute;inset:0;z-index:6;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");}
+#r .vignette{position:absolute;inset:0;z-index:5;background:radial-gradient(125% 85% at 50% 40%,transparent 56%,rgba(2,6,16,.55) 100%);}
+#r .content{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;padding:210px 90px 150px;}
+#r .kick{font-family:'DM Mono',monospace;font-weight:500;font-size:30px;letter-spacing:5px;text-transform:uppercase;color:#8FB4E8;opacity:0;}
+#r .head{font-family:'Archivo';font-weight:900;text-transform:uppercase;text-align:center;font-size:96px;line-height:.96;letter-spacing:-2px;margin-top:26px;}
+#r .head .w{display:inline-block;opacity:0;}
+#r .numwrap{margin-top:70px;position:relative;display:flex;flex-direction:column;align-items:center;}
+#r .label{font-size:34px;font-weight:600;letter-spacing:1px;color:#AFC2DC;opacity:0;}
+#r .num{font-family:'Archivo';font-weight:900;font-size:240px;line-height:.86;letter-spacing:-6px;margin-top:10px;
+  background-image:linear-gradient(180deg,#FF7A7A,#FF3B3B);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 10px 44px rgba(255,60,60,.4));will-change:filter,transform;}
+#r .num.saved{background-image:linear-gradient(125deg,#18D7FF 0%,#2563FF 48%,#7C5CFF 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 50px rgba(37,99,255,.55));}
+#r .peryr{font-size:34px;font-weight:600;color:#9FB2CC;margin-top:14px;opacity:0;letter-spacing:1px;}
+#r .flip{margin-top:64px;position:relative;width:820px;opacity:0;}
+#r .flipcard{background:linear-gradient(165deg,rgba(28,48,84,.85),rgba(12,24,50,.9));border:1px solid rgba(120,180,255,.34);
+  border-radius:34px;padding:44px 46px;box-shadow:0 46px 110px rgba(2,8,24,.6),0 0 70px rgba(37,99,255,.24);}
+#r .flipcard .ft{font-size:44px;font-weight:700;line-height:1.14;}
+#r .flipcard .ft .g{background:linear-gradient(120deg,#18D7FF,#7C5CFF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+#r .flipcard .row{display:flex;align-items:center;gap:20px;margin-top:28px;}
+#r .flipcard .chk{width:60px;height:60px;flex:0 0 60px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--bl));
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 26px rgba(24,215,255,.6);}
+#r .flipcard .chk svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:3;}
+#r .flipcard .rt{font-size:30px;font-weight:600;color:#DCEAF8;}
+#r .logo{position:absolute;left:0;right:0;bottom:120px;display:flex;align-items:center;justify-content:center;gap:20px;opacity:0;}
+#r .logo .mark{width:64px;height:64px;filter:drop-shadow(0 6px 18px rgba(37,99,255,.45));}
+#r .logo .wm{font-size:58px;font-weight:600;letter-spacing:-.5px;color:#F4F8FF;}
+</style></head>
+<body>
+<div id="r" data-composition-id="reelN1" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+  <div class="world">
+    <div class="orb a"></div><div class="orb b"></div><div class="orb r"></div>
+    <div class="flash"></div>
+    <div class="content">
+      <div class="kick">The hidden leak</div>
+      <div class="head"><span class="w">MISSED</span> <span class="w">CALLS</span><br/><span class="w">ARE</span> <span class="w">COSTING</span> <span class="w">YOU</span></div>
+      <div class="numwrap">
+        <div class="label">EVERY YEAR YOU LOSE</div>
+        <div class="num" id="num">£0</div>
+        <div class="peryr" id="peryr">in work that never called back.</div>
+      </div>
+      <div class="flip">
+        <div class="flipcard">
+          <div class="ft">LeadaLine answers every call — and turns it into <span class="g">booked work.</span></div>
+          <div class="row"><div class="chk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="rt">Keep the jobs you're already paying to win.</div></div>
+        </div>
+      </div>
+      <div class="logo">
+        <svg class="mark" viewBox="0 0 64 64" fill="none"><defs><linearGradient id="lg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#18D7FF"/><stop offset=".5" stop-color="#2563FF"/><stop offset="1" stop-color="#7C5CFF"/></linearGradient></defs><rect x="13" y="7" width="14" height="50" rx="7" fill="url(#lg)"/><rect x="13" y="43" width="40" height="14" rx="7" fill="url(#lg)"/><rect x="33" y="7" width="11" height="28" rx="5.5" fill="#18D7FF"/></svg>
+        <div class="wm">LeadaLine</div>
+      </div>
+    </div>
+    <div class="vignette"></div><div class="grain"></div>
+  </div>
+  <script src="./gsap.min.js"></script>
+  <script>
+  window.__timelines=window.__timelines||{};
+  const tl=gsap.timeline({paused:true});
+  const snap="back.out(1.8)",soft="power3.out";
+  tl.to("#r .orb.a",{opacity:1,duration:1,ease:"sine.out"},0);
+  tl.to("#r .orb.b",{opacity:1,duration:1.1,ease:"sine.out"},.1);
+  // warning bloom
+  tl.fromTo("#r .flash",{opacity:0},{opacity:.85,duration:.1,ease:"power2.out"},0);
+  tl.to("#r .flash",{opacity:0,duration:.5,ease:"power2.in"},.12);
+  tl.to("#r .orb.r",{opacity:1,duration:.5,ease:"sine.out"},0);
+  tl.from("#r .world",{scale:1.06,duration:.6,ease:"power3.out"},0);
+  // kick + headline
+  tl.to("#r .kick",{opacity:1,duration:.3,ease:soft},.2);
+  tl.to("#r .head .w",{opacity:1,y:0,duration:.34,stagger:.06,ease:snap},.3);
+  tl.from("#r .head .w",{y:34,duration:.34,stagger:.06,ease:snap},.3);
+  // label
+  tl.to("#r .label",{opacity:1,duration:.3,ease:soft},1.2);
+  // COUNTER £0 -> £41,000 with motion blur spin
+  const o={v:0},el=document.querySelector("#num");
+  tl.fromTo("#r .num",{scale:.7,opacity:0},{scale:1,opacity:1,duration:.4,ease:"back.out(2)"},1.35);
+  tl.to(o,{v:41000,duration:2.3,ease:"power2.out",onUpdate:()=>{el.textContent="£"+Math.round(o.v).toLocaleString("en-GB");}},1.5);
+  tl.fromTo("#r .num",{filter:"blur(11px) drop-shadow(0 10px 44px rgba(255,60,60,.4))"},{filter:"blur(0px) drop-shadow(0 10px 44px rgba(255,60,60,.4))",duration:2.3,ease:"power2.out"},1.5);
+  tl.to("#r .peryr",{opacity:1,duration:.4,ease:soft},3.4);
+  // punch on landing
+  tl.to("#r .num",{scale:1.07,duration:.16,ease:"power2.out"},3.85).to("#r .num",{scale:1,duration:.4,ease:"power2.inOut"},4.01);
+  // FLIP: red cost -> blue saved
+  tl.to("#r .num",{scale:.9,duration:.2,ease:"power2.in"},4.5);
+  tl.add(()=>{el.textContent="£41,000";},4.6);
+  tl.set("#r .num",{backgroundImage:"linear-gradient(125deg,#18D7FF 0%,#2563FF 48%,#7C5CFF 100%)",filter:"drop-shadow(0 10px 50px rgba(37,99,255,.55))"},4.62);
+  tl.fromTo("#r .num",{rotationX:-80,scale:.9},{rotationX:0,scale:1,duration:.5,ease:"back.out(1.6)"},4.62);
+  tl.to("#r .orb.r",{opacity:0,duration:.5,ease:"sine.in"},4.6);
+  tl.to("#r .label",{opacity:0,duration:.3},4.5);
+  tl.to("#r .peryr",{opacity:0,duration:.3},4.5);
+  // flip card in
+  tl.to("#r .flip",{opacity:1,duration:.01},5.1);
+  tl.from("#r .flipcard",{y:56,scale:.93,opacity:0,duration:.5,ease:soft},5.1);
+  tl.from("#r .flipcard .ft",{y:20,opacity:0,duration:.4,ease:soft},5.35);
+  tl.from("#r .flipcard .row",{y:18,opacity:0,duration:.36,ease:soft},5.6);
+  tl.from("#r .flipcard .chk",{scale:0,opacity:0,duration:.4,ease:"back.out(2.2)"},5.72);
+  // logo finish
+  tl.to("#r .logo",{opacity:1,duration:.4},6.3);
+  tl.from("#r .logo .mark",{scale:.55,opacity:0,duration:.5,ease:"back.out(2)"},6.3);
+  tl.from("#r .logo .wm",{x:-20,opacity:0,duration:.5,ease:soft},6.45);
+  tl.to("#r .logo .mark",{filter:"drop-shadow(0 6px 30px rgba(24,215,255,.9))",duration:.7,ease:"sine.inOut",yoyo:true,repeat:1},6.7);
+  tl.to("#r .num",{scale:1.02,duration:1.2,ease:"sine.inOut",yoyo:true,repeat:1},6.0);
+  window.__timelines["reelN1"]=tl;
+  </script>
+</div></body></html>
