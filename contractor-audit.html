@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contractor Enquiry Audit — How Many Enquiries Is Your Business Losing? | LeadaLine</title>
+  <meta name="description" content="Free personalised audit for UK contractors and service businesses. Find out where customer enquiries may be slipping through the cracks — website, response speed and follow-up.">
+  <meta property="og:title" content="Contractor Enquiry Audit — LeadaLine">
+  <meta property="og:description" content="Find out where customer enquiries may be slipping through the cracks. Free personalised audit for UK service businesses.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F8FBFF;--surface:#F3F7FF;--card:#fff;--border:rgba(148,163,184,.22);
+      --accent:#2563EB;--cyan:#18D7FF;--violet:#7C5CFF;--ink:#07142F;--ink2:#334155;--muted:#64748B;
+      --grad:linear-gradient(135deg,#18D7FF 0%,#2563EB 50%,#7C5CFF 100%);
+      --shadow:0 2px 8px rgba(15,23,42,.05),0 20px 60px rgba(15,23,42,.07);
+      --radius:16px;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body::before{content:'';position:fixed;top:-30vh;left:50%;transform:translateX(-50%);width:160vw;height:110vh;pointer-events:none;z-index:0;
+      background:radial-gradient(ellipse 70% 60% at 90% 0%,rgba(24,215,255,.08) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 10% 100%,rgba(124,92,255,.06) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 50% 0%,rgba(37,99,235,.05) 0%,transparent 60%)}
+    a{color:inherit;text-decoration:none}
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+    .nav{position:sticky;top:0;z-index:50;background:rgba(248,251,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+    .logo{font-size:21px;font-weight:800;letter-spacing:-.5px}
+    .logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-links{display:flex;gap:22px;align-items:center;font-size:14px;color:var(--ink2)}
+    .nav-links a:hover{color:var(--accent)}
+    .btn{display:inline-block;border-radius:10px;padding:13px 26px;font-weight:700;font-size:15px;cursor:pointer;border:none;font-family:inherit;transition:transform .15s,box-shadow .15s}
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(37,99,235,.25)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,99,235,.32)}
+    .btn-outline{border:1.5px solid var(--border);color:var(--ink2);background:#fff}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-sm{padding:9px 18px;font-size:13.5px}
+    .hero{padding:88px 0 64px;text-align:center}
+    .badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--border);border-radius:99px;padding:7px 16px;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:22px}
+    .badge .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+    h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.12;letter-spacing:-.02em;font-weight:900;max-width:820px;margin:0 auto 18px}
+    .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .sub{font-size:clamp(1rem,2vw,1.15rem);color:var(--ink2);max-width:640px;margin:0 auto 32px}
+    .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .micro{font-size:13px;color:var(--muted);margin-top:16px}
+    .section{padding:64px 0}
+    .section-title{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;letter-spacing:-.02em;text-align:center;margin-bottom:10px}
+    .section-sub{text-align:center;color:var(--ink2);max-width:620px;margin:0 auto 42px;font-size:15.5px}
+    .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow)}
+    .card h3{font-size:16.5px;font-weight:700;margin-bottom:8px}
+    .card p{font-size:14px;color:var(--ink2)}
+    .icon{width:42px;height:42px;border-radius:11px;background:rgba(37,99,235,.09);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--accent)}
+    .icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;counter-reset:step}
+    .step{position:relative;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px 24px;box-shadow:var(--shadow)}
+    .step-num{width:34px;height:34px;border-radius:50%;background:var(--grad);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+    .insight{border-left:4px solid var(--accent)}
+    .insight .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-radius:6px;padding:3px 9px;margin-bottom:10px}
+    .tag-gap{background:rgba(239,68,68,.1);color:#dc2626}
+    .tag-good{background:rgba(34,197,94,.12);color:#16a34a}
+    .tag-check{background:rgba(37,99,235,.1);color:var(--accent)}
+    .trust{background:var(--surface);border-radius:24px;padding:44px 36px;border:1px solid var(--border)}
+    .trust ul{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:22px}
+    .trust li{display:flex;gap:10px;font-size:14.5px;color:var(--ink2)}
+    .tick{color:#16a34a;font-weight:800;flex-shrink:0}
+    .faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+    .faq-item summary{padding:18px 22px;font-weight:600;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+    .faq-item summary::after{content:'+';font-size:20px;color:var(--accent);font-weight:400}
+    .faq-item[open] summary::after{content:'–'}
+    .faq-item p{padding:0 22px 18px;font-size:14px;color:var(--ink2)}
+    .final-cta{text-align:center;background:var(--grad);border-radius:24px;padding:56px 32px;color:#fff}
+    .final-cta h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:800;margin-bottom:10px}
+    .final-cta p{opacity:.92;margin-bottom:26px;font-size:15.5px}
+    .final-cta .btn{background:#fff;color:var(--accent)}
+    footer{border-top:1px solid var(--border);padding:34px 0;margin-top:64px;font-size:13px;color:var(--muted)}
+    .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+    @media (max-width:720px){.nav-links{display:none}.hero{padding:56px 0 44px}}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/index.html" class="logo" aria-label="LeadaLine home">Leada<span>Line</span></a>
+    <div class="nav-links">
+      <a href="/index.html">Home</a>
+      <a href="/how-it-works.html">AI Office Team</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/book-a-demo.html">Book a Demo</a>
+    </div>
+    <a href="/contractor-audit/start" class="btn btn-primary btn-sm" data-cta="nav">Run My Free Audit</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="badge"><span class="dot"></span>Free · Personalised · Takes about 3 minutes</div>
+    <h1>How many customer enquiries could your business be <span class="grad-text">losing?</span></h1>
+    <p class="sub">Analyse your website, response process and follow-up system to find gaps that may be costing you work. Built for UK contractors and service businesses.</p>
+    <div class="cta-row">
+      <a href="/contractor-audit/start" class="btn btn-primary" data-cta="hero">Run My Free Audit&nbsp;→</a>
+      <a href="#what-it-checks" class="btn btn-outline">See What It Checks</a>
+    </div>
+    <p class="micro">No payment. No obligation. You get a personalised report with a score out of 100.</p>
+  </div>
+</header>
+
+<!-- WHAT IT CHECKS -->
+<section class="section" id="what-it-checks">
+  <div class="container">
+    <h2 class="section-title">What the audit reviews</h2>
+    <p class="section-sub">This is not a website grader. It looks at the full journey a customer takes when they try to give you work — and where that journey can leak.</p>
+    <div class="grid-3">
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg></div>
+        <h3>Enquiry capture</h3>
+        <p>Can customers actually reach you? Phone visibility, enquiry forms, click-to-call, WhatsApp and clear calls to action.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Response availability</h3>
+        <p>What happens when nobody answers — evenings, weekends, or while you're on the tools. Missed-call handling and out-of-hours routes.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Lead qualification</h3>
+        <p>Whether enquiries arrive with the service, location and urgency attached — or need chasing before anyone can quote.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
+        <h3>Follow-up process</h3>
+        <p>How quotes and warm enquiries are chased. Most quoted work is won or lost purely on who follows up.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h3>Visibility &amp; organisation</h3>
+        <p>Where leads live, whether statuses are tracked, and whether you can see what's working without digging through inboxes.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <h3>Your recommended setup</h3>
+        <p>The report ends with the specific LeadaLine AI Office Team configuration we'd install for your business — not a generic feature list.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREE STEPS -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <h2 class="section-title">How it works</h2>
+    <p class="section-sub">Three steps, about three minutes of your time.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Tell us about your business</h3><p style="font-size:14px;color:var(--ink2)">Your website, trade and service area — plus a handful of quick questions about how enquiries are handled today.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>We analyse your enquiry journey</h3><p style="font-size:14px;color:var(--ink2)">We review your public website and combine it with your answers to find where enquiries may be slipping through.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Get your personalised report</h3><p style="font-size:14px;color:var(--ink2)">A score out of 100, what's working, what's leaking, the commercial opportunity, and the setup we'd recommend.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLE INSIGHTS -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <h2 class="section-title">The kind of things it finds</h2>
+    <p class="section-sub">Real examples of findings the audit produces — yours will be specific to your business.</p>
+    <div class="grid-3">
+      <div class="card insight"><span class="tag tag-gap">Gap</span><h3>No immediate out-of-hours response</h3><p>"A customer requesting urgent work may continue contacting other contractors while waiting."</p></div>
+      <div class="card insight" style="border-left-color:#22c55e"><span class="tag tag-good">Working well</span><h3>Clear phone number and accreditations</h3><p>"Your number is easy to find and NICEIC accreditation is visible — both build trust at the moment of decision."</p></div>
+      <div class="card insight" style="border-left-color:var(--violet)"><span class="tag tag-check">Worth confirming</span><h3>Quote follow-up frequency</h3><p>"We can't see this from the outside — but if follow-up depends on memory, busy weeks are exactly when it slips."</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="trust">
+      <h2 class="section-title" style="text-align:left;margin-bottom:6px">Honest by design</h2>
+      <p style="color:var(--ink2);font-size:15px;max-width:640px">The audit only reports what it can support. Results are estimates based on your public website and the answers you provide — anything we can't verify is clearly labelled "worth confirming", never presented as fact.</p>
+      <ul>
+        <li><span class="tick">✓</span>Free — no payment details, ever</li>
+        <li><span class="tick">✓</span>Positives as well as gaps — not a fear report</li>
+        <li><span class="tick">✓</span>Transparent scoring: five categories, 20 points each</li>
+        <li><span class="tick">✓</span>Opportunity shown as a conservative range, never "guaranteed revenue"</li>
+        <li><span class="tick">✓</span>We only read your public website — nothing private</li>
+        <li><span class="tick">✓</span>Your data is used to produce your audit; marketing contact is opt-in only</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" style="padding-top:0">
+  <div class="container" style="max-width:760px">
+    <h2 class="section-title">Questions</h2>
+    <div style="margin-top:30px">
+      <details class="faq-item"><summary>Who is this for?</summary><p>UK contractors and owner-led service businesses: electricians, plumbers, roofers, builders, property maintenance, HVAC, waste removal, landscaping, facilities management, security and fire safety, cleaning and similar trades.</p></details>
+      <details class="faq-item"><summary>What do I actually receive?</summary><p>A personalised web report: an overall score out of 100, category scores, what's working, where enquiries may be slipping through, an estimated commercial opportunity range, and the specific LeadaLine setup we'd recommend for your business.</p></details>
+      <details class="faq-item"><summary>How accurate is it?</summary><p>Website findings are genuine observations of your public site. Everything about your internal process comes from your own answers. Where something can't be verified, the report says so — it never guesses.</p></details>
+      <details class="faq-item"><summary>Do you crawl my whole website?</summary><p>No. We review a small number of public pages — typically your homepage, contact and services pages. We never access anything behind a login and we respect access restrictions.</p></details>
+      <details class="faq-item"><summary>Is this a sales pitch?</summary><p>The report is useful on its own — you could act on every recommendation without us. If the findings resonate, you can book a demo where we show the recommended setup built around your business. That part is entirely up to you.</p></details>
+      <details class="faq-item"><summary>What happens to my data?</summary><p>We process your details to produce your audit and store them securely so you can revisit your report. We only send follow-up marketing if you opt in, and every such email has an unsubscribe link. Contact hello@leadaline.com to have your data deleted at any time.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="final-cta">
+      <h2>Find out where enquiries are slipping through the cracks</h2>
+      <p>Three minutes. A score out of 100. A report written for your business, not a template.</p>
+      <a href="/contractor-audit/start" class="btn" data-cta="final">Run My Free Audit&nbsp;→</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot">
+    <div>© <span id="yr"></span> LeadaLine. Built for UK service businesses.</div>
+    <div><a href="/privacy.html" style="margin-right:16px">Privacy</a><a href="mailto:hello@leadaline.com">hello@leadaline.com</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Persist attribution for the funnel + track landing view.
+  (function () {
+    try {
+      const p = new URLSearchParams(location.search);
+      const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','referral_code'];
+      const existing = JSON.parse(sessionStorage.getItem('ll_audit_attr') || 'null');
+      const attr = existing || {};
+      let touched = false;
+      keys.forEach(k => { if (p.get(k)) { attr[k] = p.get(k); touched = true; } });
+      if (!existing || touched) {
+        attr.landing_page = location.pathname + location.search;
+        attr.first_touch = attr.first_touch || new Date().toISOString();
+        sessionStorage.setItem('ll_audit_attr', JSON.stringify(attr));
+      }
+      const events = JSON.parse(sessionStorage.getItem('ll_audit_funnel') || '[]');
+      events.push({ e: 'audit_landing_view', t: Date.now() });
+      sessionStorage.setItem('ll_audit_funnel', JSON.stringify(events.slice(-50)));
+    } catch (e) { /* storage unavailable — non-fatal */ }
+  })();
+</script>
+</body>
+</html>

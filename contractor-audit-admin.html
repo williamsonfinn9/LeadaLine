@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Leads — LeadaLine Internal</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--bg:#F8FBFF;--card:#fff;--border:rgba(148,163,184,.25);--accent:#2563EB;--ink:#07142F;--ink2:#334155;--muted:#64748B;
+      --grad:linear-gradient(135deg,#18D7FF,#2563EB,#7C5CFF);--font:'Inter',system-ui,sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:1180px;margin:0 auto;padding:20px}
+    .logo{font-size:18px;font-weight:800}.logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+    h1{font-size:20px;font-weight:800;margin-bottom:4px}
+    .muted{color:var(--muted);font-size:12.5px}
+    input,select,button,textarea{font-family:inherit;font-size:13.5px}
+    input,select,textarea{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;background:#fff;color:var(--ink);outline:none}
+    input:focus,select:focus{border-color:var(--accent)}
+    .btn{background:var(--grad);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer}
+    .btn-ghost{background:none;border:1.5px solid var(--border);color:var(--ink2);border-radius:8px;padding:8px 14px;cursor:pointer}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+    td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+    tr.lead-row{cursor:pointer}
+    tr.lead-row:hover{background:rgba(37,99,235,.04)}
+    .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px}
+    .pill-high{background:rgba(34,197,94,.14);color:#15803d}
+    .pill-med{background:rgba(217,119,6,.13);color:#b45309}
+    .pill-low{background:rgba(148,163,184,.18);color:var(--muted)}
+    .pill-status{background:rgba(37,99,235,.1);color:var(--accent)}
+    .login-box{max-width:360px;margin:80px auto}
+    .login-box label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin:12px 0 5px}
+    .login-box input{width:100%}
+    .err{color:#dc2626;font-size:12.5px;margin-top:10px;display:none}
+    /* detail drawer */
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100vw);background:#fff;border-left:1px solid var(--border);
+      box-shadow:-20px 0 60px rgba(15,23,42,.12);transform:translateX(100%);transition:transform .25s ease;z-index:60;overflow-y:auto;padding:26px}
+    .drawer.open{transform:none}
+    .drawer h2{font-size:17px;font-weight:800;margin-bottom:2px}
+    .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;font-size:13px;margin:14px 0}
+    .kv dt{color:var(--muted);font-weight:600}
+    .sec{border-top:1px solid var(--border);margin-top:18px;padding-top:14px}
+    .sec h3{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);margin-bottom:10px}
+    .angle{background:rgba(37,99,235,.06);border-radius:10px;padding:14px;font-size:13.5px}
+    .tl{font-size:12.5px;color:var(--ink2)}
+    .tl li{margin-bottom:5px;list-style:none}
+    .tl .t{color:var(--muted);font-size:11px;margin-right:8px}
+    @media (max-width:820px){.hide-sm{display:none}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">Leada<span>Line</span> <span class="muted" style="font-weight:500">· Contractor Audit CRM</span></div>
+    <button class="btn-ghost" id="signOut" style="display:none">Sign out</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="card login-box" id="loginBox">
+    <h1>Internal sign in</h1>
+    <p class="muted">Cam &amp; Finn only. Uses your LeadaLine Supabase account.</p>
+    <label>Email</label><input type="email" id="lEmail" autocomplete="email">
+    <label>Password</label><input type="password" id="lPass" autocomplete="current-password">
+    <button class="btn" id="lBtn" style="width:100%;margin-top:16px">Sign in</button>
+    <p class="err" id="lErr"></p>
+  </div>
+
+  <!-- LIST -->
+  <div id="app" style="display:none">
+    <div class="card">
+      <h1>Audit leads</h1>
+      <p class="muted">Every prospect who has run the Contractor Enquiry Audit, with internal fit scoring and sales angles.</p>
+      <div class="filters">
+        <select id="fFit"><option value="">All fit levels</option><option>High fit</option><option>Medium fit</option><option>Low fit</option><option>Not enough information</option></select>
+        <select id="fStatus"><option value="">All statuses</option></select>
+        <select id="fTrade"><option value="">All trades</option></select>
+        <input type="date" id="fFrom" title="From date">
+        <input type="date" id="fTo" title="To date">
+        <button class="btn-ghost" id="fApply">Apply</button>
+        <button class="btn-ghost" id="fRefresh">↻ Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>Business</th><th class="hide-sm">Contact</th><th class="hide-sm">Trade</th>
+            <th>Score</th><th>Fit</th><th class="hide-sm">Main pain</th>
+            <th>Status</th><th class="hide-sm">Views</th><th class="hide-sm">CTA</th><th>Created</th>
+          </tr></thead>
+          <tbody id="rows"><tr><td colspan="10" class="muted">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<aside class="drawer" id="drawer" aria-label="Lead detail">
+  <button class="btn-ghost" id="drawerClose" style="float:right">✕ Close</button>
+  <div id="drawerBody"></div>
+</aside>
+
+<script>
+  const SB = supabase.createClient(
+    'https://icshqgpsehddcqwydjxc.supabase.co',
+    'sb_publishable_aa8fqwwYknRkngrnmsFUHw_kM47_zOu'
+  );
+  const API = '/api/contractor-audit';
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const STATUSES = ['new','audit_processing','report_ready','report_viewed','engaged','demo_booked','qualified','proposal','won','lost','nurture','invalid'];
+  STATUSES.forEach((s) => $('fStatus').append(new Option(s.replace(/_/g,' '), s)));
+  let jwt = null;
+  let leadsCache = [];
+
+  async function apiCall(body) {
+    const res = await fetch(API, { method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}` },
+      body: JSON.stringify(body) });
+    return res.json();
+  }
+
+  /* ---------- auth ---------- */
+  async function boot() {
+    const { data } = await SB.auth.getSession();
+    if (data.session) { jwt = data.session.access_token; return showApp(); }
+  }
+  $('lBtn').addEventListener('click', async () => {
+    $('lErr').style.display = 'none';
+    const { data, error } = await SB.auth.signInWithPassword({ email: $('lEmail').value.trim(), password: $('lPass').value });
+    if (error) { $('lErr').textContent = error.message; $('lErr').style.display = 'block'; return; }
+    jwt = data.session.access_token;
+    showApp();
+  });
+  $('lPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('lBtn').click(); });
+  $('signOut').addEventListener('click', async () => { await SB.auth.signOut(); location.reload(); });
+
+  async function showApp() {
+    $('loginBox').style.display = 'none';
+    $('app').style.display = 'block';
+    $('signOut').style.display = 'inline-block';
+    loadLeads();
+  }
+
+  /* ---------- list ---------- */
+  function fitPill(label) {
+    const cls = label === 'High fit' ? 'pill-high' : label === 'Medium fit' ? 'pill-med' : 'pill-low';
+    return `<span class="pill ${cls}">${esc(label || '—')}</span>`;
+  }
+
+  async function loadLeads() {
+    $('rows').innerHTML = '<tr><td colspan="10" class="muted">Loading…</td></tr>';
+    const body = { action: 'admin_leads' };
+    if ($('fFit').value) body.fit = $('fFit').value;
+    if ($('fStatus').value) body.status = $('fStatus').value;
+    if ($('fTrade').value) body.trade = $('fTrade').value;
+    if ($('fFrom').value) body.from = $('fFrom').value;
+    if ($('fTo').value) body.to = $('fTo').value + 'T23:59:59Z';
+    const data = await apiCall(body);
+    if (!data.success) {
+      $('rows').innerHTML = `<tr><td colspan="10" class="muted">${esc(data.error || 'Not authorised — is your email on the ADMIN_EMAILS allowlist?')}</td></tr>`;
+      return;
+    }
+    leadsCache = data.leads;
+    const trades = [...new Set(data.leads.map((l) => l.trade).filter(Boolean))];
+    if ($('fTrade').options.length <= 1) trades.forEach((t) => $('fTrade').append(new Option(t, t)));
+    if (!data.leads.length) { $('rows').innerHTML = '<tr><td colspan="10" class="muted">No leads yet. Run a test audit to see one appear here.</td></tr>'; return; }
+    $('rows').innerHTML = data.leads.map((l) => `
+      <tr class="lead-row" data-id="${esc(l.id)}">
+        <td><strong>${esc(l.business_name)}</strong><br><span class="muted">${esc(l.website_url)}</span></td>
+        <td class="hide-sm">${esc(l.first_name)}<br><span class="muted">${esc(l.email)}<br>${esc(l.phone)}</span></td>
+        <td class="hide-sm">${esc(l.trade)}</td>
+        <td><strong>${l.audit_score ?? '—'}</strong></td>
+        <td>${fitPill(l.internal_fit_label)}<br><span class="muted">${l.internal_fit_score ?? ''}</span></td>
+        <td class="hide-sm">${esc(l.main_pain_point || '—')}</td>
+        <td><span class="pill pill-status">${esc((l.lead_status || '').replace(/_/g,' '))}</span></td>
+        <td class="hide-sm">${l.engagement.views}</td>
+        <td class="hide-sm">${l.engagement.cta}</td>
+        <td>${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
+      </tr>`).join('');
+    document.querySelectorAll('.lead-row').forEach((r) => r.addEventListener('click', () => openLead(r.dataset.id)));
+  }
+  $('fApply').addEventListener('click', loadLeads);
+  $('fRefresh').addEventListener('click', loadLeads);
+
+  /* ---------- detail ---------- */
+  async function openLead(id) {
+    $('drawer').classList.add('open');
+    $('drawerBody').innerHTML = '<p class="muted">Loading…</p>';
+    const data = await apiCall({ action: 'admin_lead', id });
+    if (!data.success) { $('drawerBody').innerHTML = `<p class="muted">${esc(data.error)}</p>`; return; }
+    const l = data.lead;
+    const fit = l.internal_fit_json || {};
+    const report = data.reports[0];
+    const est = data.estimates[0];
+    $('drawerBody').innerHTML = `
+      <h2>${esc(l.business_name)}</h2>
+      <p class="muted">${esc(l.trade)} · ${esc(l.service_area || '')} · created ${new Date(l.created_at).toLocaleString('en-GB')}</p>
+
+      <div class="sec"><h3>Next action</h3>
+        <div class="angle">
+          <strong>${esc(l.recommended_sales_angle || 'No angle generated yet.')}</strong>
+          ${fit.best_demo_route ? `<p style="margin-top:8px"><strong>Demo route:</strong> ${esc(fit.best_demo_route)}</p>` : ''}
+          ${fit.key_discovery_question ? `<p style="margin-top:6px"><strong>Discovery question:</strong> ${esc(fit.key_discovery_question)}</p>` : ''}
+          ${fit.expected_objection ? `<p style="margin-top:6px"><strong>Expect:</strong> ${esc(fit.expected_objection)}</p>` : ''}
+          ${fit.emphasise ? `<p style="margin-top:6px"><strong>Emphasise:</strong> ${fit.emphasise.map(esc).join(', ')}</p>` : ''}
+          ${fit.avoid ? `<p style="margin-top:4px"><strong>Avoid:</strong> ${fit.avoid.map(esc).join(', ')}</p>` : ''}
+        </div>
+      </div>
+
+      <div class="sec"><h3>Contact</h3>
+        <dl class="kv">
+          <dt>Name</dt><dd>${esc(l.first_name)}</dd>
+          <dt>Email</dt><dd><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></dd>
+          <dt>Phone</dt><dd><a href="tel:${esc(l.phone)}">${esc(l.phone)}</a></dd>
+          <dt>Website</dt><dd><a href="${esc(l.website_url)}" target="_blank" rel="noopener">${esc(l.website_url)}</a></dd>
+          <dt>Marketing consent</dt><dd>${l.marketing_consent ? 'Yes' : 'No'}</dd>
+          <dt>Source</dt><dd>${esc(l.utm_source || l.referral_source || 'direct')} ${esc(l.utm_campaign ? '· ' + l.utm_campaign : '')}</dd>
+        </dl>
+      </div>
+
+      <div class="sec"><h3>Scores</h3>
+        <dl class="kv">
+          <dt>Audit score</dt><dd>${l.audit_score ?? '—'} / 100</dd>
+          <dt>Internal fit</dt><dd>${fitPill(l.internal_fit_label)} ${l.internal_fit_score ?? ''}/100</dd>
+          <dt>Main pain</dt><dd>${esc(l.main_pain_point || '—')}</dd>
+          <dt>Package fit</dt><dd>${esc(fit.estimated_package_fit || '—')}</dd>
+          ${est ? `<dt>Opportunity</dt><dd>£${Number(est.value_low).toLocaleString()} – £${Number(est.value_high).toLocaleString()}/mo ${est.user_adjusted ? '(prospect-adjusted)' : ''}</dd>` : ''}
+        </dl>
+        ${report ? `<a class="btn-ghost" style="display:inline-block;text-decoration:none" target="_blank" rel="noopener" href="/contractor-audit/report/${esc(report.public_report_token)}">Open customer-facing report ↗</a>` : '<span class="muted">No report generated yet.</span>'}
+      </div>
+
+      <div class="sec"><h3>Status &amp; notes</h3>
+        <select id="dStatus">${STATUSES.map((s) => `<option value="${s}" ${l.lead_status === s ? 'selected' : ''}>${s.replace(/_/g,' ')}</option>`).join('')}</select>
+        <textarea id="dNotes" rows="3" style="width:100%;margin-top:10px" placeholder="Internal notes…">${esc(l.notes || '')}</textarea>
+        <button class="btn" id="dSave" style="margin-top:10px">Save</button>
+        <span class="muted" id="dSaved"></span>
+      </div>
+
+      <div class="sec"><h3>Questionnaire answers</h3>
+        <dl class="kv">${data.responses.map((r) => `<dt>${esc(r.question_key.replace(/_/g,' '))}</dt><dd>${esc(r.answer_label || r.answer_value)}</dd>`).join('')}</dl>
+      </div>
+
+      <div class="sec"><h3>Website observations (${data.observations.length})</h3>
+        <dl class="kv">${data.observations.slice(0, 40).map((o) => `<dt>${esc(o.observation_key.replace(/_/g,' '))}</dt><dd>${esc(o.value)}</dd>`).join('') || '<dd class="muted">None recorded</dd>'}</dl>
+      </div>
+
+      <div class="sec"><h3>Activity timeline</h3>
+        <ul class="tl">${data.events.slice(0, 40).map((e) => `<li><span class="t">${new Date(e.created_at).toLocaleString('en-GB')}</span>${esc(e.event_name)}</li>`).join('') || '<li class="muted">No activity yet</li>'}</ul>
+      </div>
+
+      ${data.bookings.length ? `<div class="sec"><h3>Bookings</h3>
+        <ul class="tl">${data.bookings.map((b) => `<li><span class="t">${new Date(b.created_at).toLocaleString('en-GB')}</span>${esc(b.booking_status)} ${esc(b.booking_reference || '')}</li>`).join('')}</ul></div>` : ''}
+
+      ${data.jobs.some((j) => j.status === 'failed') ? `<div class="sec"><h3>Failed audit jobs</h3>
+        <ul class="tl">${data.jobs.filter((j) => j.status === 'failed').map((j) => `<li><span class="t">${esc(j.error_code)}</span>${esc(j.error_message || '')}</li>`).join('')}</ul></div>` : ''}
+    `;
+    $('dSave').addEventListener('click', async () => {
+      const r = await apiCall({ action: 'admin_update_lead', id, lead_status: $('dStatus').value, notes: $('dNotes').value });
+      $('dSaved').textContent = r.success ? '✓ Saved' : 'Save failed';
+      if (r.success) loadLeads();
+    });
+  }
+  $('drawerClose').addEventListener('click', () => $('drawer').classList.remove('open'));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('drawer').classList.remove('open'); });
+
+  boot();
+</script>
+</body>
+</html>

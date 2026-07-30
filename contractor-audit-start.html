@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Your Enquiry Audit — LeadaLine</title>
+  <meta name="description" content="Enter your business details and answer a few quick questions to get your personalised enquiry audit.">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F8FBFF;--surface:#F3F7FF;--card:#fff;--border:rgba(148,163,184,.22);
+      --accent:#2563EB;--ink:#07142F;--ink2:#334155;--muted:#64748B;--err:#dc2626;
+      --grad:linear-gradient(135deg,#18D7FF 0%,#2563EB 50%,#7C5CFF 100%);
+      --shadow:0 2px 8px rgba(15,23,42,.05),0 20px 60px rgba(15,23,42,.07);
+      --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:radial-gradient(ellipse 70% 60% at 90% 0%,rgba(24,215,255,.07) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 10% 100%,rgba(124,92,255,.05) 0%,transparent 55%)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:680px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+    .top{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-size:19px;font-weight:800;letter-spacing:-.5px}
+    .logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .back{font-size:13px;color:var(--muted)}
+    .back:hover{color:var(--accent)}
+    .progress{height:5px;background:rgba(148,163,184,.18);border-radius:99px;margin:6px 0 28px;overflow:hidden}
+    .progress-bar{height:100%;background:var(--grad);border-radius:99px;width:33%;transition:width .4s ease}
+    .stage{display:none}
+    .stage.active{display:block;animation:fadein .35s ease}
+    @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:32px 28px;box-shadow:var(--shadow);margin-bottom:40px}
+    h1{font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+    .lead{font-size:14px;color:var(--ink2);margin-bottom:26px}
+    label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+    label .req{color:var(--err)}
+    .field{margin-bottom:18px}
+    input[type=text],input[type=email],input[type=tel],input[type=url],select{
+      width:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;
+      font-size:15px;color:var(--ink);font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+    input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+    input.invalid,select.invalid{border-color:var(--err)}
+    .hint{font-size:12px;color:var(--muted);margin-top:5px}
+    .error{font-size:12.5px;color:var(--err);margin-top:5px;display:none}
+    .error.show{display:block}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media (max-width:560px){.row2{grid-template-columns:1fr}}
+    .optional-toggle{font-size:13.5px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;margin:2px 0 16px}
+    .optional-wrap{display:none}
+    .optional-wrap.open{display:block}
+    .consent{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin:22px 0 6px}
+    .consent label{display:flex;gap:11px;align-items:flex-start;font-weight:500;font-size:13.5px;color:var(--ink2);cursor:pointer;margin-bottom:12px}
+    .consent label:last-child{margin-bottom:0}
+    .consent input{width:17px;height:17px;margin-top:2px;accent-color:var(--accent);flex-shrink:0}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:11px;padding:14px 28px;font-weight:700;font-size:15px;cursor:pointer;border:none;font-family:inherit;transition:transform .15s,opacity .15s}
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(37,99,235,.25);width:100%}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn-ghost{background:none;color:var(--muted);font-weight:600;font-size:13.5px;padding:10px}
+    /* questionnaire */
+    .qnum{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+    .qtitle{font-size:17.5px;font-weight:700;margin-bottom:18px;letter-spacing:-.01em}
+    .opts{display:grid;gap:10px}
+    .opt{display:flex;align-items:center;gap:12px;border:1.5px solid var(--border);background:#fff;border-radius:11px;padding:13px 16px;cursor:pointer;font-size:14.5px;color:var(--ink2);transition:border-color .12s,background .12s;font-family:inherit;text-align:left;width:100%}
+    .opt:hover{border-color:var(--accent)}
+    .opt[aria-checked="true"]{border-color:var(--accent);background:rgba(37,99,235,.06);color:var(--ink);font-weight:600}
+    .opt .radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;position:relative}
+    .opt[aria-checked="true"] .radio{border-color:var(--accent)}
+    .opt[aria-checked="true"] .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+    .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+    /* analysing */
+    .analysing{text-align:center;padding:16px 0 8px}
+    .spinner{width:58px;height:58px;border-radius:50%;border:4px solid rgba(37,99,235,.15);border-top-color:var(--accent);margin:0 auto 24px;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .checks{max-width:400px;margin:26px auto 0;text-align:left;display:grid;gap:11px}
+    .check{display:flex;align-items:center;gap:11px;font-size:14px;color:var(--muted);transition:color .3s}
+    .check .st{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;transition:background .3s,border-color .3s}
+    .check.active{color:var(--ink)}
+    .check.active .st{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+    .check.done{color:var(--ink2)}
+    .check.done .st{background:#22c55e;border-color:#22c55e;animation:none}
+    .check.done .st::after{content:'✓'}
+    .fail-box{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:18px;font-size:14px;color:#b91c1c;margin-top:20px;display:none}
+    .note{font-size:12.5px;color:var(--muted);margin-top:18px}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="top">
+    <a href="/index.html" class="logo">Leada<span>Line</span></a>
+    <a href="/contractor-audit" class="back">← Back to audit overview</a>
+  </div>
+  <div class="progress" aria-hidden="true"><div class="progress-bar" id="bar"></div></div>
+
+  <!-- STAGE 1: BUSINESS DETAILS -->
+  <section class="stage active" id="stage-details" aria-label="Business details">
+    <div class="card">
+      <h1>Tell us about your business</h1>
+      <p class="lead">We use this to review your public website and personalise your report. Takes about a minute.</p>
+      <form id="detailsForm" novalidate>
+        <!-- honeypot: bots fill it, humans never see it -->
+        <div style="position:absolute;left:-6000px" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off"></div>
+
+        <div class="field"><label for="f_business">Business name <span class="req">*</span></label>
+          <input type="text" id="f_business" autocomplete="organization" required><p class="error" id="e_business_name"></p></div>
+        <div class="field"><label for="f_url">Website address <span class="req">*</span></label>
+          <input type="text" id="f_url" inputmode="url" placeholder="yourbusiness.co.uk" autocomplete="url" required>
+          <p class="hint">We only review publicly visible pages.</p><p class="error" id="e_website_url"></p></div>
+        <div class="row2">
+          <div class="field"><label for="f_first">Your first name <span class="req">*</span></label>
+            <input type="text" id="f_first" autocomplete="given-name" required><p class="error" id="e_first_name"></p></div>
+          <div class="field"><label for="f_email">Work email <span class="req">*</span></label>
+            <input type="email" id="f_email" autocomplete="email" required><p class="error" id="e_email"></p></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f_phone">Mobile number <span class="req">*</span></label>
+            <input type="tel" id="f_phone" autocomplete="tel" placeholder="07..." required><p class="error" id="e_phone"></p></div>
+          <div class="field"><label for="f_trade">Primary trade or service <span class="req">*</span></label>
+            <select id="f_trade" required><option value="">Choose…</option></select><p class="error" id="e_trade"></p></div>
+        </div>
+        <div class="field" id="otherTradeWrap" style="display:none"><label for="f_other">Describe your service <span class="req">*</span></label>
+          <input type="text" id="f_other"><p class="error" id="e_other_trade"></p></div>
+        <div class="field"><label for="f_area">Main service area or postcode <span class="req">*</span></label>
+          <input type="text" id="f_area" placeholder="e.g. Leeds / LS1" required><p class="error" id="e_service_area"></p></div>
+
+        <button type="button" class="optional-toggle" id="optToggle" aria-expanded="false">+ Optional details (helps accuracy)</button>
+        <div class="optional-wrap" id="optWrap">
+          <div class="row2">
+            <div class="field"><label for="f_emp">Number of employees</label>
+              <select id="f_emp"><option value="">Choose…</option></select></div>
+            <div class="field"><label for="f_crm">Current CRM (if any)</label>
+              <input type="text" id="f_crm" placeholder="e.g. none / Tradify / spreadsheet"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label for="f_booking">Existing booking system</label>
+              <input type="text" id="f_booking" placeholder="e.g. none / Calendly"></div>
+            <div class="field"><label for="f_ref">How did you hear about us?</label>
+              <input type="text" id="f_ref"></div>
+          </div>
+        </div>
+
+        <div class="consent">
+          <label><input type="checkbox" id="c_privacy">
+            <span><strong>Required:</strong> I agree to LeadaLine processing this information to analyse my website and produce my personalised audit report. <a href="/privacy.html" style="color:var(--accent)">Privacy policy</a>.</span></label>
+          <label><input type="checkbox" id="c_marketing">
+            <span><strong>Optional:</strong> Send me relevant follow-up emails about my results and how LeadaLine could help. Unsubscribe any time.</span></label>
+        </div>
+        <p class="error" id="e_privacy_consent" style="margin-bottom:12px"></p>
+
+        <button type="submit" class="btn btn-primary" id="detailsNext">Continue to quick questions&nbsp;→</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- STAGE 2: QUESTIONNAIRE -->
+  <section class="stage" id="stage-questions" aria-label="Questionnaire">
+    <div class="card">
+      <div class="qnum" id="qNum">Question 1 of 8</div>
+      <h2 class="qtitle" id="qTitle"></h2>
+      <div class="opts" id="qOpts" role="radiogroup"></div>
+      <div class="qnav">
+        <button type="button" class="btn btn-ghost" id="qBack">← Back</button>
+        <span style="font-size:12.5px;color:var(--muted)">Answers stay between us — they shape your report.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 3: ANALYSING -->
+  <section class="stage" id="stage-analysing" aria-label="Analysing" aria-live="polite">
+    <div class="card analysing">
+      <div class="spinner" id="spin"></div>
+      <h1 id="anTitle">Analysing your enquiry journey…</h1>
+      <p class="lead" id="anSub">This usually takes under a minute. Please keep this page open.</p>
+      <div class="checks" id="checks"></div>
+      <div class="fail-box" id="failBox">
+        <strong>We hit a problem generating your audit.</strong>
+        <p style="color:#b91c1c;margin-top:6px">Your details are saved — nothing has been lost.</p>
+        <button class="btn btn-primary" id="retryBtn" style="margin-top:14px;width:auto;padding:11px 22px">Try again</button>
+      </div>
+      <p class="note" id="anNote">If your website can't be fully analysed, we'll still build your audit from the information you've provided.</p>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  import { TRADES, QUESTIONS, EMPLOYEE_RANGES, AUDIT_CONFIG } from '/lib/audit/config.js';
+  import { validateBusinessDetails, validateQuestionnaire } from '/lib/audit/validate.js';
+
+  const API = AUDIT_CONFIG.routes.api;
+  const $ = (id) => document.getElementById(id);
+  const state = { details: null, answers: {}, qIndex: 0, job: null, formStarted: Date.now() };
+
+  const funnel = (name, meta) => {
+    // Funnel events are buffered locally pre-submission (no lead exists yet)
+    // and flushed as event metadata with the submission.
+    try {
+      const events = JSON.parse(sessionStorage.getItem('ll_audit_funnel') || '[]');
+      events.push({ e: name, t: Date.now(), ...(meta || {}) });
+      sessionStorage.setItem('ll_audit_funnel', JSON.stringify(events.slice(-50)));
+    } catch {}
+  };
+  funnel('audit_started');
+
+  /* ---------- populate selects ---------- */
+  for (const t of TRADES) $('f_trade').append(new Option(t.label, t.key));
+  for (const e of EMPLOYEE_RANGES) $('f_emp').append(new Option(e, e));
+  $('f_trade').addEventListener('change', () => {
+    $('otherTradeWrap').style.display = $('f_trade').value === 'other' ? 'block' : 'none';
+  });
+  $('optToggle').addEventListener('click', () => {
+    const open = $('optWrap').classList.toggle('open');
+    $('optToggle').setAttribute('aria-expanded', String(open));
+    $('optToggle').textContent = (open ? '−' : '+') + ' Optional details (helps accuracy)';
+  });
+
+  /* ---------- stage switching ---------- */
+  const stages = ['stage-details', 'stage-questions', 'stage-analysing'];
+  function showStage(name, progress) {
+    stages.forEach((s) => $(s).classList.toggle('active', s === name));
+    $('bar').style.width = progress + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ---------- stage 1 ---------- */
+  function readDetails() {
+    return {
+      business_name: $('f_business').value, website_url: $('f_url').value,
+      first_name: $('f_first').value, email: $('f_email').value, phone: $('f_phone').value,
+      trade: $('f_trade').value, other_trade: $('f_other').value, service_area: $('f_area').value,
+      employee_range: $('f_emp').value || null, current_crm: $('f_crm').value,
+      booking_system: $('f_booking').value, referral_source: $('f_ref').value,
+      privacy_consent: $('c_privacy').checked, marketing_consent: $('c_marketing').checked,
+    };
+  }
+  const FIELD_IDS = { business_name: 'f_business', website_url: 'f_url', first_name: 'f_first', email: 'f_email', phone: 'f_phone', trade: 'f_trade', other_trade: 'f_other', service_area: 'f_area' };
+  function showErrors(errors) {
+    document.querySelectorAll('.error').forEach((e) => e.classList.remove('show'));
+    document.querySelectorAll('.invalid').forEach((e) => e.classList.remove('invalid'));
+    let first = null;
+    for (const [field, msg] of Object.entries(errors)) {
+      const err = $('e_' + field);
+      if (err) { err.textContent = msg; err.classList.add('show'); }
+      const input = $(FIELD_IDS[field]);
+      if (input) { input.classList.add('invalid'); first = first || input; }
+    }
+    if (first) first.focus();
+  }
+  $('detailsForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const result = validateBusinessDetails(readDetails());
+    if (!result.ok) { showErrors(result.errors); return; }
+    state.details = readDetails();
+    funnel('business_details_completed');
+    funnel('questionnaire_started');
+    renderQuestion(0);
+    showStage('stage-questions', 40);
+  });
+
+  /* ---------- stage 2 ---------- */
+  function renderQuestion(i) {
+    state.qIndex = i;
+    const q = QUESTIONS[i];
+    $('qNum').textContent = `Question ${i + 1} of ${QUESTIONS.length}`;
+    $('qTitle').textContent = q.title;
+    const wrap = $('qOpts');
+    wrap.innerHTML = '';
+    for (const opt of q.options) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt';
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', String(state.answers[q.key] === opt.value));
+      btn.innerHTML = `<span class="radio" aria-hidden="true"></span><span>${opt.label}</span>`;
+      btn.addEventListener('click', () => {
+        state.answers[q.key] = opt.value;
+        wrap.querySelectorAll('.opt').forEach((b) => b.setAttribute('aria-checked', 'false'));
+        btn.setAttribute('aria-checked', 'true');
+        setTimeout(() => {
+          if (i + 1 < QUESTIONS.length) {
+            renderQuestion(i + 1);
+            $('bar').style.width = (40 + ((i + 1) / QUESTIONS.length) * 40) + '%';
+          } else {
+            funnel('questionnaire_completed');
+            submitAudit();
+          }
+        }, 220);
+      });
+      wrap.appendChild(btn);
+    }
+  }
+  $('qBack').addEventListener('click', () => {
+    if (state.qIndex === 0) showStage('stage-details', 20);
+    else renderQuestion(state.qIndex - 1);
+  });
+
+  /* ---------- stage 3: submit + process ---------- */
+  const CHECK_STEPS = [
+    'Reviewing contact routes',
+    'Checking enquiry forms',
+    'Checking out-of-hours options',
+    'Reviewing lead qualification',
+    'Assessing follow-up processes',
+    'Preparing your recommended workflow',
+    'Calculating the opportunity range',
+  ];
+  function renderChecks() {
+    $('checks').innerHTML = CHECK_STEPS.map((s, i) =>
+      `<div class="check" id="chk${i}"><span class="st"></span><span>${s}</span></div>`).join('');
+  }
+  let animTimer = null;
+  function animateChecks() {
+    let i = 0;
+    const advance = () => {
+      if (i > 0) { const prev = $('chk' + (i - 1)); prev.classList.remove('active'); prev.classList.add('done'); }
+      if (i < CHECK_STEPS.length) {
+        // Hold the last step until processing genuinely finishes.
+        if (i === CHECK_STEPS.length - 1 && !state.done) { $('chk' + i).classList.add('active'); i++; return; }
+        $('chk' + i).classList.add('active'); i++;
+        animTimer = setTimeout(advance, state.done ? 260 : 2600);
+      }
+    };
+    advance();
+    return () => { // completion: finish remaining quickly
+      state.done = true;
+      clearTimeout(animTimer);
+      const finish = () => {
+        const active = document.querySelector('.check.active');
+        const pending = [...document.querySelectorAll('.check:not(.done)')];
+        if (active) { active.classList.remove('active'); active.classList.add('done'); }
+        const next = pending.find((el) => !el.classList.contains('done'));
+        if (next) { next.classList.add('done'); setTimeout(finish, 140); }
+      };
+      finish();
+    };
+  }
+
+  async function api(body) {
+    const res = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => ({}));
+    return { status: res.status, data };
+  }
+
+  async function submitAudit() {
+    showStage('stage-analysing', 85);
+    renderChecks();
+    const complete = animateChecks();
+    $('failBox').style.display = 'none';
+
+    // Bot heuristic: reject sub-4-second completions client-side too.
+    if (Date.now() - state.formStarted < 4000) { /* proceed; server has its own guards */ }
+
+    let attribution = {};
+    try { attribution = JSON.parse(sessionStorage.getItem('ll_audit_attr') || '{}'); } catch {}
+
+    try {
+      if (!state.job) {
+        const sub = await api({
+          action: 'submit',
+          details: state.details,
+          answers: state.answers,
+          attribution,
+          company_website: document.querySelector('[name=company_website]').value,
+        });
+        if (!sub.data.success) throw Object.assign(new Error(sub.data.error || 'Submission failed'), { fields: sub.data.fields });
+        state.job = sub.data;
+        funnel('audit_submitted');
+      }
+      funnel('audit_processing_started');
+      const proc = await api({ action: 'process', job_id: state.job.job_id, status_token: state.job.status_token });
+      let token = proc.data.report_token;
+
+      // If another invocation is processing, poll status.
+      if (!token && proc.data.status === 'running') {
+        for (let i = 0; i < 30 && !token; i++) {
+          await new Promise((r) => setTimeout(r, 3000));
+          const st = await api({ action: 'status', job_id: state.job.job_id, status_token: state.job.status_token });
+          if (st.data.status === 'complete') token = st.data.report_token;
+          if (st.data.status === 'failed') throw new Error('processing failed');
+        }
+      }
+      if (!token) throw new Error(proc.data.error || 'processing did not complete');
+
+      complete();
+      $('anTitle').textContent = 'Your report is ready';
+      $('anSub').textContent = 'Taking you to it now…';
+      $('spin').style.display = 'none';
+      setTimeout(() => { location.href = `/contractor-audit/report/${token}`; }, 900);
+    } catch (err) {
+      state.done = true;
+      clearTimeout(animTimer);
+      $('spin').style.display = 'none';
+      $('anTitle').textContent = 'Nearly there';
+      $('anSub').textContent = '';
+      if (err.fields) {
+        // Validation problem — send the user back to fix it.
+        showStage('stage-details', 20);
+        showErrors(err.fields);
+        return;
+      }
+      $('failBox').style.display = 'block';
+    }
+  }
+  $('retryBtn').addEventListener('click', () => { state.done = false; submitAudit(); });
+</script>
+</body>
+</html>

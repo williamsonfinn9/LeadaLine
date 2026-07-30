@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Enquiry Response Audit — LeadaLine</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F8FBFF;--surface:#F3F7FF;--card:#fff;--border:rgba(148,163,184,.22);
+      --accent:#2563EB;--cyan:#18D7FF;--violet:#7C5CFF;--ink:#07142F;--ink2:#334155;--muted:#64748B;
+      --good:#16a34a;--warn:#d97706;--bad:#dc2626;
+      --grad:linear-gradient(135deg,#18D7FF 0%,#2563EB 50%,#7C5CFF 100%);
+      --shadow:0 2px 8px rgba(15,23,42,.05),0 20px 60px rgba(15,23,42,.07);
+      --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:radial-gradient(ellipse 70% 50% at 90% 0%,rgba(24,215,255,.07) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 10% 100%,rgba(124,92,255,.05) 0%,transparent 55%)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:860px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+    .top{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .logo{font-size:19px;font-weight:800;letter-spacing:-.5px}
+    .logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:30px 28px;box-shadow:var(--shadow);margin-bottom:22px}
+    h1{font-size:clamp(1.4rem,3.4vw,2rem);font-weight:900;letter-spacing:-.02em}
+    h2{font-size:1.15rem;font-weight:800;letter-spacing:-.01em;margin-bottom:16px}
+    .eyebrow{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+    .muted{color:var(--muted);font-size:13px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:11px;padding:14px 26px;font-weight:700;font-size:15px;cursor:pointer;border:none;font-family:inherit;transition:transform .15s}
+    .btn-primary{background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(37,99,235,.25)}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-sm{padding:10px 18px;font-size:13.5px}
+    /* score hero */
+    .score-hero{display:grid;grid-template-columns:180px 1fr;gap:30px;align-items:center}
+    @media (max-width:640px){.score-hero{grid-template-columns:1fr;text-align:center;justify-items:center}}
+    .dial{position:relative;width:170px;height:170px}
+    .dial svg{transform:rotate(-90deg)}
+    .dial .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .dial .num{font-size:44px;font-weight:900;letter-spacing:-.03em;line-height:1}
+    .dial .of{font-size:12px;color:var(--muted);font-weight:600}
+    .score-label{display:inline-block;background:rgba(37,99,235,.08);color:var(--accent);border-radius:99px;padding:6px 15px;font-size:13px;font-weight:700;margin:10px 0 12px}
+    .conf{font-size:12.5px;color:var(--muted)}
+    /* categories */
+    .catbar{margin-bottom:16px}
+    .catbar .row{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:6px}
+    .catbar .row .pts{color:var(--muted);font-weight:500}
+    .track{height:9px;border-radius:99px;background:rgba(148,163,184,.18);overflow:hidden}
+    .fill{height:100%;border-radius:99px;background:var(--grad);transition:width .8s ease}
+    .conf-pill{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:6px;margin-left:8px;vertical-align:1px}
+    .conf-high{background:rgba(34,197,94,.12);color:var(--good)}
+    .conf-medium{background:rgba(217,119,6,.12);color:var(--warn)}
+    .conf-low{background:rgba(148,163,184,.18);color:var(--muted)}
+    /* lists */
+    .goodlist{display:grid;gap:10px}
+    .goodlist li{list-style:none;display:flex;gap:11px;font-size:14.5px;color:var(--ink2)}
+    .goodlist .tick{color:var(--good);font-weight:800;flex-shrink:0}
+    /* gap cards */
+    .gap{border:1px solid var(--border);border-left:4px solid var(--bad);border-radius:12px;padding:20px;margin-bottom:14px;background:#fff}
+    .gap h3{font-size:15.5px;font-weight:700;margin-bottom:10px}
+    .gap .meta{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+    .gap dl{display:grid;gap:8px;font-size:13.5px}
+    .gap dt{font-weight:700;color:var(--ink2);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    .gap dd{color:var(--ink2);margin-bottom:4px}
+    .gap .sol{background:rgba(37,99,235,.06);border-radius:9px;padding:9px 13px;font-size:13px;font-weight:600;color:var(--accent);display:inline-block}
+    /* calculator */
+    .calcgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+    @media (max-width:640px){.calcgrid{grid-template-columns:1fr}}
+    .calc-field{margin-bottom:18px}
+    .calc-field label{font-size:13px;font-weight:600;color:var(--ink2);display:flex;justify-content:space-between;margin-bottom:8px}
+    .calc-field output{color:var(--accent);font-weight:700}
+    input[type=range]{width:100%;accent-color:var(--accent)}
+    .est-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;text-align:center}
+    .est-big{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:900;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .est-jobs{font-size:14px;color:var(--ink2);margin-top:6px}
+    .assump{margin-top:16px;font-size:12.5px;color:var(--muted);text-align:left}
+    .assump li{margin-left:16px;margin-bottom:4px}
+    .disclaimer{font-size:12px;color:var(--muted);border-top:1px dashed var(--border);margin-top:14px;padding-top:12px;text-align:left}
+    /* recommendation */
+    .rec{display:flex;gap:16px;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;background:#fff}
+    .rec .pr{width:38px;height:38px;border-radius:10px;background:var(--grad);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rec h3{font-size:15px;font-weight:700}
+    .rec p{font-size:13.5px;color:var(--ink2)}
+    /* workflow */
+    .flow{display:grid;gap:0;margin-top:6px}
+    .flow-step{display:flex;gap:14px;position:relative;padding-bottom:18px}
+    .flow-step:last-child{padding-bottom:0}
+    .flow-step::before{content:'';position:absolute;left:13px;top:30px;bottom:0;width:2px;background:rgba(37,99,235,.2)}
+    .flow-step:last-child::before{display:none}
+    .flow-dot{width:28px;height:28px;border-radius:50%;background:rgba(37,99,235,.1);color:var(--accent);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+    .flow-step p{font-size:14px;color:var(--ink2);padding-top:3px}
+    /* unknown items */
+    .unk{display:flex;gap:10px;font-size:14px;color:var(--ink2);margin-bottom:9px}
+    .unk .q{color:var(--violet);font-weight:800;flex-shrink:0}
+    /* cta */
+    .cta-band{background:var(--grad);color:#fff;border-radius:18px;padding:34px 28px;text-align:center;margin-bottom:22px}
+    .cta-band h2{margin-bottom:6px}
+    .cta-band p{opacity:.92;font-size:14.5px;margin-bottom:20px}
+    .cta-band .btn{background:#fff;color:var(--accent)}
+    .loading,.errstate{text-align:center;padding:90px 20px}
+    .spinner{width:52px;height:52px;border-radius:50%;border:4px solid rgba(37,99,235,.15);border-top-color:var(--accent);margin:0 auto 20px;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer{border-top:1px solid var(--border);padding:30px 0 40px;margin-top:40px;font-size:12.5px;color:var(--muted)}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+    @media print{.cta-band,.top .btn{display:none}}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="top">
+    <a href="/index.html" class="logo">Leada<span>Line</span></a>
+    <a href="#book" class="btn btn-primary btn-sm" id="topCta">Book My Personalised Demo</a>
+  </div>
+
+  <div class="loading" id="loading"><div class="spinner"></div><p class="muted">Loading your report…</p></div>
+
+  <div class="errstate" id="errstate" style="display:none">
+    <h1 style="margin-bottom:10px">We can't open this report</h1>
+    <p class="muted" id="errmsg" style="max-width:420px;margin:0 auto 22px"></p>
+    <a class="btn btn-primary" href="/contractor-audit">Run a new audit</a>
+  </div>
+
+  <main id="report" style="display:none"></main>
+</div>
+
+<script type="module">
+  import { calculateOpportunity, formatGBP } from '/lib/audit/opportunity.js';
+  import { CATEGORY_META, scoreLabel, AUDIT_CONFIG } from '/lib/audit/config.js';
+
+  const API = AUDIT_CONFIG.routes.api;
+  const token = (location.pathname.match(/\/report\/([A-Za-z0-9_-]+)/) || [])[1] || new URLSearchParams(location.search).get('t');
+  const sessionId = (() => { try { let s = sessionStorage.getItem('ll_sid'); if (!s) { s = Math.random().toString(36).slice(2); sessionStorage.setItem('ll_sid', s); } return s; } catch { return null; } })();
+
+  const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const track = (event, metadata) => {
+    fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'track', t: token, event, metadata, session_id: sessionId }) }).catch(() => {});
+  };
+
+  async function load() {
+    if (!token) return fail('This link is missing its report reference.');
+    let res, data;
+    try {
+      res = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ action: 'report', t: token, session_id: sessionId }) });
+      data = await res.json();
+    } catch { return fail('We could not reach the report service. Please check your connection and refresh.'); }
+    if (!data.success) return fail(data.error || 'This report link is not valid.');
+    render(data.report);
+  }
+
+  function fail(msg) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('errstate').style.display = 'block';
+    document.getElementById('errmsg').textContent = msg;
+  }
+
+  function confPill(c) { return `<span class="conf-pill conf-${esc(c)}">${esc(c)} confidence</span>`; }
+
+  function bookingHref(r) {
+    const base = r.booking_url.startsWith('http') ? r.booking_url : r.booking_url;
+    const p = new URLSearchParams({
+      name: r.business.first_name || '', business: r.business.name || '',
+      email: r.business.email || '', phone: r.business.phone || '',
+      website: r.business.website || '', trade: r.business.trade || '',
+      report: token, source: 'contractor-audit',
+    });
+    return base + (base.includes('?') ? '&' : '?') + p.toString();
+  }
+
+  function render(r) {
+    document.title = `Your Enquiry Response Audit: ${r.business.name} — LeadaLine`;
+    const gaps = (r.gaps && r.gaps.cards) || [];
+    const positives = (r.positives && r.positives.items) || [];
+    const unknowns = (r.unknowns && r.unknowns.items) || [];
+    const recs = (r.recommendations && r.recommendations.items) || [];
+    const flow = (r.workflow && r.workflow.steps) || [];
+    const est = r.estimate;
+    const book = bookingHref(r);
+    const circumference = 2 * Math.PI * 74;
+    const dash = circumference * (r.overall_score / 100);
+    const genDate = new Date(r.generated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const catRow = (key, name) => {
+      const s = r.category_scores[key];
+      return `<div class="catbar"><div class="row"><span>${esc(name)}</span><span class="pts">${s} / 20</span></div>
+        <div class="track"><div class="fill" style="width:${(s / 20) * 100}%"></div></div></div>`;
+    };
+
+    document.getElementById('report').innerHTML = `
+      <!-- 1. header -->
+      <section class="card">
+        <div class="eyebrow">Contractor Enquiry Audit · ${esc(genDate)}</div>
+        <h1>Your Enquiry Response Audit: ${esc(r.business.name)}</h1>
+        <p class="muted" style="margin-top:6px">${esc(r.business.trade_label)} · ${esc(r.business.service_area)} · ${esc(r.business.website)}</p>
+        ${r.website_analysed ? '' : `<p style="margin-top:12px;font-size:13.5px;color:var(--warn);background:rgba(217,119,6,.08);border-radius:9px;padding:10px 14px">We could not fully analyse the public website, so this audit is based mainly on the information you supplied.</p>`}
+      </section>
+
+      <!-- 2+3. score + summary -->
+      <section class="card">
+        <div class="score-hero">
+          <div class="dial" role="img" aria-label="Overall score ${r.overall_score} out of 100">
+            <svg width="170" height="170" viewBox="0 0 170 170">
+              <circle cx="85" cy="85" r="74" fill="none" stroke="rgba(148,163,184,.18)" stroke-width="13"/>
+              <circle cx="85" cy="85" r="74" fill="none" stroke="url(#g)" stroke-width="13" stroke-linecap="round"
+                stroke-dasharray="${dash} ${circumference}"/>
+              <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#18D7FF"/><stop offset=".5" stop-color="#2563EB"/><stop offset="1" stop-color="#7C5CFF"/>
+              </linearGradient></defs>
+            </svg>
+            <div class="val"><span class="num">${r.overall_score}</span><span class="of">out of 100</span></div>
+          </div>
+          <div>
+            <span class="score-label">${esc(scoreLabel(r.overall_score))}</span>
+            <p style="font-size:15px;color:var(--ink2)">${esc(r.executive_summary)}</p>
+            <p class="conf" style="margin-top:10px">Overall confidence: ${esc(r.overall_confidence)} — based on website observations and the answers you provided.</p>
+            <a class="btn btn-primary btn-sm" style="margin-top:16px" href="${book}" data-book>See This Built for My Business</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. working -->
+      ${positives.length ? `<section class="card"><h2>What appears to be working</h2><ul class="goodlist">
+        ${positives.map((p) => `<li><span class="tick">✓</span><span>${esc(p)}</span></li>`).join('')}</ul></section>` : ''}
+
+      <!-- 5. gaps -->
+      ${gaps.length ? `<section class="card"><h2>Where opportunities may be slipping through</h2>
+        ${gaps.map((g) => `<div class="gap">
+          <div class="meta">${esc(g.category)} ${confPill(g.confidence)}</div>
+          <h3>${esc(g.title)}</h3>
+          <dl>
+            <div><dt>What we observed</dt><dd>${esc(g.observation)}</dd></div>
+            <div><dt>Why it matters</dt><dd>${esc(g.why)}</dd></div>
+            <div><dt>Recommendation</dt><dd>${esc(g.recommendation)}</dd></div>
+          </dl>
+          ${g.leadaline_solution ? `<span class="sol">LeadaLine solution: ${esc(g.leadaline_solution)}</span>` : ''}
+        </div>`).join('')}</section>` : ''}
+
+      <!-- 6. categories -->
+      <section class="card" id="catSection"><h2>Category breakdown</h2>
+        ${CATEGORY_META.map((c) => catRow(c.key, c.name)).join('')}
+        <p class="muted" style="margin-top:10px">Each category is scored out of 20 using website observations and your answers. Unknown information reduces confidence rather than being treated as a failure.</p>
+      </section>
+
+      <!-- 7. opportunity -->
+      <section class="card" id="calcSection">
+        <h2>Estimated commercial opportunity</h2>
+        <div class="calcgrid">
+          <div>
+            <div class="calc-field"><label>Monthly enquiries <output id="oEnq"></output></label>
+              <input type="range" id="rEnq" min="2" max="150" step="1" aria-label="Monthly enquiries"></div>
+            <div class="calc-field"><label>Average job value <output id="oVal"></output></label>
+              <input type="range" id="rVal" min="100" max="5000" step="50" aria-label="Average job value in pounds"></div>
+            <p class="muted">Adjust these to your real numbers — the estimate updates instantly.</p>
+          </div>
+          <div class="est-box">
+            <div class="muted" style="margin-bottom:6px">Potential recoverable value / month</div>
+            <div class="est-big" id="estValue"></div>
+            <div class="est-jobs" id="estJobs"></div>
+          </div>
+        </div>
+        <ul class="assump" id="assumpList"></ul>
+        <p class="disclaimer" id="discl"></p>
+      </section>
+
+      <div class="cta-band" id="ctaMid">
+        <h2>Want these numbers to stop being hypothetical?</h2>
+        <p>Your demo will focus on the enquiry gaps identified in this audit — not a generic AI presentation.</p>
+        <a class="btn" href="${book}" data-book>Book My Personalised Demo</a>
+      </div>
+
+      <!-- 8. recommendation -->
+      <section class="card" id="recSection">
+        <h2>Recommended LeadaLine AI Office Team for ${esc(r.business.name)}</h2>
+        ${recs.map((rec) => `<div class="rec"><div class="pr">${rec.priority}</div>
+          <div><h3>${esc(rec.component.name)} <span class="muted" style="font-weight:500;font-size:12px">· Priority ${rec.priority}</span></h3>
+          <p>${esc(rec.component.description)}</p>
+          ${rec.reason ? `<p style="margin-top:6px;font-size:12.5px;color:var(--accent);font-weight:600">Why: ${esc(rec.reason)}</p>` : ''}</div></div>`).join('')}
+        <p class="muted" style="margin-top:8px">We deliberately recommend a starting point, not everything at once. Additional assistants can be added once the first response process is reliable.</p>
+      </section>
+
+      <!-- 9. workflow -->
+      <section class="card"><h2>How an enquiry would flow after LeadaLine</h2>
+        <div class="flow">${flow.map((s, i) => `<div class="flow-step"><div class="flow-dot">${i + 1}</div><p>${esc(s)}</p></div>`).join('')}</div>
+      </section>
+
+      <!-- items worth confirming -->
+      ${unknowns.length ? `<section class="card"><h2>Items worth confirming</h2>
+        <p class="muted" style="margin-bottom:14px">These can't be verified from public information — worth checking internally (we'd cover them on a demo call too):</p>
+        ${unknowns.map((u) => `<div class="unk"><span class="q">?</span><span>${esc(u)}</span></div>`).join('')}</section>` : ''}
+
+      <!-- 11. book -->
+      <div class="cta-band" id="book">
+        <h2>See this built for ${esc(r.business.name)}</h2>
+        <p>A 20-minute call. We'll walk through your report and show the recommended workflow running live.</p>
+        <a class="btn" href="${book}" data-book>Book My Personalised Demo</a>
+      </div>
+
+      <!-- 12. methodology -->
+      <section class="card"><h2>Methodology &amp; disclaimer</h2>
+        <p style="font-size:13.5px;color:var(--ink2)">This audit combines automated observations of your public website (${r.website_analysed ? 'analysed successfully' : 'analysis unavailable for this run'}) with the answers you provided. Website findings are genuine observations; statements about your internal process are based on your answers; anything unverifiable is listed under "items worth confirming" rather than assumed. Scores use five categories of 20 points each (methodology v${esc(r.methodology_version)}).</p>
+        <p style="font-size:13.5px;color:var(--ink2);margin-top:10px">${esc((est && est.assumptions_json && est.assumptions_json.disclaimer) || 'This is an indicative commercial estimate, not a revenue guarantee.')}</p>
+        <p class="muted" style="margin-top:10px">Questions about this report? <a href="mailto:hello@leadaline.com" style="color:var(--accent)">hello@leadaline.com</a></p>
+      </section>
+
+      <footer>© LeadaLine · This report was prepared for ${esc(r.business.name)} and is accessible only via its private link.</footer>
+    `;
+
+    document.getElementById('topCta').href = book;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('report').style.display = 'block';
+
+    initCalculator(r, est);
+    initTracking();
+  }
+
+  /* ---------- calculator (live, deterministic, same module as server) ---------- */
+  function initCalculator(r, est) {
+    const gapCount = ((r.gaps && r.gaps.cards) || []).length;
+    const rEnq = document.getElementById('rEnq');
+    const rVal = document.getElementById('rVal');
+    rEnq.value = Math.round(((est?.monthly_enquiries_low ?? 10) + (est?.monthly_enquiries_high ?? 30)) / 2);
+    rVal.value = Math.round(((est?.average_job_value_low ?? 300) + (est?.average_job_value_high ?? 800)) / 2 / 50) * 50;
+
+    let adjustTimer = null;
+    const update = (persist) => {
+      const enq = Number(rEnq.value);
+      const val = Number(rVal.value);
+      const e = calculateOpportunity({
+        monthlyEnquiries: [Math.max(1, Math.round(enq * 0.8)), Math.round(enq * 1.2)],
+        jobValue: [Math.round(val * 0.8), Math.round(val * 1.2)],
+        gapCount,
+      });
+      document.getElementById('oEnq').textContent = `~${enq}/month`;
+      document.getElementById('oVal').textContent = formatGBP(val);
+      document.getElementById('estValue').textContent = `${formatGBP(e.value_low)} – ${formatGBP(e.value_high)}`;
+      document.getElementById('estJobs').textContent =
+        `That's roughly ${e.jobs_recovered_low}–${e.jobs_recovered_high} additional jobs in a typical month.`;
+      document.getElementById('assumpList').innerHTML = e.assumptions.map((a) => `<li>${esc(a)}</li>`).join('');
+      document.getElementById('discl').textContent = e.disclaimer;
+
+      if (persist) {
+        clearTimeout(adjustTimer);
+        adjustTimer = setTimeout(() => {
+          track('calculator_adjusted', { enquiries: enq, value: val });
+          fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ action: 'adjust', t: token,
+              monthly_enquiries: [Math.max(1, Math.round(enq * 0.8)), Math.round(enq * 1.2)],
+              job_value: [Math.round(val * 0.8), Math.round(val * 1.2)] }) }).catch(() => {});
+        }, 1200);
+      }
+    };
+    rEnq.addEventListener('input', () => update(true));
+    rVal.addEventListener('input', () => update(true));
+    update(false);
+  }
+
+  /* ---------- engagement tracking ---------- */
+  function initTracking() {
+    document.querySelectorAll('[data-book]').forEach((a) => {
+      a.addEventListener('click', () => { track('booking_cta_clicked', { where: a.closest('section,div')?.id || 'unknown' }); track('booking_started', {}); });
+    });
+    const seen = new Set();
+    if ('IntersectionObserver' in window) {
+      const map = { catSection: 'score_section_viewed', recSection: 'recommendation_viewed' };
+      const io = new IntersectionObserver((entries) => {
+        for (const en of entries) {
+          if (en.isIntersecting && !seen.has(en.target.id)) {
+            seen.add(en.target.id);
+            track(map[en.target.id]);
+            io.unobserve(en.target);
+          }
+        }
+      }, { threshold: 0.4 });
+      for (const id of Object.keys(map)) { const el = document.getElementById(id); if (el) io.observe(el); }
+    }
+  }
+
+  load();
+</script>
+</body>
+</html>
